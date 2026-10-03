@@ -12,3 +12,16 @@ export const COMMANDS: CommandDef[] = [
 export const INPUT_BEATS = 4;
 export const MEASURE_BEATS = 8;
 export const FEVER_COMBO = 4;
+
+/**
+ * Timing windows, measured either side of the beat. This is the one place to tune how
+ * forgiving the drums feel. A tap inside `perfectMs` is Perfect, inside `goodMs` is Good.
+ * Anything further out is an off-beat tap: it is ignored, it does not reset the sequence.
+ */
+export const TIMING = {
+  perfectMs: 85,
+  goodMs: 190,
+} as const;
+
+/** The good window never grows past this share of a beat, so neighbouring beats can't overlap. */
+export const MAX_GOOD_BEAT_SHARE = 0.45;

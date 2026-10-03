@@ -51,7 +51,7 @@ describe("RhythmEngine", () => {
     assert.equal(j3.grade, "perfect");
     assert.equal(j3.slot, 3);
 
-    // Advance past input beats (grace period ends around 7.0 + 0.13 = 7.13s)
+    // Advance past input beats: a complete row is answered on beat 4 (t = 7.0)
     evs = engine.advance(7.2);
     const cmdEv = evs.find((e) => e.type === "command");
     assert.ok(cmdEv, "Expected command event");
@@ -99,15 +99,129 @@ describe("RhythmEngine", () => {
     assert.equal(engine.combo, 0);
   });
 
-  it("resets rhythm when a tap is severely off-beat (miss grade)", () => {
+  it("keeps going when a tap is far off the beat, and the next good tap still counts", () => {
     const engine = new RhythmEngine({ bpm: 120 });
     const t0 = 5.0;
 
     engine.tap(1, t0);
-    // Tap with deltaMs = 250ms (off beat)
-    const j = engine.tap(1, t0 + 0.25);
-    assert.equal(j.grade, "miss");
+    // 250ms from the nearest beat: outside the good window, so it is a miss...
+    const stray = engine.tap(1, t0 + 0.25);
+    assert.equal(stray.grade, "miss");
+    assert.equal(stray.ignored, false);
+    // ...but it breaks nothing.
+    assert.equal(engine.started, true);
+    assert.equal(engine.failCount, 0);
+
+    // Playing the rest of MARCH on time (TAK TAK TAK BOOM) still works.
+    const slot1 = engine.tap(1, t0 + 0.5);
+    assert.equal(slot1.slot, 1);
+    assert.equal(slot1.grade, "perfect");
+    engine.tap(1, t0 + 1.0);
+    engine.tap(0, t0 + 1.5);
+
+    const evs = engine.advance(t0 + 2.0);
+    const cmd = evs.find((e) => e.type === "command");
+    assert.ok(cmd, "Expected the sequence to finish as a command");
+    assert.equal(engine.combo, 1);
+  });
+
+  it("accepts taps up to the wide good window instead of calling them misses", () => {
+    const engine = new RhythmEngine({ bpm: 120 });
+    const t0 = 5.0;
+
+    engine.tap(1, t0);
+    const late = engine.tap(1, t0 + 0.5 + 0.15); // 150ms late
+    assert.equal(late.grade, "good");
+    const early = engine.tap(1, t0 + 1.0 - 0.17); // 170ms early
+    assert.equal(early.grade, "good");
+    const tight = engine.tap(0, t0 + 1.5 + 0.05); // 50ms late
+    assert.equal(tight.grade, "perfect");
+  });
+
+  it("ignores drums during the response phase without resetting", () => {
+    const engine = new RhythmEngine({ bpm: 120 });
+    const t0 = 5.0;
+
+    engine.tap(1, t0);
+    engine.tap(1, t0 + 0.5);
+    engine.tap(1, t0 + 1.0);
+    engine.tap(0, t0 + 1.5);
+
+    const evs = engine.advance(t0 + 2.0);
+    assert.ok(evs.some((e) => e.type === "command"));
+    assert.equal(engine.combo, 1);
+
+    // Beat 5 is the army's turn: this tap does nothing and costs nothing.
+    const during = engine.tap(1, t0 + 2.5);
+    assert.equal(during.ignored, true);
+    assert.equal(engine.started, true);
+    assert.equal(engine.combo, 1);
+    assert.equal(engine.failCount, 0);
+
+    // The next measure's input starts at beat 8 and builds the combo.
+    const t1 = t0 + 4.0;
+    engine.tap(1, t1);
+    engine.tap(1, t1 + 0.5);
+    engine.tap(1, t1 + 1.0);
+    engine.tap(0, t1 + 1.5);
+    const next = engine.advance(t1 + 2.0);
+    assert.ok(next.some((e) => e.type === "command"));
+    assert.equal(engine.combo, 2);
+  });
+
+  it("answers a complete sequence on the beat, not after the grace period", () => {
+    const engine = new RhythmEngine({ bpm: 120 });
+    const t0 = 5.0;
+
+    engine.tap(1, t0);
+    engine.tap(1, t0 + 0.5);
+    engine.tap(1, t0 + 1.0);
+    engine.tap(0, t0 + 1.5);
+
+    // Just before beat 4: nothing yet. On beat 4: the command fires straight away.
+    assert.equal(engine.advance(t0 + 1.99).some((e) => e.type === "command"), false);
+    assert.equal(engine.advance(t0 + 2.0).some((e) => e.type === "command"), true);
+  });
+
+  it("waits out the grace period for a late final tap, then completes it", () => {
+    const engine = new RhythmEngine({ bpm: 120 });
+    const t0 = 5.0;
+
+    engine.tap(1, t0);
+    engine.tap(1, t0 + 0.5);
+    engine.tap(1, t0 + 1.0);
+
+    // Beat 4 arrives with the last slot still empty: no verdict yet.
+    assert.equal(engine.advance(t0 + 2.05).some((e) => e.type === "fail" || e.type === "command"), false);
+
+    // The last tap lands 150ms late, still inside the good window.
+    const last = engine.tap(0, t0 + 1.5 + 0.15);
+    assert.equal(last.grade, "good");
+    const evs = engine.advance(t0 + 2.16);
+    assert.ok(evs.some((e) => e.type === "command"), "Expected the late tap to complete the command");
+  });
+
+  it("still fails when the last tap never comes", () => {
+    const engine = new RhythmEngine({ bpm: 120 });
+    const t0 = 5.0;
+
+    engine.tap(1, t0);
+    engine.tap(1, t0 + 0.5);
+    engine.tap(1, t0 + 1.0);
+
+    const evs = engine.advance(t0 + 2.4);
+    const fail = evs.find((e) => e.type === "fail");
+    assert.ok(fail, "Expected an incomplete fail");
     assert.equal(engine.started, false);
-    assert.equal(engine.combo, 0);
+  });
+
+  it("caps the good window at fast tempos so neighbouring beats never overlap", () => {
+    const fast = new RhythmEngine({ bpm: 200 }); // beat = 300ms
+    assert.ok(fast.goodMs <= 300 * 0.45 + 1e-9);
+    assert.ok(fast.perfectMs <= fast.goodMs);
+
+    const normal = new RhythmEngine({ bpm: 120 });
+    assert.equal(normal.goodMs, 190);
+    assert.equal(normal.perfectMs, 85);
   });
 });

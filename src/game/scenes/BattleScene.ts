@@ -22,7 +22,17 @@ interface Fighter {
   flash: number;
   bar: Phaser.GameObjects.Graphics;
   atkCd: number;
+  /** Knockback. Units: a shove offset in px that eases back to formation. Enemies: velocity in px/s. */
+  kb: number;
+  /** Resting sprite scale, so squash and stretch can be applied on top of it. */
+  sx: number;
+  sy: number;
 }
+
+/** How much each enemy resists being shoved. Bigger enemies barely move. */
+const KNOCKBACK_WEIGHT: Record<EnemyKind, number> = { goretusk: 1, brute: 0.55, howl: 0.12 };
+
+type Emitter = Phaser.GameObjects.Particles.ParticleEmitter;
 
 const ACTION: Record<CommandId, { speed: number; walk: boolean; lunge?: boolean; defend?: boolean; jump?: boolean }> = {
   march: { speed: 155, walk: true },
@@ -76,6 +86,12 @@ export class BattleScene extends Phaser.Scene {
   private offDrum?: () => void;
   private offPause?: () => void;
   private tutorial = "";
+  private fxHit!: Emitter;
+  private fxHurt!: Emitter;
+  private dust!: Emitter;
+  private embers!: Emitter;
+  private feverGlow!: Phaser.GameObjects.Rectangle;
+  private wasFever = false;
 
   init() {
     this.ended = false;
@@ -97,6 +113,7 @@ export class BattleScene extends Phaser.Scene {
     this.lastGrade = null;
     this.telegraph = null;
     this.feverReached = false;
+    this.wasFever = false;
     this.tutorial = "";
   }
 
@@ -119,6 +136,7 @@ export class BattleScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, mission.worldLength, this.viewH);
 
     this.buildBackdrop();
+    this.buildFx();
     this.spawnArmy();
     this.drawShrine();
 
@@ -250,6 +268,9 @@ export class BattleScene extends Phaser.Scene {
         flash: 0,
         bar,
         atkCd: 0,
+        kb: 0,
+        sx: sprite.scaleX,
+        sy: sprite.scaleY,
       });
     });
   }
@@ -283,6 +304,9 @@ export class BattleScene extends Phaser.Scene {
           flash: 0,
           bar,
           atkCd: 0.4 + n * 0.15,
+          kb: 0,
+          sx: sprite.scaleX,
+          sy: sprite.scaleY,
         });
         n += 1;
       }
@@ -297,25 +321,134 @@ export class BattleScene extends Phaser.Scene {
       this.nextTick = 1;
     }
     if (j.ignored) return;
-    const label = j.grade === "perfect" ? "PERFECT" : j.grade === "good" ? "GOOD" : "MISS";
-    const color = j.grade === "perfect" ? "#59cd90" : j.grade === "good" ? "#f2b134" : "#e4572e";
+    if (j.grade === "miss") {
+      // Off-beat tap: the engine ignores it, so the sequence carries on. Just tell the player.
+      this.lastGrade = "OFF BEAT";
+      this.floatText(this.armyX + 40, this.groundY - 130, `OFF BEAT  ${j.deltaMs >= 0 ? "+" : ""}${Math.round(j.deltaMs)}ms`, "#c9b8a6");
+      return;
+    }
+    const label = j.grade === "perfect" ? "PERFECT" : "GOOD";
+    const color = j.grade === "perfect" ? "#59cd90" : "#f2b134";
     this.lastGrade = label;
     this.floatText(this.armyX + 40, this.groundY - 130, `${label}  ${j.deltaMs >= 0 ? "+" : ""}${Math.round(j.deltaMs)}ms`, color);
-    if (j.grade === "miss") {
-      this.applyFail("miss");
-      this.trauma = Math.min(1, this.trauma + 0.18);
-    }
   }
 
-  private floatText(x: number, y: number, text: string, color: string) {
+  /** Small procedural textures and emitters. Nothing here needs art files. */
+  private buildFx() {
+    if (!this.textures.exists("fx-spark")) {
+      const g = this.add.graphics();
+      g.setVisible(false);
+      g.fillStyle(0xffffff, 1);
+      g.fillCircle(6, 6, 5);
+      g.generateTexture("fx-spark", 12, 12);
+      g.clear();
+      for (let r = 16; r > 0; r -= 2) {
+        g.fillStyle(0xffffff, 0.06 + (16 - r) * 0.012);
+        g.fillCircle(16, 16, r);
+      }
+      g.generateTexture("fx-puff", 32, 32);
+      g.destroy();
+    }
+
+    const sparks = (tint: number[]) =>
+      this.add
+        .particles(0, 0, "fx-spark", {
+          emitting: false,
+          lifespan: { min: 220, max: 480 },
+          speed: { min: 90, max: 280 },
+          angle: { min: 0, max: 360 },
+          gravityY: 520,
+          scale: { start: 0.9, end: 0 },
+          alpha: { start: 1, end: 0 },
+          tint,
+          blendMode: "ADD",
+        })
+        .setDepth(52);
+    this.fxHit = sparks([0xfff2b0, 0xffc857]);
+    this.fxHurt = sparks([0xff8a6b, 0xe4572e]);
+
+    this.dust = this.add
+      .particles(0, 0, "fx-puff", {
+        emitting: false,
+        lifespan: { min: 380, max: 700 },
+        speedX: { min: -50, max: 20 },
+        speedY: { min: -40, max: -10 },
+        scale: { start: 0.5, end: 1.3 },
+        alpha: { start: 0.38, end: 0 },
+        tint: 0xb9a68e,
+      })
+      .setDepth(9);
+
+    this.embers = this.add
+      .particles(0, 0, "fx-spark", {
+        emitting: false,
+        frequency: 55,
+        lifespan: { min: 700, max: 1200 },
+        speedY: { min: -120, max: -60 },
+        speedX: { min: -18, max: 18 },
+        scale: { start: 0.7, end: 0 },
+        alpha: { start: 0.9, end: 0 },
+        tint: [0xffd36b, 0xff9a3d, 0xff6644],
+        blendMode: "ADD",
+        emitZone: {
+          type: "random",
+          source: new Phaser.Geom.Rectangle(-230, -10, 420, 20),
+        } as unknown as Phaser.Types.GameObjects.Particles.EmitZoneData,
+      })
+      .setDepth(11);
+
+    this.feverGlow = this.add
+      .rectangle(0, 0, this.viewW, this.viewH, 0xff9a3d, 0)
+      .setOrigin(0)
+      .setScrollFactor(0)
+      .setDepth(45);
+  }
+
+  private puff(x: number, y: number, n = 2) {
+    this.dust.emitParticleAt(x, y, n);
+  }
+
+  /** An expanding ring, used for shockwaves and big moments. */
+  private ring(x: number, y: number, color: number) {
+    const c = this.add.circle(x, y, 12, color, 0).setStrokeStyle(2, color, 1).setDepth(51);
+    this.tweens.add({
+      targets: c,
+      scale: 9,
+      alpha: 0,
+      duration: 420,
+      ease: "Cubic.easeOut",
+      onComplete: () => c.destroy(),
+    });
+  }
+
+  private enterFever() {
+    this.embers.start();
+    this.cameras.main.flash(160, 255, 210, 110);
+    this.trauma = Math.min(1, this.trauma + 0.3);
+    this.floatText(this.armyX + 60, this.groundY - 230, "FEVER!", "#ffe08a", 40);
+    this.ring(this.armyX + 20, this.groundY - 40, 0xffd36b);
+    this.fxHit.explode(24, this.armyX + 20, this.groundY - 60);
+  }
+
+  private updateFeverFx(beatPos: number) {
+    const fever = this.engine.fever;
+    if (fever && !this.wasFever) this.enterFever();
+    if (!fever && this.wasFever) this.embers.stop();
+    this.wasFever = fever;
+    if (fever) this.embers.setPosition(this.armyX - 20, this.groundY + 6);
+    const pulse = beatPos >= 0 ? Math.exp(-(beatPos - Math.floor(beatPos)) * 5) : 0;
+    this.feverGlow.setFillStyle(0xff9a3d, this.feverT * (0.06 + pulse * 0.07));
+  }
+
+  private floatText(x: number, y: number, text: string, color: string, size = 18) {
     const t = this.add
       .text(x, y, text, {
         fontFamily: "Nunito, sans-serif",
-        fontSize: "18px",
+        fontSize: `${size}px`,
         fontStyle: "800",
         color,
         stroke: "#110c18",
-        strokeThickness: 4,
+        strokeThickness: Math.max(4, Math.round(size / 5)),
       })
       .setOrigin(0.5)
       .setDepth(60);
@@ -373,6 +506,7 @@ export class BattleScene extends Phaser.Scene {
     this.updateUnits(dt, beatPos, now);
     this.updateEnemies(dt, beatPos);
     this.updateCamera(dt, beatPos);
+    this.updateFeverFx(beatPos);
     this.updateParallax();
     this.checkEnd();
 
@@ -416,13 +550,14 @@ export class BattleScene extends Phaser.Scene {
     const label = fever ? `${id.toUpperCase()}  FEVER` : id.toUpperCase();
     this.floatText(this.armyX + 90, this.groundY - 180, label, fever ? "#ffe08a" : "#f4ead8");
     this.trauma = Math.min(1, this.trauma + (fever ? 0.28 : 0.12) + perfects * 0.03);
+    if (perfects >= INPUT_BEATS) this.ring(this.armyX + 20, this.groundY - 40, 0x59cd90);
     if (this.mission.tutorial) {
       if (id === "march") this.tutorial = "Keep marching. The sun-disk shrine is ahead.";
       else this.tutorial = "MARCH is TAK TAK TAK BOOM. Drive them to the shrine.";
     }
   }
 
-  private applyFail(reason: "incomplete" | "unknown" | "miss") {
+  private applyFail(reason: "incomplete" | "unknown") {
     this.action = null;
     this.defending = false;
     this.jumping = false;
@@ -431,7 +566,7 @@ export class BattleScene extends Phaser.Scene {
     this.floatText(
       this.armyX + 80,
       this.groundY - 170,
-      reason === "unknown" ? "UNKNOWN BEAT" : reason === "miss" ? "OFF BEAT" : "MISSED BEAT",
+      reason === "unknown" ? "UNKNOWN BEAT" : "MISSED BEAT",
       "#ff8a6b",
     );
     this.trauma = Math.min(1, this.trauma + 0.22);
@@ -441,6 +576,13 @@ export class BattleScene extends Phaser.Scene {
   private onBeat(slot: number, phase: "input" | "response", beat: number) {
     const pulse = this.sun;
     this.tweens.add({ targets: pulse, scale: 1.08, yoyo: true, duration: 90 });
+    if (this.action && ACTION[this.action.id].walk) {
+      // Footfalls: a little dust kicked up at every unit's heels on each beat of a march.
+      const n = this.action.id === "charge" ? 3 : 2;
+      for (const u of this.units) {
+        if (u.alive) this.puff(u.sprite.x - 20, this.groundY + u.formY + 4, n);
+      }
+    }
     if (phase === "response" && slot === INPUT_BEATS) {
       this.maybeBossTelegraph(beat);
     }
@@ -472,6 +614,7 @@ export class BattleScene extends Phaser.Scene {
   private resolveAttack(charged: boolean, defend = false) {
     const defendPenalty = defend ? 0.45 : 1;
     const mul = (this.engine.fever ? 1.45 : 1) * (charged ? 1.7 : 1) * defendPenalty;
+    const power = (charged ? 1.7 : 1) * (this.engine.fever ? 1.25 : 1);
     for (const u of this.units) {
       if (!u.alive || !u.cls) continue;
       const stats = CLASSES[u.cls];
@@ -482,9 +625,9 @@ export class BattleScene extends Phaser.Scene {
       const dmg = Math.max(1, Math.round(stats.damage * mul));
       if (stats.role === "ranged") {
         const isSpear = u.cls === "pike";
-        this.fireRangedProjectile(u.sprite.x, u.sprite.y - 40, target, dmg, isSpear);
+        this.fireRangedProjectile(u.sprite.x, u.sprite.y - 40, target, dmg, isSpear, 0.7 * power);
       } else {
-        this.hitFighter(target, dmg);
+        this.hitFighter(target, dmg, 1.2 * power);
         this.spawnImpact(target.sprite.x - 20, target.sprite.y - 36);
       }
     }
@@ -496,7 +639,8 @@ export class BattleScene extends Phaser.Scene {
     startY: number,
     target: Fighter,
     dmg: number,
-    isSpear = false
+    isSpear = false,
+    power = 1
   ) {
     const startPos = { x: startX + 10, y: startY };
     const projectile = this.add
@@ -546,7 +690,7 @@ export class BattleScene extends Phaser.Scene {
       onComplete: () => {
         projectile.destroy();
         if (target.alive) {
-          this.hitFighter(target, dmg);
+          this.hitFighter(target, dmg, power);
           this.spawnImpact(target.sprite.x - 10, target.sprite.y - 36);
         }
       },
@@ -573,12 +717,23 @@ export class BattleScene extends Phaser.Scene {
     return best;
   }
 
-  private hitFighter(f: Fighter, dmg: number) {
+  private hitFighter(f: Fighter, dmg: number, power = 1) {
     if (!f.alive) return;
     f.hp = Math.max(0, f.hp - dmg);
     f.flash = 0.12;
-    f.sprite.x += f.kind ? 18 : -10;
-    this.floatText(f.sprite.x, f.sprite.y - 70, String(dmg), "#ffe08a");
+
+    if (f.kind) {
+      // Enemies are shoved back as a velocity that eases out, and stagger while it lasts.
+      f.kb = Math.min(520, f.kb + 260 * power * KNOCKBACK_WEIGHT[f.kind]);
+    } else {
+      // Army units are nudged back out of formation and spring home. Shields and DEFEND resist.
+      const resist = (f.cls === "aegis" ? 0.6 : 1) * (this.defending ? 0.4 : 1);
+      f.kb = Math.max(-46, f.kb - 26 * power * resist);
+    }
+
+    const burst = Math.round(5 + Math.min(10, dmg * 0.6));
+    (f.kind ? this.fxHit : this.fxHurt).explode(burst, f.sprite.x, f.sprite.y - 38);
+    this.floatText(f.sprite.x, f.sprite.y - 70, String(dmg), "#ffe08a", Math.round(16 + Math.min(14, dmg * 0.5)));
     this.trauma = Math.min(1, this.trauma + 0.2);
     this.hitstop = Math.max(this.hitstop, 0.045);
     if (f.hp <= 0) this.killFighter(f);
@@ -587,17 +742,43 @@ export class BattleScene extends Phaser.Scene {
   private killFighter(f: Fighter) {
     f.alive = false;
     f.hp = 0;
-    this.hitstop = Math.max(this.hitstop, 0.08);
+    const boss = f.kind === "howl";
+    this.hitstop = Math.max(this.hitstop, boss ? 0.16 : 0.08);
+
+    const sprite = f.sprite;
+    const hx = sprite.x;
+    const hy = sprite.y - 36;
+    (f.kind ? this.fxHit : this.fxHurt).explode(boss ? 36 : 16, hx, hy);
+    this.puff(hx, sprite.y, boss ? 9 : 4);
+    this.ring(hx, hy, f.kind ? 0xffe08a : 0xff8a6b);
+    if (boss) {
+      this.trauma = 1;
+      this.cameras.main.flash(120, 255, 240, 200);
+    }
+
+    // Pop up and back, then fall away and fade.
+    const dir = f.kind ? 1 : -1;
     this.tweens.add({
-      targets: f.sprite,
-      alpha: 0,
-      y: f.sprite.y + 24,
-      angle: f.kind ? -40 : 40,
-      duration: 420,
-      ease: "Cubic.easeIn",
+      targets: sprite,
+      y: sprite.y - 34,
+      x: sprite.x + dir * 26,
+      angle: dir * 18,
+      duration: 150,
+      ease: "Quad.easeOut",
       onComplete: () => {
-        f.sprite.setVisible(false);
-        f.bar.clear();
+        this.tweens.add({
+          targets: sprite,
+          y: sprite.y + 52,
+          x: sprite.x + dir * 20,
+          angle: dir * 72,
+          alpha: 0,
+          duration: 380,
+          ease: "Quad.easeIn",
+          onComplete: () => {
+            sprite.setVisible(false);
+            f.bar.clear();
+          },
+        });
       },
     });
     audio.whoosh();
@@ -632,17 +813,19 @@ export class BattleScene extends Phaser.Scene {
     boss.sprite.clearTint();
     const stats = ENEMY_STATS.howl;
     this.spawnImpact(boss.sprite.x - 40, this.groundY - 20);
+    this.ring(boss.sprite.x - 40, this.groundY - 10, 0xff6644);
+    this.puff(boss.sprite.x - 40, this.groundY, 10);
     this.trauma = Math.min(1, this.trauma + 0.55);
     this.cameras.main.flash(80, 40, 10, 8);
     if (this.jumping) {
       this.floatText(this.armyX + 40, this.groundY - 150, "DODGED", "#59cd90");
     } else {
-      this.enemyStrike(boss, this.defending ? Math.round(stats.damage * 0.4) : stats.damage);
+      this.enemyStrike(boss, this.defending ? Math.round(stats.damage * 0.4) : stats.damage, 2.4);
     }
     this.telegraph = null;
   }
 
-  private enemyStrike(e: Fighter, damage: number) {
+  private enemyStrike(e: Fighter, damage: number, power = 1) {
     e.lunge = 1;
     audio.hit();
     const living = this.units.filter((u) => u.alive);
@@ -651,7 +834,7 @@ export class BattleScene extends Phaser.Scene {
     const target = living.find((u) => u.cls === "aegis") ?? living[0]!;
     let dmg = damage;
     if (this.defending) dmg = Math.round(dmg * 0.38);
-    this.hitFighter(target, dmg);
+    this.hitFighter(target, dmg, power);
     this.spawnImpact(target.sprite.x + 16, target.sprite.y - 30);
   }
 
@@ -666,14 +849,23 @@ export class BattleScene extends Phaser.Scene {
       if (!u.alive) continue;
       u.lunge = Math.max(0, u.lunge - dt * 3);
       u.flash = Math.max(0, u.flash - dt);
-      const x = this.armyX + u.formX + thrust + u.lunge * 16;
+      u.kb *= Math.exp(-dt * 9);
+      if (Math.abs(u.kb) < 0.3) u.kb = 0;
+      const x = this.armyX + u.formX + thrust + u.lunge * 16 + u.kb;
       const y = this.groundY + u.formY - idleBeat * 6 - hop;
       u.sprite.x = x;
       u.sprite.y = y;
+      this.squash(u, idleBeat * 0.08, idleBeat * 0.045);
       if (u.flash > 0) u.sprite.setTintFill(0xffffff);
       else u.sprite.clearTint();
       this.drawBar(u, x, y - 72, 36);
     }
+  }
+
+  /** Squash and stretch about the feet: taller on the beat or when airborne, flatter when hit. */
+  private squash(f: Fighter, stretch: number, narrow: number) {
+    const hit = Math.min(1, f.flash / 0.12);
+    f.sprite.setScale(f.sx * (1 - narrow + hit * 0.12), f.sy * (1 + stretch - hit * 0.1));
   }
 
   private updateEnemies(dt: number, beatPos: number) {
@@ -684,16 +876,24 @@ export class BattleScene extends Phaser.Scene {
       if (!e.alive || !e.kind) continue;
       const stats = ENEMY_STATS[e.kind];
       const dist = e.sprite.x - front;
-      if (dist > stats.range) {
-        e.sprite.x -= stats.speed * (this.engine.fever ? 0.9 : 1) * dt;
-      } else if (dist < -36) {
-        e.sprite.x += stats.speed * dt;
+      e.kb *= Math.exp(-dt * 6.5);
+      if (e.kb < 4) e.kb = 0;
+      const staggered = e.kb > 40;
+      if (!staggered) {
+        if (dist > stats.range) {
+          e.sprite.x -= stats.speed * (this.engine.fever ? 0.9 : 1) * dt;
+        } else if (dist < -36) {
+          e.sprite.x += stats.speed * dt;
+        }
       }
+      e.sprite.x += e.kb * dt;
       e.lunge = Math.max(0, e.lunge - dt * 3);
       e.flash = Math.max(0, e.flash - dt);
       e.sprite.x -= e.lunge * 40 * dt;
       e.sprite.y = this.groundY + e.formY - idleBeat * 4;
+      this.squash(e, idleBeat * 0.05, idleBeat * 0.03);
       if (e.flash > 0) e.sprite.setTintFill(0xffffff);
+      else if (e.kind === "howl" && this.telegraph) e.sprite.setTint(0xff6644);
       else e.sprite.clearTint();
       const bw = e.kind === "howl" ? 86 : 40;
       this.drawBar(e, e.sprite.x, e.sprite.y - (e.kind === "howl" ? 110 : 74), bw);
@@ -753,6 +953,7 @@ export class BattleScene extends Phaser.Scene {
     this.sun.setRadius(h * 0.09);
     this.ground.y = this.groundY + 8;
     this.ground.setSize(Math.max(w, this.mission.worldLength), 240);
+    this.feverGlow.setSize(w, h);
     this.cameras.main.setBounds(0, 0, this.mission.worldLength, h);
     if (this.shrine) this.shrine.y = this.groundY;
   }

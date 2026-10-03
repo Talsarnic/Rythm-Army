@@ -1,4 +1,11 @@
-import { COMMANDS, FEVER_COMBO, INPUT_BEATS, MEASURE_BEATS } from "./data/commands.ts";
+import {
+  COMMANDS,
+  FEVER_COMBO,
+  INPUT_BEATS,
+  MAX_GOOD_BEAT_SHARE,
+  MEASURE_BEATS,
+  TIMING,
+} from "./data/commands.ts";
 import type { CommandDef, DrumId, Grade, Judgement, RhythmEvent } from "./types.ts";
 
 export class RhythmEngine {
@@ -30,10 +37,12 @@ export class RhythmEngine {
     this.startTime = opts.startTime ?? null;
     this.started = opts.startTime != null;
     this.inputOffsetMs = opts.inputOffsetMs ?? 0;
-    this.perfectMs = opts.perfectMs ?? 60;
-    this.goodMs = opts.goodMs ?? 130;
     this.commands = opts.commands ?? COMMANDS;
     this.beatLength = 60 / this.bpm;
+    // At fast tempos the window is capped so it never reaches into the neighbouring beat.
+    const cap = this.beatLength * 1000 * MAX_GOOD_BEAT_SHARE;
+    this.goodMs = Math.min(opts.goodMs ?? TIMING.goodMs, cap);
+    this.perfectMs = Math.min(opts.perfectMs ?? TIMING.perfectMs, this.goodMs);
   }
 
   get fever() {
@@ -96,18 +105,13 @@ export class RhythmEngine {
     const slot = j.beat % MEASURE_BEATS;
 
     if (slot >= INPUT_BEATS) {
-      // Tap made during response phase - invalid timing, triggers reset
-      this.combo = 0;
-      this.failCount += 1;
-      this.reset();
-      return { ...j, measure, slot, grade: "miss", ignored: false };
+      // The army is answering. Drums here are ignored rather than punished, as in Patapon.
+      return { ...j, measure, slot, ignored: true };
     }
 
     if (j.grade === "miss") {
-      // Missed timing on a beat - triggers reset
-      this.combo = 0;
-      this.failCount += 1;
-      this.reset();
+      // Too far from the beat to count. The tap is reported as a miss but fills nothing and
+      // breaks nothing, so a stray tap can be followed by a correct one on the same beat.
       return { ...j, measure, slot, ignored: false };
     }
 
@@ -138,8 +142,16 @@ export class RhythmEngine {
       });
     }
     const grace = this.goodMs / 1000 + Math.max(0, this.inputOffsetMs) / 1000;
-    while (this.started && this.beatTime(this.nextMeasure * MEASURE_BEATS + INPUT_BEATS) + grace <= time) {
-      const m = this.nextMeasure++;
+    while (this.started) {
+      const m = this.nextMeasure;
+      const decideAt = this.beatTime(m * MEASURE_BEATS + INPUT_BEATS);
+      if (time < decideAt) break;
+      // A full row is answered on the beat. A short row waits out the late-tap grace first,
+      // so a wide timing window doesn't also delay every command.
+      const row = this.slots.get(m);
+      const full = row !== undefined && row.every((s) => s !== null);
+      if (!full && time < decideAt + grace) break;
+      this.nextMeasure++;
       const ev = this.evaluate(m);
       if (ev) events.push(ev);
     }
