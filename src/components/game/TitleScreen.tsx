@@ -40,7 +40,7 @@ export function TitleScreen({ onPlay }: { onPlay: () => void }) {
           </div>
         </div>
         <p className="mt-6 font-mono text-xs text-faint">
-          Offset {save.offsetMs >= 0 ? "+" : ""}
+          v0.00004 · Offset {save.offsetMs >= 0 ? "+" : ""}
           {save.offsetMs}ms · Best combo {save.bestCombo}
         </p>
       </div>

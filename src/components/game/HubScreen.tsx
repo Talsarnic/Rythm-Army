@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CLASSES } from "@/game/data/units";
 import { isUnlocked, MISSIONS } from "@/game/data/missions";
 import { cn } from "@/lib/utils";
 import { useGame } from "@/store/game-store";
-import { ChevronLeft, Settings } from "lucide-react";
+import { ChevronLeft, Settings, BookOpen } from "lucide-react";
+import { CommandsModal } from "./CommandsModal";
 
 const PORTRAITS: Record<string, string> = {
-  pike: "/assets/sprites/pikekin-portrait.png",
+  pike: "/assets/sprites/spearkin-portrait.png",
   bow: "/assets/sprites/bowkin-portrait.png",
   aegis: "/assets/sprites/aegiskin-portrait.png",
   banner: "/assets/sprites/bannerkin-portrait.png",
@@ -15,6 +17,7 @@ const PORTRAITS: Record<string, string> = {
 export function HubScreen({ onPlay }: { onPlay: (id: string) => void }) {
   const go = useGame((s) => s.go);
   const save = useGame((s) => s.save);
+  const [showCommands, setShowCommands] = useState(false);
 
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -24,9 +27,21 @@ export function HubScreen({ onPlay }: { onPlay: (id: string) => void }) {
           Title
         </Button>
         <h1 className="font-display text-2xl tracking-wide">Campaign</h1>
-        <Button variant="ghost" size="sm" onClick={() => go("settings")} aria-label="Settings">
-          <Settings className="size-5" />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowCommands(true)}
+            aria-label="Commands"
+            className="gap-1.5"
+          >
+            <BookOpen className="size-5" />
+            <span className="hidden sm:inline text-xs font-semibold">Commands</span>
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => go("settings")} aria-label="Settings">
+            <Settings className="size-5" />
+          </Button>
+        </div>
       </header>
 
       <section className="px-4 pb-4">
@@ -75,6 +90,8 @@ export function HubScreen({ onPlay }: { onPlay: (id: string) => void }) {
           Calibrate timing
         </Button>
       </section>
+
+      <CommandsModal open={showCommands} onClose={() => setShowCommands(false)} />
     </div>
   );
 }

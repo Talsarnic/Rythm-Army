@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 
 const SHEETS = [
-  "pikekin-idle",
+  "spearkin-idle",
   "bowkin-idle",
   "aegiskin-idle",
   "bannerkin-idle",

@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { PhaserGame } from "@/game/PhaserGame";
 import { audio } from "@/game/audio";
 import { bus } from "@/game/events";
+import { getNextPlayableMissionId } from "@/game/data/missions";
 import { DRUMS, type BattleResult, type DrumId, type HudState } from "@/game/types";
 import { useGame } from "@/store/game-store";
 import { BattleHud } from "./BattleHud";
 import { CalibrateScreen } from "./CalibrateScreen";
+import { CommandsModal } from "./CommandsModal";
 import { DrumPads } from "./DrumPads";
 import { HowToScreen } from "./HowToScreen";
 import { HubScreen } from "./HubScreen";
@@ -28,6 +30,7 @@ export function GameShell() {
   const finishBattle = useGame((s) => s.finishBattle);
   const pressed = useRef([0, 0, 0, 0]);
   const [, bump] = useState(0);
+  const [showCommands, setShowCommands] = useState(false);
   const padHeld = useRef([false, false, false, false]);
 
   useEffect(() => {
@@ -75,7 +78,8 @@ export function GameShell() {
         return;
       }
       if (screen === "title" && e.code === "Enter") {
-        void unlockAndPlay("training");
+        const nextId = getNextPlayableMissionId(useGame.getState().save.completed);
+        void unlockAndPlay(nextId);
         return;
       }
       if (screen !== "battle") return;
@@ -108,7 +112,15 @@ export function GameShell() {
     return () => cancelAnimationFrame(raf);
   }, [screen, paused]);
 
-  if (screen === "title") return <TitleScreen onPlay={() => void unlockAndPlay("training")} />;
+  if (screen === "title")
+    return (
+      <TitleScreen
+        onPlay={() => {
+          const nextId = getNextPlayableMissionId(save.completed);
+          void unlockAndPlay(nextId);
+        }}
+      />
+    );
   if (screen === "hub") return <HubScreen onPlay={(id) => void unlockAndPlay(id)} />;
   if (screen === "howto") return <HowToScreen />;
   if (screen === "calibrate") return <CalibrateScreen />;
@@ -142,12 +154,16 @@ export function GameShell() {
             >
               Resume
             </Button>
+            <Button variant="secondary" size="lg" onClick={() => setShowCommands(true)}>
+              View Commands
+            </Button>
             <Button variant="secondary" size="lg" onClick={() => go("hub")}>
               Abandon march
             </Button>
           </div>
         </div>
       )}
+      <CommandsModal open={showCommands} onClose={() => setShowCommands(false)} />
     </div>
   );
 }

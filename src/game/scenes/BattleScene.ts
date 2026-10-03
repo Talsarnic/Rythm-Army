@@ -27,7 +27,7 @@ interface Fighter {
 const ACTION: Record<CommandId, { speed: number; walk: boolean; lunge?: boolean; defend?: boolean; jump?: boolean }> = {
   march: { speed: 155, walk: true },
   attack: { speed: 12, lunge: true, walk: false },
-  defend: { speed: 0, defend: true, walk: false },
+  defend: { speed: 0, defend: true, lunge: true, walk: false },
   retreat: { speed: -125, walk: true },
   charge: { speed: 310, walk: true, lunge: true },
   jump: { speed: 20, jump: true, walk: false },
@@ -122,10 +122,8 @@ export class BattleScene extends Phaser.Scene {
     this.spawnArmy();
     this.drawShrine();
 
-    const start = audio.now() + 1.35;
     this.engine = new RhythmEngine({
       bpm: mission.bpm,
-      startTime: start,
       inputOffsetMs: save.offsetMs,
     });
 
@@ -222,9 +220,9 @@ export class BattleScene extends Phaser.Scene {
     const used: Record<string, number> = { banner: 0, aegis: 0, pike: 0, bow: 0 };
     const slots: Record<UnitClass, number[]> = {
       banner: [-200],
-      aegis: [8, 44],
-      pike: [88, 128, 168],
       bow: [-92, -52],
+      pike: [8, 48, 88],
+      aegis: [128, 168],
     };
     STARTER_ARMY.forEach((cls, i) => {
       const stats = CLASSES[cls];
@@ -293,13 +291,20 @@ export class BattleScene extends Phaser.Scene {
 
   private onDrum(drum: DrumId, time: number) {
     if (this.ended || this.paused) return;
+    const wasStarted = this.engine.started;
     const j = this.engine.tap(drum, time);
+    if (!wasStarted && this.engine.started) {
+      this.nextTick = 1;
+    }
     if (j.ignored) return;
     const label = j.grade === "perfect" ? "PERFECT" : j.grade === "good" ? "GOOD" : "MISS";
     const color = j.grade === "perfect" ? "#59cd90" : j.grade === "good" ? "#f2b134" : "#e4572e";
     this.lastGrade = label;
     this.floatText(this.armyX + 40, this.groundY - 130, `${label}  ${j.deltaMs >= 0 ? "+" : ""}${Math.round(j.deltaMs)}ms`, color);
-    if (j.grade === "miss") this.trauma = Math.min(1, this.trauma + 0.18);
+    if (j.grade === "miss") {
+      this.applyFail("miss");
+      this.trauma = Math.min(1, this.trauma + 0.18);
+    }
   }
 
   private floatText(x: number, y: number, text: string, color: string) {
@@ -380,6 +385,7 @@ export class BattleScene extends Phaser.Scene {
 
   private scheduleAudio(now: number) {
     const e = this.engine;
+    if (!e.started || e.startTime === null) return;
     while (e.beatTime(this.nextTick) < now + 0.22) {
       const slot = this.nextTick % MEASURE_BEATS;
       const when = e.beatTime(this.nextTick);
@@ -403,7 +409,9 @@ export class BattleScene extends Phaser.Scene {
     this.jumping = id === "jump";
     if (id === "charge") this.charged = true;
     if (fever) this.feverReached = true;
-    if (id === "attack" || id === "charge") this.resolveAttack(id === "charge" || this.charged);
+    if (id === "attack" || id === "charge" || id === "defend") {
+      this.resolveAttack(id === "charge" || this.charged, id === "defend");
+    }
     if (id === "attack") this.charged = false;
     const label = fever ? `${id.toUpperCase()}  FEVER` : id.toUpperCase();
     this.floatText(this.armyX + 90, this.groundY - 180, label, fever ? "#ffe08a" : "#f4ead8");
@@ -414,12 +422,18 @@ export class BattleScene extends Phaser.Scene {
     }
   }
 
-  private applyFail(reason: "incomplete" | "unknown") {
+  private applyFail(reason: "incomplete" | "unknown" | "miss") {
     this.action = null;
     this.defending = false;
     this.jumping = false;
     this.charged = false;
-    this.floatText(this.armyX + 80, this.groundY - 170, reason === "unknown" ? "UNKNOWN BEAT" : "MISSED BEAT", "#ff8a6b");
+    this.nextTick = 0;
+    this.floatText(
+      this.armyX + 80,
+      this.groundY - 170,
+      reason === "unknown" ? "UNKNOWN BEAT" : reason === "miss" ? "OFF BEAT" : "MISSED BEAT",
+      "#ff8a6b",
+    );
     this.trauma = Math.min(1, this.trauma + 0.22);
     if (this.mission.tutorial) this.tutorial = "Four drums in a row. TAK TAK TAK BOOM to MARCH.";
   }
@@ -455,18 +469,21 @@ export class BattleScene extends Phaser.Scene {
     return Math.max(...living.map((u) => u.sprite.x));
   }
 
-  private resolveAttack(charged: boolean) {
-    const mul = (this.engine.fever ? 1.45 : 1) * (charged ? 1.7 : 1);
+  private resolveAttack(charged: boolean, defend = false) {
+    const defendPenalty = defend ? 0.45 : 1;
+    const mul = (this.engine.fever ? 1.45 : 1) * (charged ? 1.7 : 1) * defendPenalty;
     for (const u of this.units) {
       if (!u.alive || !u.cls) continue;
       const stats = CLASSES[u.cls];
       if (stats.damage <= 0) continue;
       const target = this.nearestEnemy(u.sprite.x, stats.range + (charged ? 40 : 0));
       if (!target) continue;
-      u.lunge = 1;
-      const dmg = Math.round(stats.damage * mul);
-      if (stats.role === "ranged") this.fireArrow(u.sprite.x, u.sprite.y - 40, target, dmg);
-      else {
+      u.lunge = defend ? 0.6 : 1;
+      const dmg = Math.max(1, Math.round(stats.damage * mul));
+      if (stats.role === "ranged") {
+        const isSpear = u.cls === "pike";
+        this.fireRangedProjectile(u.sprite.x, u.sprite.y - 40, target, dmg, isSpear);
+      } else {
         this.hitFighter(target, dmg);
         this.spawnImpact(target.sprite.x - 20, target.sprite.y - 36);
       }
@@ -474,17 +491,60 @@ export class BattleScene extends Phaser.Scene {
     audio.hit();
   }
 
-  private fireArrow(x: number, y: number, target: Fighter, dmg: number) {
-    const arrow = this.add.sprite(x + 10, y, "arrow", 0).setDepth(30).setDisplaySize(42, 42);
-    arrow.play("arrow-fly");
+  private fireRangedProjectile(
+    startX: number,
+    startY: number,
+    target: Fighter,
+    dmg: number,
+    isSpear = false
+  ) {
+    const startPos = { x: startX + 10, y: startY };
+    const projectile = this.add
+      .sprite(startPos.x, startPos.y, "arrow", 0)
+      .setDepth(35)
+      .setDisplaySize(isSpear ? 52 : 42, isSpear ? 52 : 42);
+
+    if (isSpear) {
+      projectile.setTint(0xffd59e);
+    }
+    projectile.play("arrow-fly");
+
+    const targetX = target.sprite.x - 16;
+    const targetY = target.sprite.y - 42;
+    const dist = Math.max(60, targetX - startPos.x);
+
+    // Dynamic arc height based on distance so it arcs visibly over troops
+    const arcHeight = Math.min(140, Math.max(70, dist * 0.38));
+    const duration = Math.min(480, Math.max(260, dist * 0.95));
+
+    const flight = { t: 0 };
+    let prevX = startPos.x;
+    let prevY = startPos.y;
+
     this.tweens.add({
-      targets: arrow,
-      x: target.sprite.x - 16,
-      y: target.sprite.y - 42,
-      duration: 220,
-      ease: "Cubic.easeIn",
+      targets: flight,
+      t: 1,
+      duration,
+      ease: "Linear",
+      onUpdate: () => {
+        const t = flight.t;
+        // Parabolic arc: 4 * arcHeight * t * (1 - t)
+        const currX = startPos.x + (targetX - startPos.x) * t;
+        const baseY = startPos.y + (targetY - startPos.y) * t;
+        const currY = baseY - 4 * arcHeight * t * (1 - t);
+
+        const dx = currX - prevX;
+        const dy = currY - prevY;
+        if (Math.abs(dx) > 0.001 || Math.abs(dy) > 0.001) {
+          projectile.setRotation(Math.atan2(dy, dx));
+        }
+
+        projectile.setPosition(currX, currY);
+        prevX = currX;
+        prevY = currY;
+      },
       onComplete: () => {
-        arrow.destroy();
+        projectile.destroy();
         if (target.alive) {
           this.hitFighter(target, dmg);
           this.spawnImpact(target.sprite.x - 10, target.sprite.y - 36);

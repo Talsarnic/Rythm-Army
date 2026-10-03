@@ -63,3 +63,18 @@ export function isUnlocked(id: string, completed: string[]): boolean {
   if (!m.unlockAfter) return true;
   return completed.includes(m.unlockAfter);
 }
+
+export function getNextPlayableMissionId(completed: string[]): string {
+  if (MISSIONS.length === 0) return "training";
+  const uncleared = MISSIONS.find((m) => !completed.includes(m.id) && isUnlocked(m.id, completed));
+  if (uncleared) return uncleared.id;
+
+  // If all are cleared, return the furthest completed mission in order of the campaign
+  for (let i = MISSIONS.length - 1; i >= 0; i--) {
+    if (completed.includes(MISSIONS[i]!.id)) {
+      return MISSIONS[i]!.id;
+    }
+  }
+
+  return MISSIONS[0]!.id;
+}

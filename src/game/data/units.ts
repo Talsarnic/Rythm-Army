@@ -13,8 +13,8 @@ export interface ClassStats {
 export const CLASSES: Record<UnitClass, ClassStats> = {
   banner: { id: "banner", name: "Bannerkin", sprite: "bannerkin-idle", hp: 48, damage: 0, range: 0, role: "flag" },
   aegis: { id: "aegis", name: "Aegiskin", sprite: "aegiskin-idle", hp: 78, damage: 7, range: 70, role: "tank" },
-  pike: { id: "pike", name: "Pikekin", sprite: "pikekin-idle", hp: 44, damage: 14, range: 92, role: "melee" },
-  bow: { id: "bow", name: "Bowkin", sprite: "bowkin-idle", hp: 32, damage: 9, range: 260, role: "ranged" },
+  pike: { id: "pike", name: "Spearkin", sprite: "spearkin-idle", hp: 44, damage: 14, range: 260, role: "ranged" },
+  bow: { id: "bow", name: "Bowkin", sprite: "bowkin-idle", hp: 32, damage: 9, range: 420, role: "ranged" },
 };
 
 export const ENEMY_STATS: Record<EnemyKind, { name: string; sprite: string; hp: number; damage: number; range: number; speed: number; scale: number }> = {
@@ -25,11 +25,11 @@ export const ENEMY_STATS: Record<EnemyKind, { name: string; sprite: string; hp: 
 
 export const STARTER_ARMY: UnitClass[] = [
   "banner",
-  "aegis",
-  "aegis",
-  "pike",
-  "pike",
-  "pike",
   "bow",
   "bow",
+  "pike",
+  "pike",
+  "pike",
+  "aegis",
+  "aegis",
 ];
