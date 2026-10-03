@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Rhythm Army",
+      "hasCanvas": false,
+      "bodyTextLen": 170,
+      "bodyTextHash": "11f68795d47a2994ff34d2fd5dced756fab17888da8ce7aff21d8cae552d2482",
+      "bodyTextPrefix": "DRUM WAR RHYTHM ARMY Drum four beats. Your army answers on the n",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Rhythm Army",
+      "hasCanvas": false,
+      "bodyTextLen": 170,
+      "bodyTextHash": "11f68795d47a2994ff34d2fd5dced756fab17888da8ce7aff21d8cae552d2482",
+      "bodyTextPrefix": "DRUM WAR RHYTHM ARMY Drum four beats. Your army answers on the n",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
