@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { SPEARKIN_TEXTURE } from "../battle/spearkin-loadout";
+import { getUnitLoadoutVariants, UNIT_ATLASES } from "../battle/unit-loadout";
 
 const PLAYER_SHEETS = [
   ["spearkin-idle", "spearkin-idle.svg"],
@@ -66,6 +67,9 @@ export class PreloadScene extends Phaser.Scene {
       this.load.image(key, `/assets/sprites/${file}`);
     }
     this.load.image(SPEARKIN_TEXTURE, "/assets/sprites/spearkin-loadouts-moonlighter.png");
+    for (const config of Object.values(UNIT_ATLASES)) {
+      this.load.image(config.texture, `/assets/sprites/${config.texture}.png`);
+    }
     this.load.spritesheet("arrow", "/assets/sprites/arrow.png", { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet("impact", "/assets/sprites/impact.png", { frameWidth: 128, frameHeight: 128 });
     const EQUIPMENT_ART = [
@@ -395,8 +399,8 @@ export class PreloadScene extends Phaser.Scene {
     // Convert each 512x128 SVG sheet into four explicit 128x128 Phaser frames.
     for (const [key] of PLAYER_SHEETS) {
       const texture = this.textures.get(key);
-      if (!texture || texture.has(0)) continue;
-      texture.firstFrame = 0;
+      if (!texture || texture.has("0") || texture.has(0 as unknown as string)) continue;
+      texture.firstFrame = "0";
       for (let frame = 0; frame < 4; frame++) {
         texture.add(frame, 0, frame * 128, 0, 128, 128);
       }
@@ -404,8 +408,8 @@ export class PreloadScene extends Phaser.Scene {
 
     // The atlas is 16 loadouts x 4 animation frames, using 96px frames.
     const spearkinTexture = this.textures.get(SPEARKIN_TEXTURE);
-    if (spearkinTexture && !spearkinTexture.has(0)) {
-      spearkinTexture.firstFrame = 0;
+    if (spearkinTexture && !spearkinTexture.has("0") && !spearkinTexture.has(0 as unknown as string)) {
+      spearkinTexture.firstFrame = "0";
       for (let frame = 0; frame < 64; frame++) {
         const column = frame % 16;
         const row = Math.floor(frame / 16);
@@ -416,8 +420,20 @@ export class PreloadScene extends Phaser.Scene {
       }
     }
 
+    for (const config of Object.values(UNIT_ATLASES)) {
+      const texture = this.textures.get(config.texture);
+      const frameCount = config.atlasRows * 16;
+      if (!texture || texture.has("0") || texture.has(0 as unknown as string)) continue;
+      texture.firstFrame = "0";
+      for (let frame = 0; frame < frameCount; frame += 1) {
+        const column = frame % 16;
+        const row = Math.floor(frame / 16);
+        texture.add(`s${frame}`, 0, column * 96, row * 96, 96, 96);
+      }
+    }
+
     // Keep the hand-authored pixel art crisp at every gameplay scale.
-    for (const key of [...SHEETS, SPEARKIN_TEXTURE]) {
+    for (const key of [...SHEETS, SPEARKIN_TEXTURE, ...Object.values(UNIT_ATLASES).map((config) => config.texture)]) {
       this.textures.get(key)?.setFilter(Phaser.Textures.FilterMode.NEAREST);
     }
     const mk = (key: string, anim: string, rate: number, repeat: number) => {
@@ -448,6 +464,20 @@ export class PreloadScene extends Phaser.Scene {
           repeat: -1,
         });
       }
+    }
+
+    for (const variant of getUnitLoadoutVariants()) {
+      const textureKey = UNIT_ATLASES[variant.cls].texture;
+      if (this.anims.exists(variant.animationKey)) continue;
+      this.anims.create({
+        key: variant.animationKey,
+        frames: [0, 1, 2, 3].map((offset) => ({
+          key: textureKey,
+          frame: `s${variant.firstFrame + offset}`,
+        })),
+        frameRate: 7,
+        repeat: -1,
+      });
     }
 
     // Register animations for new classes & enemy types

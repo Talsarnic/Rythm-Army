@@ -1,13 +1,9 @@
 import type * as Phaser from "phaser";
 import type { UnitMember } from "../types";
 import { ITEMS } from "../data/items.ts";
-import { getSpearkinAnimationKey, getSpearkinAtlasFrame, SPEARKIN_TEXTURE } from "./spearkin-loadout";
+import { getUnitAtlasTexture, getUnitLoadoutAnimationKey, getUnitLoadoutFirstFrame } from "./unit-loadout";
 
-/**
- * Equipment-aware pixel-art composition.
- * Finished item textures are preferred; procedural geometry remains only as a
- * fallback for equipment that has not received final art yet.
- */
+/** Keeps each unit's complete equipment atlas and idle animation on its battle sprite. */
 export class UnitVisual {
   private base: Phaser.GameObjects.Sprite;
   private back?: Phaser.GameObjects.Image;
@@ -33,71 +29,13 @@ export class UnitVisual {
 
   rebuild() {
     this.destroyLayers();
-    this.fallbackBack.clear();
-    this.fallbackFront.clear();
-    this.fallbackHelmet.clear();
-
-    if (this.member.cls === "spear") {
-      this.applySpearkinLoadout();
-      this.hideLayeredEquipment();
-      this.sync();
-      return;
-    }
-
-    const weapon = this.member.weapon ? ITEMS[this.member.weapon] : undefined;
-    const shield = this.member.shield ? ITEMS[this.member.shield] : undefined;
-    const helmet = this.member.helmet ? ITEMS[this.member.helmet] : undefined;
-
-    // Class silhouettes are deliberately built from the same compact pixel language
-    // as the reference sprite, and sit behind the shared character body.
-    this.loadEquipmentArt();
-
-    if (shield?.equipment?.slot === "shield") {
-      this.drawFallbackShield(this.fallbackBack, this.member.shield!);
-    }
-
-    if (weapon?.equipment?.slot === "weapon") {
-      if (this.member.weapon !== "spear-wood") {
-        this.drawFallbackWeapon(this.fallbackFront, this.member.weapon!);
-      }
-    }
-
-    if (helmet?.equipment?.slot === "helmet") {
-      if (this.member.helmet !== "helm-leather") {
-        this.drawFallbackHelmet(this.fallbackHelmet, this.member.helmet!);
-      }
-    }
-
+    this.appliedTextureKey = undefined;
     this.sync();
   }
 
   sync() {
-    if (this.member.cls === "spear") {
-      this.applySpearkinLoadout();
-      this.hideLayeredEquipment();
-      return;
-    }
-
-    this.fallbackBack.setDepth(this.base.depth - 0.2);
-    this.fallbackFront.setDepth(this.base.depth + 0.2);
-    this.fallbackHelmet.setDepth(this.base.depth + 0.1);
-    this.back?.setDepth(this.base.depth - 0.2);
-    this.front?.setDepth(this.base.depth + 0.2);
-    this.helmet?.setDepth(this.base.depth + 0.3);
-
-    for (const layer of [this.fallbackBack, this.fallbackFront, this.fallbackHelmet]) {
-      layer.setPosition(this.base.x, this.base.y);
-      layer.setScale(this.base.scaleX, this.base.scaleY);
-      layer.setVisible(this.base.visible && this.base.alpha > 0);
-    }
-
-    for (const layer of [this.back, this.front, this.helmet]) {
-      if (layer) {
-        layer.setPosition(this.base.x, this.base.y - 54 * this.base.scaleY);
-        layer.setScale(this.base.scaleX, this.base.scaleY);
-        layer.setVisible(this.base.visible && this.base.alpha > 0);
-      }
-    }
+    this.applyAtlasedLoadout();
+    this.hideLayeredEquipment();
   }
 
   destroy() {
@@ -107,13 +45,14 @@ export class UnitVisual {
     this.fallbackHelmet.destroy();
   }
 
-  private applySpearkinLoadout() {
-    if (!this.scene.textures.exists(SPEARKIN_TEXTURE)) return;
+  private applyAtlasedLoadout() {
+    const texture = getUnitAtlasTexture(this.member);
+    if (!this.scene.textures.exists(texture)) return;
 
-    const key = getSpearkinAnimationKey(this.member);
+    const key = getUnitLoadoutAnimationKey(this.member);
     if (this.appliedTextureKey !== key) {
-      this.base.setTexture(SPEARKIN_TEXTURE, `s${getSpearkinAtlasFrame(this.member)}`);
-      this.base.play(key);
+      this.base.setTexture(texture, `s${getUnitLoadoutFirstFrame(this.member)}`);
+      if (this.scene.anims.exists(key)) this.base.play(key);
       this.appliedTextureKey = key;
     }
   }

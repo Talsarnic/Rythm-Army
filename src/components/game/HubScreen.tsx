@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CLASSES } from "@/game/data/units";
+import { CLASSES, getDefaultStarterGear } from "@/game/data/units";
 import { isUnlocked, MISSIONS } from "@/game/data/missions";
 import type { UnitClass } from "@/game/types";
 import { cn } from "@/lib/utils";
@@ -10,20 +10,7 @@ import { CommandsModal } from "./CommandsModal";
 import { EquipmentModal } from "./EquipmentModal";
 import { CreateUnitModal } from "./CreateUnitModal";
 import { InventoryModal } from "./InventoryModal";
-import { SpearkinSpritePreview } from "./SpearkinSpritePreview";
-
-const PORTRAITS: Record<string, string> = {
-  spear: "/assets/sprites/spearkin-portrait.svg",
-  bow: "/assets/sprites/bowkin-portrait.svg",
-  aegis: "/assets/sprites/aegiskin-portrait.svg",
-  banner: "/assets/sprites/bannerkin-portrait.svg",
-  kiba: "/assets/sprites/kibakin-portrait.svg",
-  deka: "/assets/sprites/dekakin-portrait.svg",
-  mega: "/assets/sprites/megakin-portrait.svg",
-  tori: "/assets/sprites/torikin-portrait.svg",
-  maho: "/assets/sprites/mahokin-portrait.svg",
-  robo: "/assets/sprites/robokin-portrait.svg",
-};
+import { UnitSpritePreview } from "./UnitSpritePreview";
 
 // Unit order reflecting their battle positioning from rear to front:
 // Bannerkin ➔ Magekin ➔ Warhornkin ➔ Bowkin ➔ Spearkin ➔ Wingkin ➔ Horsekin ➔ Bludgeonkin ➔ Mechakin ➔ Aegiskin
@@ -126,6 +113,12 @@ export function HubScreen({ onPlay }: { onPlay: (id: string) => void }) {
           {CAMPAIGN_UNIT_ORDER.map((id) => {
             const c = CLASSES[id];
             const countInRoster = (save.roster ?? []).filter((u) => u.cls === id).length;
+            const previewUnit = (save.roster ?? []).find((u) => u.cls === id) ?? {
+              id: `preview-${id}`,
+              cls: id,
+              level: 1,
+              ...getDefaultStarterGear(id),
+            };
             return (
               <button
                 key={id}
@@ -138,21 +131,11 @@ export function HubScreen({ onPlay }: { onPlay: (id: string) => void }) {
                     : "border-border/40 bg-surface/30 opacity-60 hover:opacity-100 hover:border-accent"
                 )}
               >
-                {id === "spear" ? (
-                  <SpearkinSpritePreview
-                    unit={(save.roster ?? []).find((u) => u.cls === "spear") ?? {
-                      id: "preview-spear",
-                      cls: "spear",
-                      level: 1,
-                      weapon: "spear-wood",
-                      helmet: "helm-leather",
-                    }}
-                    size={48}
-                    className="mx-auto group-hover:scale-105 transition-transform"
-                  />
-                ) : (
-                  <img src={PORTRAITS[id]} alt="" className="mx-auto h-12 w-12 object-contain group-hover:scale-105 transition-transform" />
-                )}
+                <UnitSpritePreview
+                  unit={previewUnit}
+                  size={48}
+                  className="mx-auto group-hover:scale-105 transition-transform"
+                />
                 <p className="mt-1 text-xs font-semibold group-hover:text-accent transition-colors truncate">{c.name}</p>
                 <p className="text-[10px] text-faint truncate">
                   {c.roleTitle}

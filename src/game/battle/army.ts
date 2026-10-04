@@ -6,7 +6,7 @@ import { beatFraction, drawBar, squash } from "./fighter.ts";
 import { ACTION, ENEMY_COLLISION_RADIUS, easeUnitKnockback } from "./rules.ts";
 import type { BattleState } from "./state.ts";
 import { UnitVisual } from "./unit-visual.ts";
-import { getSpearkinAtlasFrame, SPEARKIN_TEXTURE } from "./spearkin-loadout";
+import { getUnitAtlasTexture, getUnitLoadoutAnimationKey, getUnitLoadoutFirstFrame } from "./unit-loadout";
 
 /** Where each class stands relative to the banner, front rank on the right. */
 export const FORMATION: Record<UnitClass, number[]> = {
@@ -46,8 +46,8 @@ export class Army {
       used[cls] = idx + 1;
       const formX = FORMATION[cls]?.[idx] ?? idx * 36;
       const formY = (i % 2) * 8;
-      const textureKey = cls === "spear" ? SPEARKIN_TEXTURE : classDef.sprite;
-      const initialFrame = cls === "spear" ? `s${getSpearkinAtlasFrame(member)}` : 0;
+      const textureKey = getUnitAtlasTexture(member);
+      const initialFrame = `s${getUnitLoadoutFirstFrame(member)}`;
       const sprite = scene.add.sprite(s.armyX + formX, s.groundY + formY, textureKey, initialFrame);
       sprite.setOrigin(0.5, 0.92);
       sprite.setDepth(10 + i * 0.01);
@@ -59,7 +59,7 @@ export class Army {
       // Standard kin (Aegiskin, Spearkin, Bowkin, Magekin, Warhornkin, Mechakin): ~80px
       const display = cls === "banner" ? 92 : cls === "deka" ? 116 : cls === "kiba" ? 104 : cls === "tori" ? 86 : 80;
       sprite.setDisplaySize(display, display);
-      sprite.play(`${classDef.sprite}-anim`);
+      sprite.play(getUnitLoadoutAnimationKey(member));
       const visual = new UnitVisual(scene, sprite, member);
       const bar = scene.add.graphics().setDepth(40);
       s.units.push({

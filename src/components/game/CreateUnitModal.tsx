@@ -12,20 +12,7 @@ import type { UnitClass } from "@/game/types";
 import { useGame } from "@/store/game-store";
 import { cn } from "@/lib/utils";
 import { UserPlus, X, Sparkles, Check, AlertCircle } from "lucide-react";
-import { SpearkinSpritePreview } from "./SpearkinSpritePreview";
-
-const PORTRAITS: Record<string, string> = {
-  spear: "/assets/sprites/spearkin-portrait.svg",
-  bow: "/assets/sprites/bowkin-portrait.svg",
-  aegis: "/assets/sprites/aegiskin-portrait.svg",
-  banner: "/assets/sprites/bannerkin-portrait.svg",
-  kiba: "/assets/sprites/kibakin-portrait.svg",
-  deka: "/assets/sprites/dekakin-portrait.svg",
-  mega: "/assets/sprites/megakin-portrait.svg",
-  tori: "/assets/sprites/torikin-portrait.svg",
-  maho: "/assets/sprites/mahokin-portrait.svg",
-  robo: "/assets/sprites/robokin-portrait.svg",
-};
+import { UnitSpritePreview } from "./UnitSpritePreview";
 
 const CRAFTABLE_CLASSES: Exclude<UnitClass, "banner">[] = [
   "spear", // Spearkin
@@ -62,6 +49,12 @@ export function CreateUnitModal({ open, onClose, initialClass }: CreateUnitModal
   const recipe = UNIT_CREATION_RECIPES[selectedCls];
   const check = canCreateUnit(selectedCls, save.roster ?? [], save.inventory ?? {});
   const classDef = CLASSES[selectedCls];
+  const selectedPreviewUnit = {
+    id: `preview-${selectedCls}`,
+    cls: selectedCls,
+    level: 1,
+    ...getDefaultStarterGear(selectedCls),
+  };
 
   const handleCreate = () => {
     if (!check.allowed || !recipe) return;
@@ -138,6 +131,12 @@ export function CreateUnitModal({ open, onClose, initialClass }: CreateUnitModal
             const isSelected = selectedCls === cls;
             const cDef = CLASSES[cls];
             const count = (save.roster ?? []).filter((u) => u.cls === cls).length;
+            const previewUnit = {
+              id: `preview-${cls}`,
+              cls,
+              level: 1,
+              ...getDefaultStarterGear(cls),
+            };
             const max = MAX_UNITS_PER_CLASS[cls] ?? 3;
             const isFull = count >= max;
 
@@ -156,25 +155,7 @@ export function CreateUnitModal({ open, onClose, initialClass }: CreateUnitModal
                     : "border-border/60 bg-surface/60 hover:bg-surface-2"
                 )}
               >
-                {cls === "spear" ? (
-                  <SpearkinSpritePreview
-                    unit={{
-                      id: "preview-spear",
-                      cls: "spear",
-                      level: 1,
-                      weapon: "spear-wood",
-                      helmet: "helm-leather",
-                    }}
-                    size={36}
-                    className="rounded-lg bg-surface-2/40"
-                  />
-                ) : (
-                  <img
-                    src={PORTRAITS[cls]}
-                    alt=""
-                    className="h-9 w-9 object-contain rounded-lg bg-surface-2/40 p-0.5"
-                  />
-                )}
+                <UnitSpritePreview unit={previewUnit} size={36} className="rounded-lg bg-surface-2/40" />
                 <div>
                   <p className="text-[11px] font-bold text-fg leading-tight truncate max-w-[70px]">{cDef.name}</p>
                   <p className="text-[9px] text-muted">{cDef.roleTitle}</p>
@@ -195,25 +176,11 @@ export function CreateUnitModal({ open, onClose, initialClass }: CreateUnitModal
         {/* Selected Unit Details & Cost */}
         <div className="flex-1 overflow-y-auto py-4 space-y-4">
           <div className="flex items-center gap-3.5 rounded-2xl border border-border/80 bg-surface/60 p-3.5">
-            {selectedCls === "spear" ? (
-              <SpearkinSpritePreview
-                unit={{
-                  id: "preview-spear",
-                  cls: "spear",
-                  level: 1,
-                  weapon: "spear-wood",
-                  helmet: "helm-leather",
-                }}
-                size={56}
-                className="rounded-xl bg-surface-2/50 border border-border/50"
-              />
-            ) : (
-              <img
-                src={PORTRAITS[selectedCls]}
-                alt=""
-                className="h-14 w-14 object-contain rounded-xl bg-surface-2/50 border border-border/50 p-1"
-              />
-            )}
+            <UnitSpritePreview
+              unit={selectedPreviewUnit}
+              size={56}
+              className="rounded-xl bg-surface-2/50 border border-border/50"
+            />
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-display text-lg text-fg">{classDef.name}</h3>
