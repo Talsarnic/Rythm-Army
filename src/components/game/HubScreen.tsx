@@ -13,15 +13,15 @@ import { InventoryModal } from "./InventoryModal";
 
 const PORTRAITS: Record<string, string> = {
   spear: "/assets/sprites/spearkin-portrait.svg",
-  bow: "/assets/sprites/bowkin-portrait.png",
-  aegis: "/assets/sprites/aegiskin-portrait.png",
-  banner: "/assets/sprites/bannerkin-portrait.png",
-  kiba: "/assets/sprites/spearkin-portrait.svg",
-  deka: "/assets/sprites/aegiskin-portrait.png",
-  mega: "/assets/sprites/bowkin-portrait.png",
-  tori: "/assets/sprites/spearkin-portrait.svg",
-  maho: "/assets/sprites/bowkin-portrait.png",
-  robo: "/assets/sprites/aegiskin-portrait.png",
+  bow: "/assets/sprites/bowkin-portrait.svg",
+  aegis: "/assets/sprites/aegiskin-portrait.svg",
+  banner: "/assets/sprites/bannerkin-portrait.svg",
+  kiba: "/assets/sprites/kibakin-portrait.svg",
+  deka: "/assets/sprites/dekakin-portrait.svg",
+  mega: "/assets/sprites/megakin-portrait.svg",
+  tori: "/assets/sprites/torikin-portrait.svg",
+  maho: "/assets/sprites/mahokin-portrait.svg",
+  robo: "/assets/sprites/robokin-portrait.svg",
 };
 
 // Unit order reflecting their battle positioning from rear to front:
