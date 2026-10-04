@@ -13,6 +13,18 @@ const PLAYER_SHEETS = [
   ["robokin-idle", "robokin-idle.svg"],
 ] as const;
 
+
+const SPEARKIN_LOADOUTS = [
+  "spearkin-helm-leather-spear-wood", "spearkin-helm-leather-spear-iron",
+  "spearkin-helm-leather-spear-fang", "spearkin-helm-leather-spear-storm",
+  "spearkin-helm-iron-spear-wood", "spearkin-helm-iron-spear-iron",
+  "spearkin-helm-iron-spear-fang", "spearkin-helm-iron-spear-storm",
+  "spearkin-helm-great-spear-wood", "spearkin-helm-great-spear-iron",
+  "spearkin-helm-great-spear-fang", "spearkin-helm-great-spear-storm",
+  "spearkin-helm-crown-spear-wood", "spearkin-helm-crown-spear-iron",
+  "spearkin-helm-crown-spear-fang", "spearkin-helm-crown-spear-storm",
+] as const;
+
 const SHEETS = [
   "spearkin-idle",
   "bowkin-idle",
@@ -62,6 +74,9 @@ export class PreloadScene extends Phaser.Scene {
       // Load SVG as an image, then add explicit 128x128 frames in create().
       // This avoids browser-dependent SVG spritesheet dimension parsing.
       this.load.image(key, `/assets/sprites/${file}`);
+    }
+    for (const key of SPEARKIN_LOADOUTS) {
+      this.load.image(key, `/assets/sprites/${key}.svg`);
     }
     this.load.spritesheet("arrow", "/assets/sprites/arrow.png", { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet("impact", "/assets/sprites/impact.png", { frameWidth: 128, frameHeight: 128 });
@@ -399,8 +414,8 @@ export class PreloadScene extends Phaser.Scene {
       }
     }
 
-    // Keep the hand-authored pixel art crisp at every gameplay scale.
-    for (const key of SHEETS) {
+    // Spearkin loadouts use complete character art; each sheet still has four 128px frames.\n    for (const key of SPEARKIN_LOADOUTS) {\n      const texture = this.textures.get(key);\n      if (!texture || texture.has(0)) continue;\n      texture.firstFrame = 0;\n      for (let frame = 0; frame < 4; frame++) {\n        texture.add(frame, 0, frame * 128, 0, 128, 128);\n      }\n    }\n\n    // Keep the hand-authored pixel art crisp at every gameplay scale.
+    for (const key of [...SHEETS, ...SPEARKIN_LOADOUTS]) {
       this.textures.get(key)?.setFilter(Phaser.Textures.FilterMode.NEAREST);
     }
     const mk = (key: string, anim: string, rate: number, repeat: number) => {
@@ -417,6 +432,7 @@ export class PreloadScene extends Phaser.Scene {
       else if (key === "arrow") mk(key, "arrow-fly", 12, -1);
       else mk(key, `${key}-anim`, 7, -1);
     }
+    for (const key of SPEARKIN_LOADOUTS) mk(key, `${key}-anim`, 7, -1);
 
     // Register animations for new classes & enemy types
     const extraSheets = [
