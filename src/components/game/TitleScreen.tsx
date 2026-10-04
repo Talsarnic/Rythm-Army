@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useGame } from "@/store/game-store";
+import { GAME_VERSION } from "@/game/version";
 
 export function TitleScreen({ onPlay }: { onPlay: () => void }) {
   const go = useGame((s) => s.go);
@@ -40,7 +41,7 @@ export function TitleScreen({ onPlay }: { onPlay: () => void }) {
           </div>
         </div>
         <p className="mt-6 font-mono text-xs text-faint">
-          v0.00004 · Offset {save.offsetMs >= 0 ? "+" : ""}
+          v{GAME_VERSION} · Offset {save.offsetMs >= 0 ? "+" : ""}
           {save.offsetMs}ms · Best combo {save.bestCombo}
         </p>
       </div>

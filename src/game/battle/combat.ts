@@ -30,14 +30,18 @@ export class Combat {
     const mod = attackModifiers({ charged, defend, fever: s.engine.fever });
     for (const u of s.units) {
       if (!u.alive || !u.cls) continue;
-      const stats = CLASSES[u.cls];
-      if (stats.damage <= 0) continue;
-      const target = this.nearestEnemy(u.sprite.x, stats.range + (charged ? 40 : 0));
+      const classDef = CLASSES[u.cls];
+      const damage = u.damage ?? classDef.damage;
+      const range = u.range ?? classDef.range;
+      const role = classDef.role;
+
+      if (damage <= 0) continue;
+      const target = this.nearestEnemy(u.sprite.x, range + (charged ? 40 : 0));
       if (!target) continue;
       u.lunge = defend ? 0.6 : 1;
-      const dmg = scaledDamage(stats.damage, mod.damage);
-      if (stats.role === "ranged") {
-        const isSpear = u.cls === "pike";
+      const dmg = scaledDamage(damage, mod.damage);
+      if (role === "ranged") {
+        const isSpear = u.cls === "spear";
         this.fireRanged(u.sprite.x, u.sprite.y - 40, target, dmg, isSpear, 0.7 * mod.power);
       } else {
         this.hit(target, dmg, 1.2 * mod.power);
@@ -56,7 +60,7 @@ export class Combat {
     if (!living.length) return;
     living.sort((a, b) => b.sprite.x - a.sprite.x);
     const target = living.find((u) => u.cls === "aegis") ?? living[0]!;
-    this.hit(target, damageToUnit(damage, s.defending), power);
+    this.hit(target, damageToUnit(damage, s.defending, target.defense ?? 0), power);
     fx.impact(target.sprite.x + 16, target.sprite.y - 30);
   }
 
@@ -83,6 +87,9 @@ export class Combat {
     const { s, fx, scene } = this;
     f.alive = false;
     f.hp = 0;
+    if (f.kind) {
+      s.killedEnemies.push(f.kind);
+    }
     const boss = f.kind === "howl";
     s.freeze(boss ? 0.16 : 0.08);
 

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { audio } from "@/game/audio";
 import { useGame } from "@/store/game-store";
+import { GAME_VERSION } from "@/game/version";
 import { ChevronLeft } from "lucide-react";
 
 function Slider({
@@ -55,7 +56,7 @@ export function SettingsScreen() {
         <Slider label="Screen shake" value={save.settings.shake} onChange={(v) => setField("shake", v)} />
       </div>
       <p className="mt-8 font-mono text-xs text-faint">
-        Input offset {save.offsetMs >= 0 ? "+" : ""}
+        v{GAME_VERSION} · Input offset {save.offsetMs >= 0 ? "+" : ""}
         {save.offsetMs}ms
       </p>
       <Button className="mt-4" variant="secondary" onClick={() => go("calibrate")}>

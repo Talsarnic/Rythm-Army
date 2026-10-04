@@ -68,9 +68,11 @@ export function unitKnockback(current: number, power: number, cls: UnitClass | u
   return Math.max(-46, current - 26 * power * resist);
 }
 
-/** Damage an enemy blow deals to the army. DEFEND cuts it sharply. */
-export function damageToUnit(damage: number, defending: boolean): number {
-  return defending ? Math.round(damage * 0.38) : damage;
+/** Damage an enemy blow deals to the army. DEFEND cuts it sharply, and equipment defense further mitigates it. */
+export function damageToUnit(damage: number, defending: boolean, defenseBonus = 0): number {
+  const baseDefended = defending ? damage * 0.38 : damage;
+  const mitigated = baseDefended * (1 - Math.min(0.75, Math.max(0, defenseBonus)));
+  return Math.max(1, Math.round(mitigated));
 }
 
 /** The boss's slam damage before it reaches the army. DEFEND softens it. */

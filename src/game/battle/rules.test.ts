@@ -86,17 +86,17 @@ describe("knockback", () => {
   });
 
   it("nudges army units backwards, shields less", () => {
-    assert.equal(unitKnockback(0, 1, "pike", false), -26);
+    assert.equal(unitKnockback(0, 1, "spear", false), -26);
     near(unitKnockback(0, 1, "aegis", false), -15.6);
   });
 
   it("defending resists the shove further", () => {
-    near(unitKnockback(0, 1, "pike", true), -10.4);
+    near(unitKnockback(0, 1, "spear", true), -10.4);
     near(unitKnockback(0, 1, "aegis", true), -6.24);
   });
 
   it("never pushes a unit more than 46px out of formation", () => {
-    assert.equal(unitKnockback(-40, 3, "pike", false), -46);
+    assert.equal(unitKnockback(-40, 3, "spear", false), -46);
   });
 
   it("unit shove decays and snaps to zero", () => {
@@ -116,6 +116,11 @@ describe("damage taken by the army", () => {
   it("is unchanged normally and cut to 38% when defending", () => {
     assert.equal(damageToUnit(14, false), 14);
     assert.equal(damageToUnit(10, true), 4);
+  });
+
+  it("defense bonus from helmets and shields mitigates damage taken", () => {
+    assert.equal(damageToUnit(20, false, 0.2), 16);
+    assert.equal(damageToUnit(20, true, 0.2), 6);
   });
 
   it("the boss slam is softened by defending, then cut again on the way in", () => {

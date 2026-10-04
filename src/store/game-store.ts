@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { defaultSave, loadSave, writeSave } from "@/game/save";
+import { addLootToInventory } from "@/game/data/loot";
 import type { BattleResult, HudState, SaveData, ScreenId } from "@/game/types";
 
 interface GameState {
@@ -46,6 +47,7 @@ export const useGame = create<GameState>((set, get) => ({
         ...s,
         completed: s.completed.includes(result.missionId) ? s.completed : [...s.completed, result.missionId],
         bestCombo: Math.max(s.bestCombo, result.bestCombo),
+        inventory: result.rewards ? addLootToInventory(s.inventory, result.rewards) : s.inventory,
       }));
     } else {
       get().patchSave((s) => ({ ...s, bestCombo: Math.max(s.bestCombo, result.bestCombo) }));

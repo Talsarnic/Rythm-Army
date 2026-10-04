@@ -8,8 +8,17 @@ export const DRUMS = [
 export type DrumId = 0 | 1 | 2 | 3;
 export type Grade = "perfect" | "good" | "miss";
 export type CommandId = "march" | "attack" | "defend" | "retreat" | "charge" | "jump";
-export type UnitClass = "pike" | "bow" | "aegis" | "banner";
+export type UnitClass = "spear" | "bow" | "aegis" | "banner";
 export type EnemyKind = "goretusk" | "brute" | "howl";
+export type EquipSlot = "weapon" | "helmet";
+
+export interface UnitMember {
+  id: string; // Unique unit instance id
+  cls: UnitClass;
+  level: number;
+  weapon?: string; // ItemDef id
+  helmet?: string; // ItemDef id
+}
 
 export type ScreenId =
   | "title"
@@ -85,12 +94,19 @@ export interface SaveData {
   completed: string[];
   bestCombo: number;
   offsetMs: number;
+  roster: UnitMember[];
+  inventory: Record<string, number>;
   settings: {
     master: number;
     music: number;
     sfx: number;
     shake: number;
   };
+}
+
+export interface LootRewardSummary {
+  itemId: string;
+  qty: number;
 }
 
 export interface BattleResult {
@@ -102,6 +118,7 @@ export interface BattleResult {
   bestCombo: number;
   feverReached: boolean;
   cause: string;
+  rewards?: LootRewardSummary[];
 }
 
 export interface HudState {

@@ -1,4 +1,5 @@
-import type { EnemyKind, UnitClass } from "../types";
+import type { EnemyKind, UnitClass, UnitMember } from "../types";
+import { ITEMS } from "./items.ts";
 
 export interface ClassStats {
   id: UnitClass;
@@ -13,9 +14,55 @@ export interface ClassStats {
 export const CLASSES: Record<UnitClass, ClassStats> = {
   banner: { id: "banner", name: "Bannerkin", sprite: "bannerkin-idle", hp: 48, damage: 0, range: 0, role: "flag" },
   aegis: { id: "aegis", name: "Aegiskin", sprite: "aegiskin-idle", hp: 78, damage: 7, range: 70, role: "tank" },
-  pike: { id: "pike", name: "Spearkin", sprite: "spearkin-idle", hp: 44, damage: 14, range: 260, role: "ranged" },
+  spear: { id: "spear", name: "Spearkin", sprite: "spearkin-idle", hp: 44, damage: 14, range: 260, role: "ranged" },
   bow: { id: "bow", name: "Bowkin", sprite: "bowkin-idle", hp: 32, damage: 9, range: 420, role: "ranged" },
 };
+
+export interface EffectiveUnitStats {
+  hp: number;
+  damage: number;
+  range: number;
+  defense: number; // 0..1 flat reduction
+  attackSpeed: number; // multiplier e.g. 1.0, 1.25
+  role: "melee" | "ranged" | "tank" | "flag";
+}
+
+export function computeUnitStats(unit: UnitMember): EffectiveUnitStats {
+  const base = CLASSES[unit.cls];
+  let hp = base.hp;
+  let damage = base.damage;
+  let range = base.range;
+  let defense = 0;
+  let attackSpeed = 1.0;
+
+  if (unit.weapon) {
+    const weaponDef = ITEMS[unit.weapon];
+    if (weaponDef?.equipment) {
+      damage += weaponDef.equipment.damageBonus ?? 0;
+      range += weaponDef.equipment.rangeBonus ?? 0;
+      defense += weaponDef.equipment.defenseBonus ?? 0;
+      hp += weaponDef.equipment.hpBonus ?? 0;
+      attackSpeed *= weaponDef.equipment.attackSpeedMultiplier ?? 1.0;
+    }
+  }
+
+  if (unit.helmet) {
+    const helmDef = ITEMS[unit.helmet];
+    if (helmDef?.equipment) {
+      hp += helmDef.equipment.hpBonus ?? 0;
+      defense += helmDef.equipment.defenseBonus ?? 0;
+    }
+  }
+
+  return {
+    hp: Math.max(1, hp),
+    damage: Math.max(0, damage),
+    range: Math.max(0, range),
+    defense: Math.min(0.75, Math.max(0, defense)),
+    attackSpeed: Math.max(0.5, attackSpeed),
+    role: base.role,
+  };
+}
 
 export const ENEMY_STATS: Record<EnemyKind, { name: string; sprite: string; hp: number; damage: number; range: number; speed: number; scale: number }> = {
   goretusk: { name: "Goretusk", sprite: "goretusk-idle", hp: 42, damage: 8, range: 70, speed: 46, scale: 0.92 },
@@ -27,9 +74,100 @@ export const STARTER_ARMY: UnitClass[] = [
   "banner",
   "bow",
   "bow",
-  "pike",
-  "pike",
-  "pike",
+  "spear",
+  "spear",
+  "spear",
   "aegis",
   "aegis",
 ];
+
+export const MAX_UNITS_PER_CLASS: Record<UnitClass, number> = {
+  banner: 1,
+  bow: 3,
+  spear: 3,
+  aegis: 3,
+};
+
+export interface UnitCreationCost {
+  materials: Record<string, number>;
+}
+
+export const UNIT_CREATION_RECIPES: Record<Exclude<UnitClass, "banner">, UnitCreationCost> = {
+  bow: {
+    materials: {
+      "beast-meat": 3,
+      "wood-branch": 4,
+      "stone-chunk": 2,
+    },
+  },
+  spear: {
+    materials: {
+      "beast-meat": 3,
+      "wood-branch": 3,
+      "iron-scrap": 2,
+    },
+  },
+  aegis: {
+    materials: {
+      "beast-meat": 4,
+      "wood-branch": 2,
+      "stone-chunk": 2,
+      "iron-scrap": 3,
+    },
+  },
+};
+
+export function canCreateUnit(
+  cls: UnitClass,
+  roster: UnitMember[],
+  inventory: Record<string, number>
+): { allowed: boolean; reason?: string } {
+  if (cls === "banner") {
+    return { allowed: false, reason: "Bannerkin is unique and cannot be cloned." };
+  }
+  const currentCount = roster.filter((u) => u.cls === cls).length;
+  const maxAllowed = MAX_UNITS_PER_CLASS[cls] ?? 3;
+  if (currentCount >= maxAllowed) {
+    return { allowed: false, reason: `Maximum limit reached (${maxAllowed}/${maxAllowed}).` };
+  }
+
+  const recipe = UNIT_CREATION_RECIPES[cls as Exclude<UnitClass, "banner">];
+  if (!recipe) {
+    return { allowed: false, reason: "No creation recipe found." };
+  }
+
+  for (const [matId, reqQty] of Object.entries(recipe.materials)) {
+    const available = inventory[matId] ?? 0;
+    if (available < reqQty) {
+      return { allowed: false, reason: `Missing materials.` };
+    }
+  }
+
+  return { allowed: true };
+}
+
+export function getDefaultStarterGear(cls: UnitClass): { weapon?: string; helmet?: string } {
+  switch (cls) {
+    case "spear":
+      return { weapon: "spear-wood", helmet: "helm-leather" };
+    case "bow":
+      return { weapon: "bow-wood", helmet: "helm-leather" };
+    case "aegis":
+      return { weapon: "shield-wood", helmet: "helm-leather" };
+    case "banner":
+      return { helmet: "helm-leather" };
+  }
+}
+
+export function createStarterRoster(): UnitMember[] {
+  return STARTER_ARMY.map((cls, idx) => {
+    const gear = getDefaultStarterGear(cls);
+    return {
+      id: `starter-${cls}-${idx}`,
+      cls,
+      level: 1,
+      weapon: gear.weapon,
+      helmet: gear.helmet,
+    };
+  });
+}

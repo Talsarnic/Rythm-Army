@@ -1,6 +1,6 @@
 import type * as Phaser from "phaser";
 import type { RhythmEngine } from "../rhythm.ts";
-import type { CommandId, EnemyKind, MissionDef, UnitClass } from "../types";
+import type { CommandId, EnemyKind, MissionDef, UnitClass, UnitMember } from "../types";
 
 /** One soldier or enemy on the field. */
 export interface Fighter {
@@ -9,6 +9,11 @@ export interface Fighter {
   maxHp: number;
   /** Set for army units. */
   cls?: UnitClass;
+  member?: UnitMember;
+  damage?: number;
+  range?: number;
+  defense?: number;
+  attackSpeed?: number;
   /** Set for enemies. */
   kind?: EnemyKind;
   alive: boolean;
@@ -72,6 +77,7 @@ export class BattleState {
 
   units: Fighter[] = [];
   enemies: Fighter[] = [];
+  killedEnemies: EnemyKind[] = [];
   spawnedWaves = new Set<number>();
 
   lastGrade: string | null = null;

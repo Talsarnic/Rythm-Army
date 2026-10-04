@@ -12,6 +12,7 @@ import { scheduleMusic } from "../battle/music.ts";
 import { ACTION, armyAdvance, evaluateEnd } from "../battle/rules.ts";
 import { BattleState } from "../battle/state.ts";
 import { COMMANDS, INPUT_BEATS } from "../data/commands";
+import { rollBattleLoot } from "../data/loot";
 import { missionById } from "../data/missions";
 import { ENEMY_STATS } from "../data/units";
 import { bus } from "../events";
@@ -269,6 +270,7 @@ export class BattleScene extends Phaser.Scene {
       bestCombo: s.engine.bestCombo,
       feverReached: s.feverReached,
       cause,
+      rewards: win ? rollBattleLoot(s.mission.id, s.killedEnemies) : undefined,
     };
     this.time.delayedCall(700, () => bus.emit("battle-end", result));
   }
