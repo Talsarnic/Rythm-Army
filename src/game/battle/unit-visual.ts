@@ -108,13 +108,6 @@ export class UnitVisual {
   }
 
   private applySpearkinLoadout() {
-    const helmet = this.member.helmet && ITEMS[this.member.helmet]?.equipment?.gearType === "helmet"
-      ? this.member.helmet
-      : "helm-leather";
-    const weapon = this.member.weapon && ITEMS[this.member.weapon]?.equipment?.gearType === "spear"
-      ? this.member.weapon
-      : "spear-wood";
-
     if (!this.scene.textures.exists(SPEARKIN_TEXTURE)) return;
 
     const key = getSpearkinAnimationKey(this.member);
