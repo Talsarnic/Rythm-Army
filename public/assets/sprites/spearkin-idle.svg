@@ -1,136 +1,113 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="128" viewBox="0 0 512 128" shape-rendering="crispEdges">
-<g>
+<defs>
+<style>
+.o{fill:#241a1b}.ink{fill:#2d2222}.skin{fill:#d6a56a}.skin2{fill:#b8794f}.leather{fill:#70452f}.leather2{fill:#936044}.cloth{fill:#3d5260}.cloth2{fill:#587180}.metal{fill:#b9b8a9}.metal2{fill:#7f827c}.wood{fill:#8a5a36}.wood2{fill:#b57a45}.steel{fill:#d8d7c7}.shine{fill:#f1e7c8}.eye{fill:#f7f0dc}.pupil{fill:#241a1b}.shadow{fill:#38272a}
+</style>
+</defs>
+<!-- frame 0 -->
 <g transform="translate(0 0)">
-  <rect x="42" y="45" width="44" height="42" rx="10" fill="#2b2430"/>
-  <rect x="47" y="50" width="34" height="31" rx="8" fill="#6f3f36"/>
-  <rect x="52" y="55" width="29" height="25" rx="7" fill="#a85f4c"/>
-  <rect x="57" y="59" width="24" height="21" rx="6" fill="#d18a63"/>
-  <rect x="62" y="64" width="14" height="12" rx="3" fill="#f3d7a5"/>
-  <rect x="66" y="67" width="6" height="8" fill="#2b2430"/>
-  <rect x="48" y="79" width="10" height="14" fill="#3a2d36"/>
-  <rect x="72" y="79" width="10" height="14" fill="#3a2d36"/>
-  <rect x="47" y="89" width="13" height="6" fill="#201a22"/>
-  <rect x="70" y="89" width="13" height="6" fill="#201a22"/>
-  <rect x="39" y="45" width="8" height="22" fill="#513039"/>
-  <rect x="80" y="47" width="8" height="22" fill="#513039"/>
-  <rect x="44" y="39" width="42" height="9" fill="#382933"/>
-  <rect x="51" y="34" width="28" height="8" fill="#5a3d32"/>
-  <rect x="56" y="31" width="18" height="6" fill="#7b5740"/>
-  <rect x="61" y="30" width="8" height="4" fill="#a77850"/>
-  <rect x="45" y="46" width="8" height="5" fill="#c28a55"/>
-  <rect x="79" y="46" width="7" height="5" fill="#c28a55"/>
-  <rect x="77" y="54" width="7" height="18" fill="#4a3031"/>
-  <rect x="84" y="57" width="5" height="14" fill="#2b2430"/>
-  <rect x="30" y="57" width="10" height="8" fill="#8b4d3d"/>
-  <rect x="27" y="62" width="12" height="7" fill="#b46b50"/>
-  <rect x="19" y="66" width="6" height="5" fill="#d8a15d"/>
-  <rect x="15" y="70" width="6" height="5" fill="#8f633f"/>
-  <rect x="22" y="64" width="4" height="12" fill="#5d3a2d"/>
-  <rect x="13" y="73" width="4" height="5" fill="#2b2430"/>
-  <rect x="10" y="75" width="3" height="3" fill="#d8a15d"/>
-  <rect x="88" y="42" width="6" height="38" fill="#5b3a27"/>
-  <rect x="92" y="39" width="4" height="44" fill="#9b6a3f"/>
-  <rect x="96" y="35" width="5" height="7" fill="#c9d1d9"/>
-  <rect x="101" y="31" width="4" height="9" fill="#e6edf2"/>
-  <rect x="97" y="40" width="8" height="4" fill="#8b949e"/>
- </g><g transform="translate(128 1)">
-  <rect x="42" y="45" width="44" height="42" rx="10" fill="#2b2430"/>
-  <rect x="47" y="50" width="34" height="31" rx="8" fill="#6f3f36"/>
-  <rect x="52" y="55" width="29" height="25" rx="7" fill="#a85f4c"/>
-  <rect x="57" y="59" width="24" height="21" rx="6" fill="#d18a63"/>
-  <rect x="62" y="64" width="14" height="12" rx="3" fill="#f3d7a5"/>
-  <rect x="66" y="67" width="6" height="8" fill="#2b2430"/>
-  <rect x="48" y="79" width="10" height="14" fill="#3a2d36"/>
-  <rect x="72" y="79" width="10" height="14" fill="#3a2d36"/>
-  <rect x="47" y="90" width="13" height="6" fill="#201a22"/>
-  <rect x="70" y="88" width="13" height="6" fill="#201a22"/>
-  <rect x="39" y="45" width="8" height="22" fill="#513039"/>
-  <rect x="80" y="47" width="8" height="22" fill="#513039"/>
-  <rect x="44" y="39" width="42" height="9" fill="#382933"/>
-  <rect x="51" y="34" width="28" height="8" fill="#5a3d32"/>
-  <rect x="56" y="31" width="18" height="6" fill="#7b5740"/>
-  <rect x="61" y="30" width="8" height="4" fill="#a77850"/>
-  <rect x="45" y="46" width="8" height="5" fill="#c28a55"/>
-  <rect x="79" y="46" width="7" height="5" fill="#c28a55"/>
-  <rect x="77" y="54" width="7" height="18" fill="#4a3031"/>
-  <rect x="84" y="57" width="5" height="14" fill="#2b2430"/>
-  <rect x="30" y="57" width="10" height="8" fill="#8b4d3d"/>
-  <rect x="27" y="62" width="12" height="7" fill="#b46b50"/>
-  <rect x="19" y="66" width="6" height="5" fill="#d8a15d"/>
-  <rect x="15" y="70" width="6" height="5" fill="#8f633f"/>
-  <rect x="22" y="64" width="4" height="12" fill="#5d3a2d"/>
-  <rect x="13" y="73" width="4" height="5" fill="#2b2430"/>
-  <rect x="10" y="75" width="3" height="3" fill="#d8a15d"/>
-  <rect x="88" y="42" width="6" height="38" fill="#5b3a27"/>
-  <rect x="92" y="39" width="4" height="44" fill="#9b6a3f"/>
-  <rect x="96" y="35" width="5" height="7" fill="#c9d1d9"/>
-  <rect x="101" y="31" width="4" height="9" fill="#e6edf2"/>
-  <rect x="97" y="40" width="8" height="4" fill="#8b949e"/>
- </g><g transform="translate(256 0)">
-  <rect x="42" y="45" width="44" height="42" rx="10" fill="#2b2430"/>
-  <rect x="47" y="50" width="34" height="31" rx="8" fill="#6f3f36"/>
-  <rect x="52" y="55" width="29" height="25" rx="7" fill="#a85f4c"/>
-  <rect x="57" y="59" width="24" height="21" rx="6" fill="#d18a63"/>
-  <rect x="62" y="64" width="14" height="12" rx="3" fill="#f3d7a5"/>
-  <rect x="66" y="67" width="6" height="8" fill="#2b2430"/>
-  <rect x="48" y="79" width="10" height="14" fill="#3a2d36"/>
-  <rect x="72" y="79" width="10" height="14" fill="#3a2d36"/>
-  <rect x="47" y="89" width="13" height="6" fill="#201a22"/>
-  <rect x="70" y="89" width="13" height="6" fill="#201a22"/>
-  <rect x="39" y="45" width="8" height="22" fill="#513039"/>
-  <rect x="80" y="47" width="8" height="22" fill="#513039"/>
-  <rect x="44" y="39" width="42" height="9" fill="#382933"/>
-  <rect x="51" y="34" width="28" height="8" fill="#5a3d32"/>
-  <rect x="56" y="31" width="18" height="6" fill="#7b5740"/>
-  <rect x="61" y="30" width="8" height="4" fill="#a77850"/>
-  <rect x="45" y="46" width="8" height="5" fill="#c28a55"/>
-  <rect x="79" y="46" width="7" height="5" fill="#c28a55"/>
-  <rect x="77" y="54" width="7" height="18" fill="#4a3031"/>
-  <rect x="84" y="57" width="5" height="14" fill="#2b2430"/>
-  <rect x="30" y="57" width="10" height="8" fill="#8b4d3d"/>
-  <rect x="27" y="62" width="12" height="7" fill="#b46b50"/>
-  <rect x="19" y="66" width="6" height="5" fill="#d8a15d"/>
-  <rect x="15" y="70" width="6" height="5" fill="#8f633f"/>
-  <rect x="22" y="64" width="4" height="12" fill="#5d3a2d"/>
-  <rect x="13" y="73" width="4" height="5" fill="#2b2430"/>
-  <rect x="10" y="75" width="3" height="3" fill="#d8a15d"/>
-  <rect x="88" y="42" width="6" height="38" fill="#5b3a27"/>
-  <rect x="92" y="39" width="4" height="44" fill="#9b6a3f"/>
-  <rect x="96" y="35" width="5" height="7" fill="#c9d1d9"/>
-  <rect x="101" y="31" width="4" height="9" fill="#e6edf2"/>
-  <rect x="97" y="40" width="8" height="4" fill="#8b949e"/>
- </g><g transform="translate(384 -1)">
-  <rect x="42" y="45" width="44" height="42" rx="10" fill="#2b2430"/>
-  <rect x="47" y="50" width="34" height="31" rx="8" fill="#6f3f36"/>
-  <rect x="52" y="55" width="29" height="25" rx="7" fill="#a85f4c"/>
-  <rect x="57" y="59" width="24" height="21" rx="6" fill="#d18a63"/>
-  <rect x="62" y="64" width="14" height="12" rx="3" fill="#f3d7a5"/>
-  <rect x="66" y="67" width="6" height="8" fill="#2b2430"/>
-  <rect x="48" y="79" width="10" height="14" fill="#3a2d36"/>
-  <rect x="72" y="79" width="10" height="14" fill="#3a2d36"/>
-  <rect x="47" y="90" width="13" height="6" fill="#201a22"/>
-  <rect x="70" y="88" width="13" height="6" fill="#201a22"/>
-  <rect x="39" y="45" width="8" height="22" fill="#513039"/>
-  <rect x="80" y="47" width="8" height="22" fill="#513039"/>
-  <rect x="44" y="39" width="42" height="9" fill="#382933"/>
-  <rect x="51" y="34" width="28" height="8" fill="#5a3d32"/>
-  <rect x="56" y="31" width="18" height="6" fill="#7b5740"/>
-  <rect x="61" y="30" width="8" height="4" fill="#a77850"/>
-  <rect x="45" y="46" width="8" height="5" fill="#c28a55"/>
-  <rect x="79" y="46" width="7" height="5" fill="#c28a55"/>
-  <rect x="77" y="54" width="7" height="18" fill="#4a3031"/>
-  <rect x="84" y="57" width="5" height="14" fill="#2b2430"/>
-  <rect x="30" y="57" width="10" height="8" fill="#8b4d3d"/>
-  <rect x="27" y="62" width="12" height="7" fill="#b46b50"/>
-  <rect x="19" y="66" width="6" height="5" fill="#d8a15d"/>
-  <rect x="15" y="70" width="6" height="5" fill="#8f633f"/>
-  <rect x="22" y="64" width="4" height="12" fill="#5d3a2d"/>
-  <rect x="13" y="73" width="4" height="5" fill="#2b2430"/>
-  <rect x="10" y="75" width="3" height="3" fill="#d8a15d"/>
-  <rect x="88" y="42" width="6" height="38" fill="#5b3a27"/>
-  <rect x="92" y="39" width="4" height="44" fill="#9b6a3f"/>
-  <rect x="96" y="35" width="5" height="7" fill="#c9d1d9"/>
-  <rect x="101" y="31" width="4" height="9" fill="#e6edf2"/>
-  <rect x="97" y="40" width="8" height="4" fill="#8b949e"/>
- </g>
-</g></svg>
+<rect width="128" height="128" fill="none"/>
+<!-- shadow -->
+<rect x="38" y="112" width="51" height="5" class="shadow"/><rect x="45" y="117" width="38" height="2" class="shadow"/>
+<!-- back arm -->
+<rect x="28" y="69" width="12" height="29" class="skin2"/><rect x="25" y="91" width="16" height="8" class="leather"/>
+<!-- legs -->
+<rect x="49" y="92" width="13" height="22" class="skin2"/><rect x="68" y="92" width="13" height="22" class="skin2"/>
+<rect x="45" y="111" width="19" height="7" class="leather"/><rect x="66" y="111" width="19" height="7" class="leather"/>
+<!-- body silhouette -->
+<path d="M39 55h48v10h6v28H82v7H45v-7H34V65h5z" class="o"/>
+<path d="M43 59h39v8h7v22H78v7H49v-7H39V67h4z" class="cloth"/>
+<rect x="48" y="66" width="29" height="25" class="cloth2"/><rect x="54" y="72" width="17" height="16" class="cloth"/>
+<rect x="47" y="89" width="34" height="7" class="leather"/>
+<rect x="53" y="92" width="8" height="4" class="leather2"/><rect x="69" y="92" width="8" height="4" class="leather2"/>
+<!-- front arm -->
+<path d="M78 68h14v8h5v16H85V82h-7z" class="skin"/><rect x="88" y="87" width="11" height="8" class="leather"/>
+<!-- head -->
+<path d="M40 35h8v-6h29v5h8v8h5v23H83v8H44v-7h-8V42h4z" class="o"/>
+<path d="M45 39h34v5h7v18H78v6H48v-6h-8V44h5z" class="skin"/>
+<rect x="47" y="47" width="31" height="14" class="eye"/><rect x="51" y="51" width="10" height="9" class="pupil"/><rect x="67" y="51" width="8" height="9" class="pupil"/>
+<rect x="45" y="61" width="35" height="6" class="skin2"/>
+<!-- helmet -->
+<path d="M39 42V31h6v-8h8v-5h23v5h8v8h6v11H82v-6H45v6z" class="leather"/>
+<path d="M46 31h8v-7h22v7h8v8H46z" class="leather2"/>
+<rect x="53" y="24" width="21" height="5" class="shine"/><rect x="42" y="38" width="43" height="5" class="leather"/>
+<rect x="78" y="29" width="6" height="9" class="shadow"/>
+<!-- spear behind -->
+<rect x="94" y="29" width="5" height="70" class="wood"/><rect x="96" y="28" width="2" height="67" class="wood2"/>
+<path d="M91 31l5-13 5 13-5 11z" class="steel"/><path d="M96 20l2-2 3 13h-5z" class="shine"/>
+<!-- spear hand -->
+<rect x="83" y="71" width="12" height="9" class="skin"/><rect x="86" y="78" width="9" height="6" class="leather2"/>
+</g>
+
+<!-- frame 1 -->
+<g transform="translate(128 0)">
+<rect x="38" y="112" width="51" height="5" class="shadow"/><rect x="45" y="117" width="38" height="2" class="shadow"/>
+<rect x="28" y="70" width="12" height="27" class="skin2"/><rect x="25" y="90" width="16" height="8" class="leather"/>
+<rect x="48" y="91" width="13" height="23" class="skin2"/><rect x="69" y="91" width="13" height="23" class="skin2"/>
+<rect x="44" y="111" width="20" height="7" class="leather"/><rect x="67" y="111" width="19" height="7" class="leather"/>
+<path d="M39 54h48v10h6v28H82v7H45v-7H34V64h5z" class="o"/>
+<path d="M43 58h39v8h7v22H78v7H49v-7H39V66h4z" class="cloth"/>
+<rect x="48" y="65" width="29" height="25" class="cloth2"/><rect x="54" y="71" width="17" height="16" class="cloth"/>
+<rect x="47" y="88" width="34" height="7" class="leather"/>
+<path d="M78 67h14v8h5v16H85V81h-7z" class="skin"/><rect x="88" y="86" width="11" height="8" class="leather"/>
+<path d="M40 35h8v-6h29v5h8v8h5v23H83v8H44v-7h-8V42h4z" class="o"/>
+<path d="M45 39h34v5h7v18H78v6H48v-6h-8V44h5z" class="skin"/>
+<rect x="47" y="47" width="31" height="14" class="eye"/><rect x="52" y="51" width="10" height="9" class="pupil"/><rect x="68" y="51" width="8" height="9" class="pupil"/>
+<rect x="45" y="61" width="35" height="6" class="skin2"/>
+<path d="M39 42V31h6v-8h8v-5h23v5h8v8h6v11H82v-6H45v6z" class="leather"/>
+<path d="M46 31h8v-7h22v7h8v8H46z" class="leather2"/>
+<rect x="53" y="24" width="21" height="5" class="shine"/><rect x="42" y="38" width="43" height="5" class="leather"/>
+<rect x="78" y="29" width="6" height="9" class="shadow"/>
+<rect x="94" y="29" width="5" height="70" class="wood"/><rect x="96" y="28" width="2" height="67" class="wood2"/>
+<path d="M91 31l5-13 5 13-5 11z" class="steel"/><path d="M96 20l2-2 3 13h-5z" class="shine"/>
+<rect x="83" y="70" width="12" height="9" class="skin"/><rect x="86" y="77" width="9" height="6" class="leather2"/>
+</g>
+
+<!-- frame 2: step -->
+<g transform="translate(256 0)">
+<rect x="36" y="113" width="54" height="5" class="shadow"/>
+<rect x="30" y="72" width="11" height="25" class="skin2"/><rect x="27" y="91" width="15" height="8" class="leather"/>
+<rect x="46" y="92" width="13" height="22" class="skin2"/><rect x="70" y="90" width="13" height="24" class="skin2"/>
+<rect x="42" y="111" width="20" height="7" class="leather"/><rect x="68" y="111" width="19" height="7" class="leather"/>
+<path d="M40 55h48v10h6v28H82v7H45v-7H34V65h6z" class="o"/>
+<path d="M44 59h38v8h7v22H78v7H49v-7H39V67h5z" class="cloth"/>
+<rect x="49" y="66" width="28" height="25" class="cloth2"/><rect x="55" y="72" width="16" height="16" class="cloth"/>
+<rect x="47" y="89" width="34" height="7" class="leather"/>
+<path d="M78 68h14v8h5v16H85V82h-7z" class="skin"/><rect x="88" y="87" width="11" height="8" class="leather"/>
+<path d="M41 35h8v-6h29v5h8v8h5v23H84v8H45v-7h-8V42h4z" class="o"/>
+<path d="M46 39h34v5h7v18H79v6H49v-6h-8V44h5z" class="skin"/>
+<rect x="48" y="47" width="31" height="14" class="eye"/><rect x="54" y="51" width="10" height="9" class="pupil"/><rect x="69" y="51" width="8" height="9" class="pupil"/>
+<rect x="46" y="61" width="34" height="6" class="skin2"/>
+<path d="M40 42V31h6v-8h8v-5h23v5h8v8h6v11H83v-6H46v6z" class="leather"/>
+<path d="M47 31h8v-7h22v7h8v8H47z" class="leather2"/>
+<rect x="54" y="24" width="21" height="5" class="shine"/><rect x="43" y="38" width="43" height="5" class="leather"/>
+<rect x="79" y="29" width="6" height="9" class="shadow"/>
+<rect x="94" y="30" width="5" height="70" class="wood"/><rect x="96" y="29" width="2" height="67" class="wood2"/>
+<path d="M91 32l5-13 5 13-5 11z" class="steel"/><path d="M96 21l2-2 3 13h-5z" class="shine"/>
+<rect x="83" y="72" width="12" height="9" class="skin"/><rect x="86" y="79" width="9" height="6" class="leather2"/>
+</g>
+
+<!-- frame 3 -->
+<g transform="translate(384 0)">
+<rect x="38" y="112" width="51" height="5" class="shadow"/><rect x="45" y="117" width="38" height="2" class="shadow"/>
+<rect x="29" y="69" width="12" height="29" class="skin2"/><rect x="26" y="91" width="16" height="8" class="leather"/>
+<rect x="49" y="92" width="13" height="22" class="skin2"/><rect x="68" y="92" width="13" height="22" class="skin2"/>
+<rect x="45" y="111" width="19" height="7" class="leather"/><rect x="66" y="111" width="19" height="7" class="leather"/>
+<path d="M39 55h48v10h6v28H82v7H45v-7H34V65h5z" class="o"/>
+<path d="M43 59h39v8h7v22H78v7H49v-7H39V67h4z" class="cloth"/>
+<rect x="48" y="66" width="29" height="25" class="cloth2"/><rect x="54" y="72" width="17" height="16" class="cloth"/>
+<rect x="47" y="89" width="34" height="7" class="leather"/>
+<path d="M78 68h14v8h5v16H85V82h-7z" class="skin"/><rect x="88" y="87" width="11" height="8" class="leather"/>
+<path d="M40 35h8v-6h29v5h8v8h5v23H83v8H44v-7h-8V42h4z" class="o"/>
+<path d="M45 39h34v5h7v18H78v6H48v-6h-8V44h5z" class="skin"/>
+<rect x="47" y="47" width="31" height="14" class="eye"/><rect x="51" y="51" width="10" height="9" class="pupil"/><rect x="67" y="51" width="8" height="9" class="pupil"/>
+<rect x="45" y="61" width="35" height="6" class="skin2"/>
+<path d="M39 42V31h6v-8h8v-5h23v5h8v8h6v11H82v-6H45v6z" class="leather"/>
+<path d="M46 31h8v-7h22v7h8v8H46z" class="leather2"/>
+<rect x="53" y="24" width="21" height="5" class="shine"/><rect x="42" y="38" width="43" height="5" class="leather"/>
+<rect x="78" y="29" width="6" height="9" class="shadow"/>
+<rect x="94" y="29" width="5" height="70" class="wood"/><rect x="96" y="28" width="2" height="67" class="wood2"/>
+<path d="M91 31l5-13 5 13-5 11z" class="steel"/><path d="M96 20l2-2 3 13h-5z" class="shine"/>
+<rect x="83" y="71" width="12" height="9" class="skin"/><rect x="86" y="78" width="9" height="6" class="leather2"/>
+</g>
+</svg>
