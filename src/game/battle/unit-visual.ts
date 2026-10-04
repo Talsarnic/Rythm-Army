@@ -112,7 +112,7 @@ export class UnitVisual {
 
     const key = getSpearkinAnimationKey(this.member);
     if (this.appliedTextureKey !== key) {
-      this.base.setTexture(SPEARKIN_TEXTURE, getSpearkinAtlasFrame(this.member));
+      this.base.setTexture(SPEARKIN_TEXTURE, `s${getSpearkinAtlasFrame(this.member)}`);
       this.base.play(key);
       this.appliedTextureKey = key;
     }
