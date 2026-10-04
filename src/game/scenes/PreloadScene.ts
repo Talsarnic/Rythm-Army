@@ -72,10 +72,6 @@ export class PreloadScene extends Phaser.Scene {
     this.generateEnemySpritesheets();
   }
 
-  private generateProceduralSpritesheets() {
-    this.generateEnemySpritesheets();
-  }
-
   private generateEnemySpritesheets() {
     const enemyTypes = [
       // Wildlife
