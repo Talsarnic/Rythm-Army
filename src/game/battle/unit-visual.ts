@@ -41,7 +41,7 @@ export class UnitVisual {
 
     // Class silhouettes are deliberately built from the same compact pixel language
     // as the reference sprite, and sit behind the shared character body.
-    this.drawFallbackClass(this.fallbackBack, this.member.cls);
+    this.loadEquipmentArt();
 
     if (shield?.equipment?.slot === "shield") {
       this.drawFallbackShield(this.fallbackBack, this.member.shield!);
@@ -66,6 +66,9 @@ export class UnitVisual {
     this.fallbackBack.setDepth(this.base.depth - 0.2);
     this.fallbackFront.setDepth(this.base.depth + 0.2);
     this.fallbackHelmet.setDepth(this.base.depth + 0.1);
+    this.back?.setDepth(this.base.depth - 0.2);
+    this.front?.setDepth(this.base.depth + 0.2);
+    this.helmet?.setDepth(this.base.depth + 0.3);
 
     for (const layer of [this.fallbackBack, this.fallbackFront, this.fallbackHelmet]) {
       layer.setPosition(this.base.x, this.base.y);
@@ -73,16 +76,12 @@ export class UnitVisual {
       layer.setVisible(this.base.visible && this.base.alpha > 0);
     }
 
-    if (this.front) {
-      this.front.setPosition(this.base.x + 25 * this.base.scaleX, this.base.y - 7 * this.base.scaleY);
-      this.front.setScale(this.base.scaleX * 0.78, this.base.scaleY * 0.78);
-      this.front.setVisible(this.base.visible && this.base.alpha > 0);
-    }
-
-    if (this.helmet) {
-      this.helmet.setPosition(this.base.x, this.base.y - 29 * this.base.scaleY);
-      this.helmet.setScale(this.base.scaleX * 0.62, this.base.scaleY * 0.62);
-      this.helmet.setVisible(this.base.visible && this.base.alpha > 0);
+    for (const layer of [this.back, this.front, this.helmet]) {
+      if (layer) {
+        layer.setPosition(this.base.x, this.base.y);
+        layer.setScale(this.base.scaleX, this.base.scaleY);
+        layer.setVisible(this.base.visible && this.base.alpha > 0);
+      }
     }
   }
 
@@ -100,6 +99,22 @@ export class UnitVisual {
     this.front = undefined;
     this.helmet = undefined;
     this.back = undefined;
+  }
+
+  private loadEquipmentArt() {
+    const add = (id: string | undefined, layer: "back" | "front" | "helmet") => {
+      if (!id || !this.scene.textures.exists(`item-${id}`)) return;
+      const image = this.scene.add.image(this.base.x, this.base.y, `item-${id}`).setOrigin(0.5);
+      if (layer === "back") this.back = image;
+      else if (layer === "helmet") this.helmet = image;
+      else this.front = image;
+    };
+    const weapon = this.member.weapon ? ITEMS[this.member.weapon] : undefined;
+    const shield = this.member.shield ? ITEMS[this.member.shield] : undefined;
+    const helmet = this.member.helmet ? ITEMS[this.member.helmet] : undefined;
+    if (shield?.equipment?.slot === "shield") add(this.member.shield, "back");
+    if (weapon?.equipment?.slot === "weapon") add(this.member.weapon, "front");
+    if (helmet?.equipment?.slot === "helmet") add(this.member.helmet, "helmet");
   }
 
   private drawFallbackClass(g: Phaser.GameObjects.Graphics, cls: UnitMember["cls"]) {
