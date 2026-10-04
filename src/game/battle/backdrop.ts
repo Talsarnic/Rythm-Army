@@ -51,22 +51,22 @@ export class Backdrop {
     this.sky = scene.add.tileSprite(0, 0, w, h, "sky")
       .setOrigin(0).setScrollFactor(0).setDepth(-20).setTint(theme.skyTint);
 
-    this.makeHillTex("hill-far", 1024, 280, theme.far, 0.012, 0.38);
-    this.makeHillTex("hill-mid", 1024, 260, theme.mid, 0.01, 0.48);
-    this.makeHillTex("hill-near", 1024, 220, theme.near, 0.008, 0.58);
-    this.makeGroundTex("ground-tex", 512, 220, theme.ground, theme.groundEdge);
+    this.makeHillTex(`hill-far-${s.mission.id}`, 1024, 280, theme.far, 0.012, 0.38);
+    this.makeHillTex(`hill-mid-${s.mission.id}`, 1024, 260, theme.mid, 0.01, 0.48);
+    this.makeHillTex(`hill-near-${s.mission.id}`, 1024, 220, theme.near, 0.008, 0.58);
+    this.makeGroundTex(`ground-tex-${s.mission.id}`, 512, 220, theme.ground, theme.groundEdge);
 
-    this.far = scene.add.tileSprite(0, h * 0.28, w, 280, "hill-far")
+    this.far = scene.add.tileSprite(0, h * 0.28, w, 280, `hill-far-${s.mission.id}`)
       .setOrigin(0, 0).setScrollFactor(0).setDepth(-15);
-    this.mid = scene.add.tileSprite(0, h * 0.4, w, 260, "hill-mid")
+    this.mid = scene.add.tileSprite(0, h * 0.4, w, 260, `hill-mid-${s.mission.id}`)
       .setOrigin(0, 0).setScrollFactor(0).setDepth(-12);
-    this.near = scene.add.tileSprite(0, h * 0.5, w, 220, "hill-near")
+    this.near = scene.add.tileSprite(0, h * 0.5, w, 220, `hill-near-${s.mission.id}`)
       .setOrigin(0, 0).setScrollFactor(0).setDepth(-10);
 
     this.sun = scene.add.circle(w * 0.72, h * 0.22, h * 0.09, theme.sun, 0.9)
       .setScrollFactor(0).setDepth(-18);
 
-    this.ground = scene.add.tileSprite(0, s.groundY + 8, Math.max(w, s.mission.worldLength), 240, "ground-tex")
+    this.ground = scene.add.tileSprite(0, s.groundY + 8, Math.max(w, s.mission.worldLength), 240, `ground-tex-${s.mission.id}`)
       .setOrigin(0, 0).setDepth(-5);
 
     this.buildProps();
@@ -115,7 +115,7 @@ export class Backdrop {
     const { scene, s, theme } = this;
     const spacing = theme.prop === "gate" || theme.prop === "bastion" ? 420 : 520;
     for (let x = 420, i = 0; x < s.mission.worldLength - 220; x += spacing, i++) {
-      const c = scene.add.container(0, s.groundY).setDepth(-1);
+      const c = scene.add.container(0, s.groundY).setScrollFactor(0).setDepth(-1);
       c.setData("worldX", x);
       c.setData("parallax", 0.62);
       this.drawProp(c, theme.prop, i);
