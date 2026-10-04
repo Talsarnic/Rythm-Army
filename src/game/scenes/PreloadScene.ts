@@ -42,7 +42,7 @@ export class PreloadScene extends Phaser.Scene {
 
     this.load.image("sky", "/assets/map/dusk-sky.jpg");
     for (const key of SHEETS) {
-      this.load.spritesheet(key, `/assets/sprites/${key}.png`, {
+      this.load.spritesheet(key, `/assets/sprites/${key}.${key === "spearkin-idle" ? "svg" : "png"}`, {
         frameWidth: 128,
         frameHeight: 128,
       });
