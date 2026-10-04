@@ -69,6 +69,7 @@ export class PreloadScene extends Phaser.Scene {
 
     // Player art is now reference-matched hand-authored pixel art.
     // Enemy/fortification art remains generated below until its art pass.
+    this.generateEnemySpritesheets();
   }
 
   private generateProceduralSpritesheets() {
