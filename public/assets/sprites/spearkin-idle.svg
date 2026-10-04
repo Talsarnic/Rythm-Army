@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="128" viewBox="0 0 512 128" shape-rendering="crispEdges">
 <defs>
 <style>
-.o{fill:#241a1b}.ink{fill:#2d2222}.skin{fill:#d6a56a}.skin2{fill:#b8794f}.leather{fill:#70452f}.leather2{fill:#936044}.cloth{fill:#3d5260}.cloth2{fill:#587180}.metal{fill:#b9b8a9}.metal2{fill:#7f827c}.wood{fill:#8a5a36}.wood2{fill:#b57a45}.steel{fill:#d8d7c7}.shine{fill:#f1e7c8}.eye{fill:#f7f0dc}.pupil{fill:#241a1b}.shadow{fill:#38272a}
+.o{fill:#17131b}.skin{fill:#c98a5a}.skin2{fill:#9e5f43}.leather{fill:#51352d}.leather2{fill:#7b4d3a}.cloth{fill:#293b46}.cloth2{fill:#405b66}.metal{fill:#9fa49e}.metal2{fill:#6f756f}.wood{fill:#70452e}.wood2{fill:#a86f3e}.steel{fill:#c8c8b8}.shine{fill:#eadcae}.eye{fill:#eee2c4}.pupil{fill:#17131b}.shadow{fill:#211a22}
 </style>
 </defs>
 <!-- frame 0 -->
