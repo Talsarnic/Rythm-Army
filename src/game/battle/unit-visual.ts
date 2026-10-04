@@ -39,6 +39,10 @@ export class UnitVisual {
     const shield = this.member.shield ? ITEMS[this.member.shield] : undefined;
     const helmet = this.member.helmet ? ITEMS[this.member.helmet] : undefined;
 
+    // Class silhouettes are deliberately built from the same compact pixel language
+    // as the reference sprite, and sit behind the shared character body.
+    this.drawFallbackClass(this.fallbackBack, this.member.cls);
+
     if (shield?.equipment?.slot === "shield") {
       this.drawFallbackShield(this.fallbackBack, this.member.shield!);
     }
@@ -59,6 +63,10 @@ export class UnitVisual {
   }
 
   sync() {
+    this.fallbackBack.setDepth(this.base.depth - 0.2);
+    this.fallbackFront.setDepth(this.base.depth + 0.2);
+    this.fallbackHelmet.setDepth(this.base.depth + 0.1);
+
     for (const layer of [this.fallbackBack, this.fallbackFront, this.fallbackHelmet]) {
       layer.setPosition(this.base.x, this.base.y);
       layer.setScale(this.base.scaleX, this.base.scaleY);
@@ -92,6 +100,51 @@ export class UnitVisual {
     this.front = undefined;
     this.helmet = undefined;
     this.back = undefined;
+  }
+
+  private drawFallbackClass(g: Phaser.GameObjects.Graphics, cls: UnitMember["cls"]) {
+    g.clear();
+
+    if (cls === "banner") {
+      g.fillStyle(0x75462f, 1);
+      g.fillRect(-34, -58, 3, 68);
+      g.fillStyle(0x8e3e3d, 1);
+      g.fillTriangle(-31, -56, -2, -52, -31, -28);
+      g.fillStyle(0xb95745, 1);
+      g.fillTriangle(-29, -53, -6, -50, -29, -32);
+      g.fillStyle(0xf0c96a, 1);
+      g.fillRect(-21, -47, 7, 3);
+      g.fillRect(-18, -50, 3, 9);
+    } else if (cls === "kiba") {
+      g.fillStyle(0x241a1d, 1);
+      g.fillEllipse(-18, 31, 54, 25);
+      g.fillStyle(0x394b50, 1);
+      g.fillEllipse(-17, 29, 47, 19);
+      g.fillStyle(0x75462f, 1);
+      g.fillRect(-34, 35, 8, 22);
+      g.fillRect(2, 35, 8, 22);
+      g.fillStyle(0xa86b45, 1);
+      g.fillRect(-38, 17, 15, 8);
+    } else if (cls === "tori") {
+      g.fillStyle(0xb7b0a5, 1);
+      g.fillTriangle(-25, 3, -52, -20, -45, 16);
+      g.fillTriangle(25, 3, 52, -20, 45, 16);
+      g.fillStyle(0xe5e0d4, 1);
+      g.fillTriangle(-22, 4, -43, -13, -36, 12);
+      g.fillTriangle(22, 4, 43, -13, 36, 12);
+    } else if (cls === "maho") {
+      g.fillStyle(0x7d68a8, 1);
+      g.fillTriangle(-22, 19, 0, 4, 22, 19);
+      g.fillStyle(0xb7a1df, 1);
+      g.fillRect(-12, 7, 24, 6);
+    } else if (cls === "robo") {
+      g.fillStyle(0x656d6b, 1);
+      g.fillRect(-33, -2, 14, 20);
+      g.fillRect(19, -2, 14, 20);
+      g.fillStyle(0xd0d0c5, 1);
+      g.fillRect(-30, 1, 8, 10);
+      g.fillRect(22, 1, 8, 10);
+    }
   }
 
   private drawFallbackWeapon(g: Phaser.GameObjects.Graphics, id: string) {
