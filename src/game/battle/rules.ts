@@ -54,13 +54,46 @@ export const STAGGER_SPEED = 40;
 export const FEVER_ARMY_SPEED = 1.32;
 export const FEVER_ENEMY_SPEED = 0.9;
 
-/** The army can't be marched past these distances from the ends of the map. */
+/** Knockback weight and collision stopping radius for each enemy/obstacle type */
+export const ENEMY_COLLISION_RADIUS: Record<EnemyKind, number> = {
+  kooda: 24,
+  goretusk: 32,
+  brute: 44,
+  stag: 30,
+  "sand-crab": 34,
+  barricade: 55,
+  "stone-wall": 70,
+  watchtower: 75,
+  "catapult-tower": 85,
+  "tribe-spear": 28,
+  "tribe-shield": 34,
+  "tribe-bow": 26,
+  "tribe-kiba": 38,
+  "tribe-deka": 48,
+  "tribe-tori": 28,
+  howl: 90,
+  "drake-titan": 110,
+  "colossus-golem": 130,
+};
+
+/** The army can't be marched past these distances from the ends of the map or through living obstacles. */
 const ARMY_MIN_X = 80;
 const ARMY_END_MARGIN = 200;
 
-export function armyAdvance(armyX: number, commandSpeed: number, fever: boolean, dt: number, worldLength: number): number {
+export function armyAdvance(
+  armyX: number,
+  commandSpeed: number,
+  fever: boolean,
+  dt: number,
+  worldLength: number,
+  maxAllowedX = worldLength - ARMY_END_MARGIN
+): number {
   const speed = commandSpeed * (fever ? FEVER_ARMY_SPEED : 1);
-  return Math.min(worldLength - ARMY_END_MARGIN, Math.max(ARMY_MIN_X, armyX + speed * dt));
+  const targetX = armyX + speed * dt;
+  if (speed > 0) {
+    return Math.max(ARMY_MIN_X, Math.min(maxAllowedX, targetX));
+  }
+  return Math.max(ARMY_MIN_X, targetX);
 }
 
 /** Damage and knockback multipliers for one volley of ATTACK, CHARGE or DEFEND. */
@@ -118,7 +151,7 @@ export function enemyWalk(distToFront: number, range: number, speed: number, fev
   return 0;
 }
 
-/** The target ahead of `x` within `range`, closest first. Ignores anything that is dead or too close. */
+/** The target ahead of `x` within `range`, closest first. Ignores anything that is dead or behind. */
 export function nearestAhead<T>(
   items: readonly T[],
   x: number,
@@ -131,7 +164,7 @@ export function nearestAhead<T>(
   for (const item of items) {
     if (!isAlive(item)) continue;
     const d = xOf(item) - x;
-    if (d > 8 && d < bestD) {
+    if (d >= -15 && d <= bestD) {
       bestD = d;
       best = item;
     }

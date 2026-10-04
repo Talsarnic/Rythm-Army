@@ -4,6 +4,48 @@ All notable changes, version milestones, and feature updates for **Rhythm Army**
 
 ---
 
+## [0.00025] - 2026-10-03
+
+### Fixed
+- **Obstacle & Barricade Collision and Attack Sticking**:
+  - Fixed army advance stopping distance calculation in `BattleScene.ts` and `army.ts` so the front rank closes to within true melee strike distance (~20px) of barricades and enemies, preventing units from getting stuck out of attack range.
+  - Re-tightened `FORMATION` coordinates across all classes so rear and midline ranged squads (Spearkin, Bowkin, Magekin, Warhornkin) stay well within firing range while frontline tanks (Aegiskin, Dekakin, Mechakin) engage obstacles directly.
+  - Adjusted `nearestAhead` in `rules.ts` to allow melee and close-quarter attacks to register seamlessly against static fortifications.
+  - Registered procedural animation for `robokin-idle` in `PreloadScene.ts`.
+
+---
+
+## [0.00024] - 2026-10-03
+
+### Changed
+- **Obstacle & Barricade Collision Stopping**:
+  - Implemented physical collision clamping in `BattleScene.ts`, `army.ts`, and `rules.ts` so the army's march and individual unit attack rushes are physically stopped by barricades, stone wall ramparts, watchtowers, catapult towers, and frontline enemies instead of passing through them.
+  - Defined explicit collision bounding radii (`ENEMY_COLLISION_RADIUS`) for all enemy and obstacle archetypes.
+- **Authentic Attack Styles, Animations & Ranges**:
+  - **Bludgeonkin (Dekapon)**: Giant overhead club ground smash delivering an area shockwave, ground ring, heavy damage, stun, and massive knockback.
+  - **Horsekin (Kibapon)**: Fast cavalry sprint, forward lance lunge with high knockback shove that pushes enemies back.
+  - **Mechakin (Robopon)**: Rapid mechanical gauntlet combo with 2.5x structure damage bonus against barricades, walls, and towers.
+  - **Magekin (Mahopon)**: Mystic staff channel summoning celestial/arcane lightning meteor strikes descending directly onto targets.
+  - **Warhornkin (Megapon)**: Piercing resonant sonic soundwaves that pierce through enemy ranks.
+  - **Wingkin (Toripon)**: High-altitude aerial flight with downward dive javelin throws.
+  - **Spearkin (Yaripon)**: High leap jump-throws with arched ballistic spear trajectories.
+  - **Bowkin (Yumipon)**: High arcing arrow volleys with 3-arrow spread in Fever mode.
+  - **Aegiskin (Tatepon)**: Frontline sword slashes and shield blocking wall.
+
+---
+
+## [0.00023] - 2026-10-03
+
+### Changed
+- **Faithful Unit & Enemy Visual Scaling**:
+  - Aligned all friendly kin unit proportions with authentic Patapon dimensions: Dekakin (giant heavyweight ~116px), Kibakin (mounted cavalry ~104px), Bannerkin (standard with battle banner ~92px), Wingkin (aerial sky lancer ~86px), and standard infantry kin (Aegiskin, Spearkin, Bowkin, Magekin, Warhornkin, Mechakin ~80px).
+  - Scaled enemy units, wildlife, fortifications, and bosses: Colossus Golem (2.8x / ~224px), Pyro Drake Titan (2.5x / ~200px), Iron Howl (2.1x / ~168px), Catapult Towers (1.95x / ~156px), Archer Watchtowers (1.75x / ~140px), Stone Gate Ramparts (1.5x / ~120px), Wood Palisades (1.25x / ~100px), Tuskbrutes (1.35x), Golden Antler Stags (1.15x), and Ironback Scuttlers (1.05x).
+  - Adjusted dynamic health bar widths and vertical offsets across all unit categories.
+- **Patapon Campaign Stage Lengths & Layouts**:
+  - Expanded and tuned campaign mission world lengths (2600px - 6800px) and wave spawn coordinates across all 8 Patapon 2 campaign missions to reflect authentic march pacing, obstacle encounters, and boss arenas.
+
+---
+
 ## [0.00022] - 2026-10-03
 
 ### Changed

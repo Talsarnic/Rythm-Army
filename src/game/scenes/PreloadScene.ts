@@ -505,6 +505,7 @@ export class PreloadScene extends Phaser.Scene {
       "megakin-idle",
       "torikin-idle",
       "mahokin-idle",
+      "robokin-idle",
       "kooda-idle",
       "stag-idle",
       "crab-idle",

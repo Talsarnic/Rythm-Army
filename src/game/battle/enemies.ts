@@ -87,8 +87,22 @@ export class Enemies {
       else if (stats.isBoss && s.telegraph) e.sprite.setTint(0xff6644);
       else e.sprite.clearTint();
 
-      const bw = stats.isBoss ? (e.kind === "colossus-golem" ? 110 : 86) : stats.isStationary ? 56 : 40;
-      const barY = e.sprite.y - (stats.isBoss ? 115 : stats.isStationary ? 88 : 74);
+      const bw = stats.isBoss
+        ? (e.kind === "colossus-golem" ? 140 : e.kind === "drake-titan" ? 130 : 115)
+        : stats.isStationary
+        ? (e.kind === "catapult-tower" ? 90 : e.kind === "watchtower" ? 75 : 60)
+        : stats.scale > 1.2
+        ? 52
+        : 38;
+      const barY = e.sprite.y - (
+        stats.isBoss
+          ? (e.kind === "colossus-golem" ? 175 : e.kind === "drake-titan" ? 160 : 135)
+          : stats.isStationary
+          ? (e.kind === "catapult-tower" ? 145 : e.kind === "watchtower" ? 130 : 92)
+          : stats.scale > 1.2
+          ? 96
+          : 74
+      );
       drawBar(e, e.sprite.x, barY, bw);
     }
   }
@@ -173,12 +187,12 @@ export class Enemies {
     for (const pack of wave.enemies) {
       for (let i = 0; i < pack.count; i++) {
         const stats = ENEMY_STATS[pack.kind];
-        const x = wave.atX + n * (stats.isStationary ? 90 : 54);
+        const x = wave.atX + n * (stats.isStationary ? (stats.scale > 1.6 ? 120 : 90) : 54);
         const y = s.groundY + (stats.isStationary ? 0 : (n % 2) * 10);
         const sprite = scene.add.sprite(x, y, stats.sprite, 0);
         sprite.setOrigin(0.5, 0.92);
-        sprite.setDepth(stats.flying ? 14 : 8);
-        const size = 86 * stats.scale;
+        sprite.setDepth(stats.flying ? 14 : stats.isBoss ? 6 : stats.isStationary ? 5 : 8);
+        const size = Math.round(80 * stats.scale);
         sprite.setDisplaySize(size, size);
         sprite.play(`${stats.sprite}-anim`);
         const bar = scene.add.graphics().setDepth(40);

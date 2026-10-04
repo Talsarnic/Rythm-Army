@@ -134,7 +134,20 @@ export class BattleScene extends Phaser.Scene {
     if (s.action && beatPos >= s.action.beat + INPUT_BEATS) s.clearAction();
 
     const act = s.action ? ACTION[s.action.id] : null;
-    s.armyX = armyAdvance(s.armyX, act?.speed ?? 0, s.engine.fever, dt, s.mission.worldLength);
+
+    // Calculate maximum allowed army advance position so the army is stopped by living obstacles/enemies
+    let maxAllowedArmyX = s.mission.worldLength - 200;
+    const livingUnits = s.units.filter((u) => u.alive && u.cls !== "banner");
+    const maxFormX = livingUnits.length > 0 ? Math.max(...livingUnits.map((u) => u.formX)) : 0;
+    const livingEnemies = s.enemies.filter((e) => e.alive);
+    if (livingEnemies.length > 0) {
+      livingEnemies.sort((a, b) => a.sprite.x - b.sprite.x);
+      const frontEnemy = livingEnemies[0];
+      // The frontmost unit rank stops right in melee strike range of the obstacle/enemy (within 20px)
+      maxAllowedArmyX = Math.min(maxAllowedArmyX, frontEnemy.sprite.x - 20 - maxFormX);
+    }
+
+    s.armyX = armyAdvance(s.armyX, act?.speed ?? 0, s.engine.fever, dt, s.mission.worldLength, maxAllowedArmyX);
 
     this.enemies.spawnDue();
     this.army.update(dt, beatPos);

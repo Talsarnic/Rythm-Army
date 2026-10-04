@@ -39,47 +39,81 @@ export class Combat {
 
       if (damage <= 0) continue;
       // Search for nearest enemy from this unit's EXACT live sprite position in the world
-      const target = this.nearestEnemy(u.sprite.x, range + (charged ? 75 : 0));
+      const target = this.nearestEnemy(u.sprite.x, range + (charged ? 80 : 0));
       if (!target) continue;
 
       hitAny = true;
       u.lunge = defend ? 0.6 : 1;
-      const dmg = scaledDamage(damage, mod.damage);
+      let dmg = scaledDamage(damage, mod.damage);
+
+      // Structure damage bonus for Mechakin (Robopon) and Bludgeonkin (Dekapon) vs obstacles/forts
+      const isStructure = target.kind ? (ENEMY_STATS[target.kind]?.isStationary ?? false) : false;
+      if (isStructure) {
+        if (u.cls === "robo") dmg = Math.round(dmg * 2.5);
+        else if (u.cls === "deka") dmg = Math.round(dmg * 1.8);
+      }
+
       const isSpear = u.cls === "spear" || u.cls === "tori";
       const isSonic = u.cls === "mega";
       const isMagic = u.cls === "maho";
       const isBow = u.cls === "bow";
       const isCavalry = u.cls === "kiba";
-      const isHeavy = u.cls === "deka" || u.cls === "robo";
+      const isDekapon = u.cls === "deka";
+      const isRobo = u.cls === "robo";
 
-      if (role === "ranged" || role === "magic") {
+      if (role === "ranged") {
         // In authentic Patapon style:
         // Bowkin fires a 3-arrow arched volley during Fever or Charge
-        // Spearkin leaps up to throw javelins
+        // Spearkin / Wingkin leap to throw piercing javelins
         // Warhornkin fires resonant piercing sound waves
-        // Magekin channels elemental bolts
         const volleyCount = (isBow && (s.engine.fever || charged)) ? 3 : (isSonic && s.engine.fever) ? 2 : 1;
         const arrowDmg = volleyCount > 1 ? Math.max(1, Math.round(dmg / (volleyCount === 3 ? 1.7 : 1.3))) : dmg;
 
         for (let v = 0; v < volleyCount; v++) {
           const delay = v * 95;
           const launchX = u.sprite.x;
-          const launchY = u.sprite.y - 38;
+          const launchY = u.sprite.y - (u.cls === "tori" ? 18 : 38);
           if (delay === 0) {
-            this.fireRanged(launchX, launchY, target, arrowDmg, isSpear, 0.75 * mod.power, isSonic, isMagic);
+            this.fireRanged(launchX, launchY, target, arrowDmg, isSpear, 0.75 * mod.power, isSonic, false, 0, u.cls === "tori");
           } else {
             this.scene.time.delayedCall(delay, () => {
               if (u.alive && target.alive) {
-                this.fireRanged(u.sprite.x, u.sprite.y - 38, target, arrowDmg, isSpear, 0.75 * mod.power, isSonic, isMagic, v * 14);
+                this.fireRanged(u.sprite.x, u.sprite.y - 38, target, arrowDmg, isSpear, 0.75 * mod.power, isSonic, false, v * 14, u.cls === "tori");
               }
             });
           }
         }
+      } else if (role === "magic") {
+        // Magekin (Mahopon): Elemental sky strike descending directly from the heavens onto target
+        this.castMagicSpell(u.sprite.x, u.sprite.y, target, dmg, mod.power);
       } else {
-        // Melee combat: Swords, Clubs, Gauntlets, Cavalry Lances
-        const shovePower = (isHeavy ? 2.2 : isCavalry ? 1.8 : 1.2) * mod.power;
-        this.hit(target, dmg, shovePower);
-        fx.impact(target.sprite.x - 18, target.sprite.y - 34);
+        // Melee combat: Swords (Aegiskin), Clubs (Dekapon), Gauntlets (Robopon), Cavalry Lances (Horsekin)
+        if (isDekapon) {
+          // Dekapon: Giant overhead ground smash with heavy shockwave & stun
+          const shovePower = 3.2 * mod.power;
+          this.hit(target, dmg, shovePower);
+          fx.ring(target.sprite.x - 10, s.groundY - 10, 0xf59e0b);
+          fx.puff(target.sprite.x - 10, s.groundY - 10, 6);
+          fx.impact(target.sprite.x - 16, target.sprite.y - 36);
+          s.addTrauma(0.18);
+        } else if (isCavalry) {
+          // Kibapon: Cavalry lance charge with extreme knockback shove
+          const shovePower = 2.6 * mod.power;
+          this.hit(target, dmg, shovePower);
+          fx.impact(target.sprite.x - 14, target.sprite.y - 34);
+          fx.puff(u.sprite.x, s.groundY + 4, 3);
+        } else if (isRobo) {
+          // Robopon: Rapid mechanical dual punch combo
+          const shovePower = 2.2 * mod.power;
+          this.hit(target, dmg, shovePower);
+          fx.impact(target.sprite.x - 18, target.sprite.y - 32);
+          fx.sparks("hit", 8, target.sprite.x - 14, target.sprite.y - 32);
+        } else {
+          // Aegiskin: Sword slash & frontline shield push
+          const shovePower = 1.3 * mod.power;
+          this.hit(target, dmg, shovePower);
+          fx.impact(target.sprite.x - 18, target.sprite.y - 34);
+        }
       }
     }
     if (hitAny) {
@@ -177,14 +211,18 @@ export class Combat {
     power = 1,
     isSonic = false,
     isMagic = false,
-    arcVariance = 0
+    arcVariance = 0,
+    isToripon = false
   ) {
     const { scene, fx, s } = this;
     const startPos = { x: startX + 10, y: startY };
     const projectile = scene.add
       .sprite(startPos.x, startPos.y, "arrow", 0)
       .setDepth(35)
-      .setDisplaySize(isSpear ? 64 : isSonic ? 52 : isMagic ? 48 : 44, isSpear ? 64 : isSonic ? 52 : isMagic ? 48 : 44);
+      .setDisplaySize(
+        isSpear ? (isToripon ? 60 : 64) : isSonic ? 52 : isMagic ? 48 : 44,
+        isSpear ? (isToripon ? 60 : 64) : isSonic ? 52 : isMagic ? 48 : 44
+      );
 
     if (isSpear) {
       projectile.setTint(0xffd59e);
@@ -202,7 +240,11 @@ export class Combat {
     const dist = Math.max(60, destX - startPos.x);
 
     // Dynamic arc height based on distance so it arcs visibly over troops
-    const arcHeight = isSonic ? 20 : isMagic ? 55 : (isSpear ? Math.min(180, Math.max(90, dist * 0.45)) : Math.min(140, Math.max(70, dist * 0.38))) + arcVariance;
+    const arcHeight = isSonic
+      ? 15
+      : isToripon
+      ? -20 // Toripon dive-throws javelins downward from above
+      : (isSpear ? Math.min(180, Math.max(90, dist * 0.45)) : Math.min(140, Math.max(70, dist * 0.38))) + arcVariance;
     const duration = Math.min(500, Math.max(260, dist * 0.9));
 
     const flight = { t: 0 };
@@ -242,6 +284,40 @@ export class Combat {
         } else {
           // Missed because enemy moved/fled or was destroyed: impact dust on the ground
           fx.puff(destX, s.groundY - 10, 3);
+        }
+      },
+    });
+  }
+
+  /** Magekin (Mahopon) mystical sky strike that calls down elemental fire/thunder from above */
+  private castMagicSpell(
+    casterX: number,
+    casterY: number,
+    target: Fighter,
+    dmg: number,
+    power = 1
+  ) {
+    const { scene, fx, s } = this;
+    const destX = target.sprite.x - 10;
+    const destY = target.sprite.y - 36;
+
+    // Glowing staff channel spark
+    fx.sparks("hit", 4, casterX + 16, casterY - 34);
+
+    // Descending lightning / arcane meteor strike
+    const spell = scene.add.circle(destX, -40, 18, 0xf43f5e, 0.9).setDepth(48);
+    scene.tweens.add({
+      targets: spell,
+      y: destY,
+      duration: 280,
+      ease: "Quad.easeIn",
+      onComplete: () => {
+        spell.destroy();
+        fx.ring(destX, destY + 20, 0xec4899);
+        fx.sparks("hit", 14, destX, destY);
+        fx.impact(destX, destY);
+        if (target.alive) {
+          this.hit(target, dmg, 1.4 * power);
         }
       },
     });

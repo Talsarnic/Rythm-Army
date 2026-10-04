@@ -174,10 +174,10 @@ describe("nearestAhead", () => {
     assert.equal(nearestAhead(items, 100, 500, xOf, alive), items[1]);
   });
 
-  it("ignores targets behind or right on top of the shooter", () => {
+  it("ignores targets behind the shooter", () => {
     const items: T[] = [
       { x: 50, alive: true },
-      { x: 105, alive: true },
+      { x: 80, alive: true },
     ];
     assert.equal(nearestAhead(items, 100, 500, xOf, alive), null);
   });
@@ -227,6 +227,13 @@ describe("armyAdvance", () => {
 
   it("stops 200px before the end of the map", () => {
     assert.equal(armyAdvance(3790, 310, false, 1, 4000), 3800);
+  });
+
+  it("stops at obstacles and enemy lines when maxAllowedX is specified", () => {
+    // Cannot march past maxAllowedX (e.g. 620px where barricade/enemy line stops army)
+    assert.equal(armyAdvance(550, 155, false, 1, 4000, 620), 620);
+    // Can still move backwards away from the obstacle
+    assert.equal(armyAdvance(620, -125, false, 1, 4000, 620), 495);
   });
 
   it("retreat is the only command that moves the army backwards", () => {

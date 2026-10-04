@@ -207,7 +207,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 0,
     range: 160,
     speed: 75,
-    scale: 0.8,
+    scale: 0.85,
     isFleeing: true,
   },
   goretusk: {
@@ -217,7 +217,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 8,
     range: 70,
     speed: 46,
-    scale: 0.92,
+    scale: 0.95,
   },
   brute: {
     name: "Tuskbrute",
@@ -226,7 +226,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 15,
     range: 82,
     speed: 32,
-    scale: 1.28,
+    scale: 1.35,
   },
   stag: {
     name: "Golden Antler",
@@ -235,7 +235,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 0,
     range: 180,
     speed: 80,
-    scale: 1.05,
+    scale: 1.15,
     isFleeing: true,
   },
   "sand-crab": {
@@ -245,7 +245,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 12,
     range: 65,
     speed: 26,
-    scale: 1.15,
+    scale: 1.05,
   },
 
   // --- Obstacles & Fortifications ---
@@ -256,7 +256,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 0,
     range: 0,
     speed: 0,
-    scale: 1.1,
+    scale: 1.25,
     isStationary: true,
   },
   "stone-wall": {
@@ -266,7 +266,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 0,
     range: 0,
     speed: 0,
-    scale: 1.35,
+    scale: 1.5,
     isStationary: true,
   },
   watchtower: {
@@ -276,7 +276,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 10,
     range: 320,
     speed: 0,
-    scale: 1.3,
+    scale: 1.75,
     isStationary: true,
     isRanged: true,
   },
@@ -287,7 +287,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 24,
     range: 420,
     speed: 0,
-    scale: 1.55,
+    scale: 1.95,
     isStationary: true,
     isRanged: true,
   },
@@ -300,7 +300,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 9,
     range: 240,
     speed: 40,
-    scale: 0.95,
+    scale: 0.93,
     isRanged: true,
   },
   "tribe-shield": {
@@ -310,7 +310,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 7,
     range: 60,
     speed: 36,
-    scale: 0.98,
+    scale: 0.93,
   },
   "tribe-bow": {
     name: "Redmask Archer",
@@ -319,7 +319,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 8,
     range: 340,
     speed: 34,
-    scale: 0.92,
+    scale: 0.93,
     isRanged: true,
   },
   "tribe-kiba": {
@@ -329,7 +329,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 16,
     range: 75,
     speed: 70,
-    scale: 1.05,
+    scale: 1.2,
   },
   "tribe-deka": {
     name: "Redmask Crusher",
@@ -360,7 +360,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 22,
     range: 110,
     speed: 22,
-    scale: 1.7,
+    scale: 2.1,
     isBoss: true,
   },
   "drake-titan": {
@@ -370,7 +370,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 32,
     range: 140,
     speed: 18,
-    scale: 2.1,
+    scale: 2.5,
     isBoss: true,
   },
   "colossus-golem": {
@@ -380,7 +380,7 @@ export const ENEMY_STATS: Record<EnemyKind, EnemyStatDef> = {
     damage: 40,
     range: 130,
     speed: 14,
-    scale: 2.3,
+    scale: 2.8,
     isBoss: true,
   },
 };

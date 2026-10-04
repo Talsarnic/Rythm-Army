@@ -3,21 +3,21 @@ import { CLASSES, computeUnitStats, STARTER_ARMY } from "../data/units";
 import { loadSave } from "../save.ts";
 import type { UnitClass, UnitMember } from "../types";
 import { beatFraction, drawBar, squash } from "./fighter.ts";
-import { ACTION, easeUnitKnockback } from "./rules.ts";
+import { ACTION, ENEMY_COLLISION_RADIUS, easeUnitKnockback } from "./rules.ts";
 import type { BattleState } from "./state.ts";
 
 /** Where each class stands relative to the banner, front rank on the right. */
-const FORMATION: Record<UnitClass, number[]> = {
-  banner: [-260],
-  maho: [-220, -195, -170],
-  mega: [-150, -125, -100],
-  bow: [-80, -65, -50, -35, -20, -5],
-  spear: [15, 30, 45, 60, 75, 90],
-  tori: [110, 135, 160],
-  kiba: [175, 200, 225],
-  deka: [235, 260, 285],
-  robo: [290, 310, 330],
-  aegis: [340, 360, 380, 400, 420, 440],
+export const FORMATION: Record<UnitClass, number[]> = {
+  banner: [-180],
+  maho: [-140, -120, -100],
+  mega: [-95, -75, -55],
+  bow: [-40, -25, -10, 5, 20, 35],
+  spear: [50, 68, 86, 104, 122, 140],
+  tori: [120, 140, 160],
+  kiba: [145, 165, 185],
+  deka: [155, 175, 195],
+  robo: [165, 185, 205],
+  aegis: [170, 188, 206, 224, 242, 260],
 };
 
 /** The player's marching army: spawning it in formation and animating it each frame. */
@@ -51,7 +51,13 @@ export class Army {
       const sprite = scene.add.sprite(s.armyX + formX, s.groundY + formY, classDef.sprite, 0);
       sprite.setOrigin(0.5, 0.92);
       sprite.setDepth(10 + i * 0.01);
-      const display = cls === "banner" ? 92 : cls === "deka" ? 108 : cls === "kiba" ? 96 : 80;
+      // Unit visual dimensions faithfully scaled to Patapon archetypes:
+      // Dekakin: giant heavyweight ~116px
+      // Kibakin: mounted cavalry with horse ~104px
+      // Bannerkin: standard with large flag ~92px
+      // Wingkin: sky flyer ~86px
+      // Standard kin (Aegiskin, Spearkin, Bowkin, Magekin, Warhornkin, Mechakin): ~80px
+      const display = cls === "banner" ? 92 : cls === "deka" ? 116 : cls === "kiba" ? 104 : cls === "tori" ? 86 : 80;
       sprite.setDisplaySize(display, display);
       sprite.play(`${classDef.sprite}-anim`);
       const bar = scene.add.graphics().setDepth(40);
@@ -110,7 +116,8 @@ export class Army {
       if (u.cls !== "banner" && (isAttacking || isCharging) && nearestEnemy) {
         const uCurrentX = s.armyX + u.formX + u.attackOffset;
         const enemyDist = nearestEnemy.sprite.x - uCurrentX;
-        const desiredDist = u.range ? Math.max(35, u.range * 0.72) : 45;
+        const desiredDist = u.range ? Math.max(40, u.range * 0.72) : 50;
+        const obstacleRadius = nearestEnemy.kind ? ENEMY_COLLISION_RADIUS[nearestEnemy.kind] ?? 30 : 30;
 
         if (enemyDist > desiredDist) {
           // Surge forward towards enemy, capped at a max tether ahead of formation
@@ -120,6 +127,14 @@ export class Army {
         } else {
           // In range: ease attack offset
           u.attackOffset = Math.max(0, u.attackOffset - dt * 45);
+        }
+
+        // Clamp unit's position so it stops physically in front of obstacles/enemies (cannot pass through)
+        const maxUnitX = nearestEnemy.sprite.x - 20;
+        const currentBaseX = s.armyX + u.formX;
+        const maxOffset = Math.max(0, maxUnitX - currentBaseX);
+        if (u.attackOffset > maxOffset) {
+          u.attackOffset = maxOffset;
         }
 
         // Jump windup animations for Spearkin / Wingkin (leaping javelins)
