@@ -1,6 +1,7 @@
 import type * as Phaser from "phaser";
 import type { UnitMember } from "../types";
 import { ITEMS } from "../data/items.ts";
+import { getSpearkinAnimationKey, getSpearkinAtlasFrame, SPEARKIN_TEXTURE } from "./spearkin-loadout";
 
 /**
  * Equipment-aware pixel-art composition.
@@ -114,12 +115,12 @@ export class UnitVisual {
       ? this.member.weapon
       : "spear-wood";
 
-    const key = `spearkin-${helmet}-${weapon}`;
-    if (!this.scene.textures.exists(key)) return;
+    if (!this.scene.textures.exists(SPEARKIN_TEXTURE)) return;
 
+    const key = getSpearkinAnimationKey(this.member);
     if (this.appliedTextureKey !== key) {
-      this.base.setTexture(key, 0);
-      this.base.play(`${key}-anim`);
+      this.base.setTexture(SPEARKIN_TEXTURE, getSpearkinAtlasFrame(this.member));
+      this.base.play(key);
       this.appliedTextureKey = key;
     }
   }
