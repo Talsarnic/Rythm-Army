@@ -6,6 +6,7 @@ import { beatFraction, drawBar, squash } from "./fighter.ts";
 import { ACTION, ENEMY_COLLISION_RADIUS, easeUnitKnockback } from "./rules.ts";
 import type { BattleState } from "./state.ts";
 import { UnitVisual } from "./unit-visual.ts";
+import { getSpearkinAtlasFrame, SPEARKIN_TEXTURE } from "./spearkin-loadout";
 
 /** Where each class stands relative to the banner, front rank on the right. */
 export const FORMATION: Record<UnitClass, number[]> = {
@@ -45,7 +46,9 @@ export class Army {
       used[cls] = idx + 1;
       const formX = FORMATION[cls]?.[idx] ?? idx * 36;
       const formY = (i % 2) * 8;
-      const sprite = scene.add.sprite(s.armyX + formX, s.groundY + formY, classDef.sprite, 0);
+      const textureKey = cls === "spear" ? SPEARKIN_TEXTURE : classDef.sprite;
+      const initialFrame = cls === "spear" ? getSpearkinAtlasFrame(member) : 0;
+      const sprite = scene.add.sprite(s.armyX + formX, s.groundY + formY, textureKey, initialFrame);
       sprite.setOrigin(0.5, 0.92);
       sprite.setDepth(10 + i * 0.01);
       // Unit visual dimensions faithfully scaled to Patapon archetypes:
