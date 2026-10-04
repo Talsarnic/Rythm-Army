@@ -65,7 +65,7 @@ export class PreloadScene extends Phaser.Scene {
       // This avoids browser-dependent SVG spritesheet dimension parsing.
       this.load.image(key, `/assets/sprites/${file}`);
     }
-    this.load.image(SPEARKIN_TEXTURE, "/assets/sprites/spearkin-loadouts.svg");
+    this.load.image(SPEARKIN_TEXTURE, "/assets/sprites/spearkin-loadouts-moonlighter.png");
     this.load.spritesheet("arrow", "/assets/sprites/arrow.png", { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet("impact", "/assets/sprites/impact.png", { frameWidth: 128, frameHeight: 128 });
     const EQUIPMENT_ART = [
@@ -402,7 +402,7 @@ export class PreloadScene extends Phaser.Scene {
       }
     }
 
-    // The atlas is 16 loadouts x 4 animation frames, packed as 16 frames across each row.
+    // The atlas is 16 loadouts x 4 animation frames, using 96px frames.
     const spearkinTexture = this.textures.get(SPEARKIN_TEXTURE);
     if (spearkinTexture && !spearkinTexture.has(0)) {
       spearkinTexture.firstFrame = 0;
@@ -411,7 +411,7 @@ export class PreloadScene extends Phaser.Scene {
         const row = Math.floor(frame / 16);
         const name = `s${frame}`;
         if (!spearkinTexture.has(name)) {
-          spearkinTexture.add(name, 0, column * 128, row * 128, 128, 128);
+          spearkinTexture.add(name, 0, column * 96, row * 96, 96, 96);
         }
       }
     }
