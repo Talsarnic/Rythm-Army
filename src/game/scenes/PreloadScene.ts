@@ -58,14 +58,22 @@ export class PreloadScene extends Phaser.Scene {
     });
 
     this.load.image("sky", "/assets/map/dusk-sky.jpg");
-    for (const [key, source] of PLAYER_SHEETS) {
-      this.load.spritesheet(key, `/assets/sprites/${source}`, {
+    for (const key of PLAYER_SHEETS) {
+      this.load.spritesheet(key, `/assets/sprites/${key}.svg`, {
         frameWidth: 128,
         frameHeight: 128,
       });
     }
     this.load.spritesheet("arrow", "/assets/sprites/arrow.png", { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet("impact", "/assets/sprites/impact.png", { frameWidth: 128, frameHeight: 128 });
+    const EQUIPMENT_ART = [
+      "spear-wood","spear-iron","spear-fang","spear-storm","sword-wood","sword-iron","sword-flame","sword-divine",
+      "shield-wood","shield-iron","shield-tower","shield-aegis-core","bow-wood","bow-recurve","bow-great","bow-cyclone",
+      "club-wood","club-iron","club-crusher","club-divine","horn-wood","horn-iron","horn-sonic","horn-divine",
+      "staff-wood","staff-flame","staff-thunder","staff-divine","arm-wood","arm-iron","arm-crusher","arm-divine",
+      "helm-leather","helm-iron","helm-great","helm-crown",
+    ] as const;
+    for (const id of EQUIPMENT_ART) this.load.image(`item-${id}`, `/assets/items/${id}.svg`);
 
     // Player art is now reference-matched hand-authored pixel art.
     // Enemy/fortification art remains generated below until its art pass.
