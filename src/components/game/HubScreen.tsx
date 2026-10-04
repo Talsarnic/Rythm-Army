@@ -10,6 +10,7 @@ import { CommandsModal } from "./CommandsModal";
 import { EquipmentModal } from "./EquipmentModal";
 import { CreateUnitModal } from "./CreateUnitModal";
 import { InventoryModal } from "./InventoryModal";
+import { SpearkinSpritePreview } from "./SpearkinSpritePreview";
 
 const PORTRAITS: Record<string, string> = {
   spear: "/assets/sprites/spearkin-portrait.svg",
@@ -137,7 +138,21 @@ export function HubScreen({ onPlay }: { onPlay: (id: string) => void }) {
                     : "border-border/40 bg-surface/30 opacity-60 hover:opacity-100 hover:border-accent"
                 )}
               >
-                <img src={PORTRAITS[id]} alt="" className="mx-auto h-12 w-12 object-contain group-hover:scale-105 transition-transform" />
+                {id === "spear" ? (
+                  <SpearkinSpritePreview
+                    unit={(save.roster ?? []).find((u) => u.cls === "spear") ?? {
+                      id: "preview-spear",
+                      cls: "spear",
+                      level: 1,
+                      weapon: "spear-wood",
+                      helmet: "helm-leather",
+                    }}
+                    size={48}
+                    className="mx-auto group-hover:scale-105 transition-transform"
+                  />
+                ) : (
+                  <img src={PORTRAITS[id]} alt="" className="mx-auto h-12 w-12 object-contain group-hover:scale-105 transition-transform" />
+                )}
                 <p className="mt-1 text-xs font-semibold group-hover:text-accent transition-colors truncate">{c.name}</p>
                 <p className="text-[10px] text-faint truncate">
                   {c.roleTitle}
