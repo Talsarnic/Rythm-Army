@@ -3,70 +3,113 @@ import type { UnitMember } from "../types";
 import { ITEMS } from "../data/items.ts";
 
 /**
- * Equipment-aware visual composition.
- * The first version uses procedural placeholder overlays so the renderer can be
- * tested before final pixel-art assets replace these layers.
+ * Equipment-aware pixel-art composition.
+ * Finished item textures are preferred; procedural geometry remains only as a
+ * fallback for equipment that has not received final art yet.
  */
 export class UnitVisual {
   private base: Phaser.GameObjects.Sprite;
-  private back: Phaser.GameObjects.Graphics;
-  private front: Phaser.GameObjects.Graphics;
-  private helmet: Phaser.GameObjects.Graphics;
+  private back?: Phaser.GameObjects.Image;
+  private front?: Phaser.GameObjects.Image;
+  private helmet?: Phaser.GameObjects.Image;
+  private fallbackBack: Phaser.GameObjects.Graphics;
+  private fallbackFront: Phaser.GameObjects.Graphics;
+  private fallbackHelmet: Phaser.GameObjects.Graphics;
   private member: UnitMember;
+  private scene: Phaser.Scene;
 
   constructor(scene: Phaser.Scene, base: Phaser.GameObjects.Sprite, member: UnitMember) {
+    this.scene = scene;
     this.base = base;
     this.member = member;
-    this.back = scene.add.graphics();
-    this.front = scene.add.graphics();
-    this.helmet = scene.add.graphics();
-    this.back.setDepth(base.depth - 0.01);
-    this.front.setDepth(base.depth + 0.01);
-    this.helmet.setDepth(base.depth + 0.02);
+    this.fallbackBack = scene.add.graphics();
+    this.fallbackFront = scene.add.graphics();
+    this.fallbackHelmet = scene.add.graphics();
     this.rebuild();
     this.sync();
   }
 
   rebuild() {
-    this.back.clear();
-    this.front.clear();
-    this.helmet.clear();
+    this.destroyLayers();
+    this.fallbackBack.clear();
+    this.fallbackFront.clear();
+    this.fallbackHelmet.clear();
 
     const weapon = this.member.weapon ? ITEMS[this.member.weapon] : undefined;
     const shield = this.member.shield ? ITEMS[this.member.shield] : undefined;
     const helmet = this.member.helmet ? ITEMS[this.member.helmet] : undefined;
 
-    if (shield?.equipment?.slot === "shield") this.drawShield(this.back, this.member.shield!);
-    if (weapon?.equipment?.slot === "weapon") this.drawWeapon(this.front, this.member.weapon!);
-    if (helmet?.equipment?.slot === "helmet") this.drawHelmet(this.helmet, this.member.helmet!);
+    if (shield?.equipment?.slot === "shield") {
+      this.drawFallbackShield(this.fallbackBack, this.member.shield!);
+    }
+
+    if (weapon?.equipment?.slot === "weapon") {
+      if (this.member.weapon === "spear-wood") {
+        this.front = this.scene.add.image(this.base.x, this.base.y, "item-spear-wood");
+        this.front.setOrigin(0.72, 0.5);
+        this.front.setDepth(this.base.depth + 0.01);
+      } else {
+        this.drawFallbackWeapon(this.fallbackFront, this.member.weapon!);
+      }
+    }
+
+    if (helmet?.equipment?.slot === "helmet") {
+      if (this.member.helmet === "helm-leather") {
+        this.helmet = this.scene.add.image(this.base.x, this.base.y - 28, "item-helm-leather");
+        this.helmet.setOrigin(0.5, 0.62);
+        this.helmet.setDepth(this.base.depth + 0.02);
+      } else {
+        this.drawFallbackHelmet(this.fallbackHelmet, this.member.helmet!);
+      }
+    }
+
+    this.sync();
   }
 
   sync() {
-    for (const layer of [this.back, this.front, this.helmet]) {
+    for (const layer of [this.fallbackBack, this.fallbackFront, this.fallbackHelmet]) {
       layer.setPosition(this.base.x, this.base.y);
       layer.setScale(this.base.scaleX, this.base.scaleY);
       layer.setVisible(this.base.visible && this.base.alpha > 0);
     }
+
+    if (this.front) {
+      this.front.setPosition(this.base.x + 25 * this.base.scaleX, this.base.y - 7 * this.base.scaleY);
+      this.front.setScale(this.base.scaleX * 0.78, this.base.scaleY * 0.78);
+      this.front.setVisible(this.base.visible && this.base.alpha > 0);
+    }
+
+    if (this.helmet) {
+      this.helmet.setPosition(this.base.x, this.base.y - 29 * this.base.scaleY);
+      this.helmet.setScale(this.base.scaleX * 0.62, this.base.scaleY * 0.62);
+      this.helmet.setVisible(this.base.visible && this.base.alpha > 0);
+    }
   }
 
   destroy() {
-    this.back.destroy();
-    this.front.destroy();
-    this.helmet.destroy();
+    this.destroyLayers();
+    this.fallbackBack.destroy();
+    this.fallbackFront.destroy();
+    this.fallbackHelmet.destroy();
   }
 
-  private drawWeapon(g: Phaser.GameObjects.Graphics, id: string) {
+  private destroyLayers() {
+    this.front?.destroy();
+    this.helmet?.destroy();
+    this.back?.destroy();
+    this.front = undefined;
+    this.helmet = undefined;
+    this.back = undefined;
+  }
+
+  private drawFallbackWeapon(g: Phaser.GameObjects.Graphics, id: string) {
     const metal = /iron|divine|storm|crusher/.test(id);
     const magic = /flame|thunder|cyclone|divine/.test(id);
     const shaft = metal ? 0x6d7480 : 0x8b5a32;
     const head = magic ? 0xb77cff : metal ? 0xd8dde5 : 0xc7a45a;
 
     g.lineStyle(4, shaft, 1);
-    if (id.startsWith("spear-")) {
-      g.lineBetween(12, -5, 48, -16);
-      g.fillStyle(head, 1);
-      g.fillTriangle(48, -16, 39, -10, 41, -22);
-    } else if (id.startsWith("sword-")) {
+    if (id.startsWith("sword-")) {
       g.lineBetween(10, -4, 43, -18);
       g.fillStyle(head, 1);
       g.fillTriangle(46, -20, 38, -14, 42, -27);
@@ -99,7 +142,7 @@ export class UnitVisual {
     }
   }
 
-  private drawShield(g: Phaser.GameObjects.Graphics, id: string) {
+  private drawFallbackShield(g: Phaser.GameObjects.Graphics, id: string) {
     const heavy = /tower|aegis/.test(id);
     const iron = /iron|tower|aegis/.test(id);
     const w = heavy ? 25 : 19;
@@ -110,7 +153,7 @@ export class UnitVisual {
     g.strokeRoundedRect(-34, -h / 2 - 4, w, h, 6);
   }
 
-  private drawHelmet(g: Phaser.GameObjects.Graphics, id: string) {
+  private drawFallbackHelmet(g: Phaser.GameObjects.Graphics, id: string) {
     const iron = /iron|great|crown/.test(id);
     const crown = id.includes("crown");
     const great = id.includes("great");
