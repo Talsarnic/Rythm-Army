@@ -1,12 +1,29 @@
 import * as Phaser from "phaser";
 
+const PLAYER_SHEETS = [
+  ["spearkin-idle", "spearkin-idle.svg"],
+  ["bowkin-idle", "spearkin-idle.svg"],
+  ["aegiskin-idle", "aegiskin-idle.svg"],
+  ["bannerkin-idle", "spearkin-idle.svg"],
+  ["kibakin-idle", "spearkin-idle.svg"],
+  ["dekakin-idle", "dekakin-idle.svg"],
+  ["megakin-idle", "megakin-idle.svg"],
+  ["torikin-idle", "spearkin-idle.svg"],
+  ["mahokin-idle", "spearkin-idle.svg"],
+  ["robokin-idle", "aegiskin-idle.svg"],
+] as const;
+
 const SHEETS = [
   "spearkin-idle",
   "bowkin-idle",
   "aegiskin-idle",
   "bannerkin-idle",
-  "goretusk-idle",
-  "howl-idle",
+  "kibakin-idle",
+  "dekakin-idle",
+  "megakin-idle",
+  "torikin-idle",
+  "mahokin-idle",
+  "robokin-idle",
   "arrow",
   "impact",
 ] as const;
@@ -41,135 +58,20 @@ export class PreloadScene extends Phaser.Scene {
     });
 
     this.load.image("sky", "/assets/map/dusk-sky.jpg");
-    for (const key of SHEETS) {
-      this.load.spritesheet(key, `/assets/sprites/${key}.${key === "spearkin-idle" ? "svg" : "png"}`, {
+    for (const [key, source] of PLAYER_SHEETS) {
+      this.load.spritesheet(key, `/assets/sprites/${source}`, {
         frameWidth: 128,
         frameHeight: 128,
       });
     }
+    this.load.spritesheet("arrow", "/assets/sprites/arrow.png", { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet("impact", "/assets/sprites/impact.png", { frameWidth: 128, frameHeight: 128 });
 
-    // Procedurally generate unit spritesheets for new classes if not on disk
-    this.generateProceduralSpritesheets();
+    // Player art is now reference-matched hand-authored pixel art.
+    // Enemy/fortification art remains generated below until its art pass.
   }
 
   private generateProceduralSpritesheets() {
-    // Generate spritesheets for kiba, deka, mega, tori, maho, robo
-    const classes = [
-      { key: "kibakin-idle", base: "spearkin-idle", tint: 0xe066ff, horse: true },
-      { key: "dekakin-idle", base: "aegiskin-idle", tint: 0xf59e0b, giant: true },
-      { key: "megakin-idle", base: "bowkin-idle", tint: 0x38bdf8, horn: true },
-      { key: "torikin-idle", base: "spearkin-idle", tint: 0x10b981, bird: true },
-      { key: "mahokin-idle", base: "bowkin-idle", tint: 0xec4899, staff: true },
-      { key: "robokin-idle", base: "aegiskin-idle", tint: 0x64748b, robo: true },
-    ];
-
-    for (const c of classes) {
-      if (!this.textures.exists(c.key)) {
-        const canvas = document.createElement("canvas");
-        canvas.width = 512;
-        canvas.height = 128;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          for (let f = 0; f < 4; f++) {
-            const ox = f * 128 + 64;
-            const oy = 92 + Math.sin((f / 4) * Math.PI * 2) * 4;
-
-            // Mount / Bird / Body features
-            if (c.horse) {
-              // Horse body
-              ctx.fillStyle = "#1e1e24";
-              ctx.beginPath();
-              ctx.ellipse(ox - 6, oy + 4, 32, 16, 0, 0, Math.PI * 2);
-              ctx.fill();
-              // Legs
-              ctx.strokeStyle = "#1e1e24";
-              ctx.lineWidth = 4;
-              ctx.beginPath();
-              ctx.moveTo(ox - 24, oy + 12);
-              ctx.lineTo(ox - 26, oy + 28);
-              ctx.moveTo(ox + 12, oy + 12);
-              ctx.lineTo(ox + 14, oy + 28);
-              ctx.stroke();
-            } else if (c.bird) {
-              // Bird wings
-              ctx.fillStyle = "#10b981";
-              ctx.beginPath();
-              ctx.ellipse(ox - 10, oy - 2, 28, 12, -0.2, 0, Math.PI * 2);
-              ctx.fill();
-            }
-
-            // Kin warrior body circle
-            const radius = c.giant ? 28 : 20;
-            ctx.fillStyle = "#111116";
-            ctx.beginPath();
-            ctx.arc(ox, oy - (c.giant ? 24 : 12), radius, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Kin big eyeball
-            ctx.fillStyle = "#ffffff";
-            ctx.beginPath();
-            ctx.arc(ox + 4, oy - (c.giant ? 24 : 12), radius * 0.62, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Pupil
-            ctx.fillStyle = "#09090b";
-            ctx.beginPath();
-            ctx.arc(ox + 6, oy - (c.giant ? 24 : 12), radius * 0.32, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Weapon / Accessory
-            ctx.strokeStyle = "#fbbf24";
-            ctx.fillStyle = "#fbbf24";
-            ctx.lineWidth = 3;
-            if (c.horn) {
-              // Horn bell
-              ctx.beginPath();
-              ctx.moveTo(ox + 16, oy - 14);
-              ctx.lineTo(ox + 34, oy - 26);
-              ctx.lineTo(ox + 34, oy - 2);
-              ctx.closePath();
-              ctx.fill();
-            } else if (c.staff) {
-              // Staff
-              ctx.beginPath();
-              ctx.moveTo(ox + 16, oy + 10);
-              ctx.lineTo(ox + 26, oy - 38);
-              ctx.stroke();
-              ctx.fillStyle = "#ec4899";
-              ctx.beginPath();
-              ctx.arc(ox + 27, oy - 40, 7, 0, Math.PI * 2);
-              ctx.fill();
-            } else if (c.giant) {
-              // Giant club
-              ctx.fillStyle = "#78350f";
-              ctx.beginPath();
-              ctx.rect(ox + 16, oy - 48, 14, 46);
-              ctx.fill();
-            } else if (c.robo) {
-              // Big mechanical fists / gauntlets
-              ctx.fillStyle = "#475569";
-              ctx.strokeStyle = "#94a3b8";
-              ctx.lineWidth = 2;
-              ctx.beginPath();
-              ctx.roundRect(ox + 12, oy - 24, 20, 20, 4);
-              ctx.fill();
-              ctx.stroke();
-              // Back fist
-              ctx.beginPath();
-              ctx.roundRect(ox - 24, oy - 18, 16, 16, 3);
-              ctx.fill();
-              ctx.stroke();
-            }
-          }
-          this.textures.addSpriteSheet(c.key, canvas as unknown as HTMLImageElement, {
-            frameWidth: 128,
-            frameHeight: 128,
-          });
-        }
-      }
-    }
-
-    // Procedurally generate new enemy types (wildlife, obstacles, rival tribe, and colossal bosses)
     this.generateEnemySpritesheets();
   }
 
