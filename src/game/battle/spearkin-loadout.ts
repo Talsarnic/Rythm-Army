@@ -41,7 +41,7 @@ export function getSpearkinSpriteStyle(member: UnitMember, size = 56): CSSProper
   return {
     width: size,
     height: size,
-    backgroundImage: `url("/assets/sprites/spearkin-loadouts.svg")`,
+    backgroundImage: `url("/assets/sprites/spearkin-loadouts-moonlighter.png")`,
     backgroundRepeat: "no-repeat",
     backgroundSize: `${size * 16}px ${size * 4}px`,
     backgroundPosition: `-${column * size}px -${row * size}px`,
