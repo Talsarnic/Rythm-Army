@@ -26,6 +26,7 @@ import {
   Check,
   AlertCircle,
 } from "lucide-react";
+import { SpearkinSpritePreview } from "./SpearkinSpritePreview";
 
 const PORTRAITS: Record<string, string> = {
   spear: "/assets/sprites/spearkin-portrait.svg",
@@ -366,11 +367,15 @@ export function EquipmentModal({ open, onClose, unitClass }: EquipmentModalProps
                     : "border-border/60 bg-surface/50 hover:bg-surface-2"
                 )}
               >
-                <img
-                  src={PORTRAITS[u.cls]}
-                  alt=""
-                  className="h-9 w-9 rounded-lg object-contain bg-surface-2/40 p-0.5"
-                />
+                {u.cls === "spear" ? (
+                  <SpearkinSpritePreview unit={u} size={36} className="rounded-lg bg-surface-2/40" />
+                ) : (
+                  <img
+                    src={PORTRAITS[u.cls]}
+                    alt=""
+                    className="h-9 w-9 rounded-lg object-contain bg-surface-2/40 p-0.5"
+                  />
+                )}
                 <div>
                   <p className="text-xs font-bold leading-tight text-fg">
                     {cDef.name} #{i + 1}
@@ -415,11 +420,19 @@ export function EquipmentModal({ open, onClose, unitClass }: EquipmentModalProps
             {/* Unit Info & Stats Card */}
             <div className="rounded-2xl border border-border/80 bg-surface/60 p-4 space-y-3">
               <div className="flex items-center gap-3">
-                <img
-                  src={PORTRAITS[currentUnit.cls]}
-                  alt=""
-                  className="h-14 w-14 object-contain rounded-xl bg-surface-2/50 border border-border/50 p-1"
-                />
+                {currentUnit.cls === "spear" ? (
+                  <SpearkinSpritePreview
+                    unit={currentUnit}
+                    size={56}
+                    className="rounded-xl bg-surface-2/50 border border-border/50"
+                  />
+                ) : (
+                  <img
+                    src={PORTRAITS[currentUnit.cls]}
+                    alt=""
+                    className="h-14 w-14 object-contain rounded-xl bg-surface-2/50 border border-border/50 p-1"
+                  />
+                )}
                 <div>
                   <h3 className="font-display text-lg text-fg">
                     {classDef.name}
