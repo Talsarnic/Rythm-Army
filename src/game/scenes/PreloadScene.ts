@@ -41,8 +41,6 @@ export class PreloadScene extends Phaser.Scene {
     });
 
     this.load.image("sky", "/assets/map/dusk-sky.jpg");
-    this.load.image("item-spear-wood", "/assets/items/spear-wood.svg");
-    this.load.image("item-helm-leather", "/assets/items/helm-leather.svg");
     for (const key of SHEETS) {
       this.load.spritesheet(key, `/assets/sprites/${key}.${key === "spearkin-idle" ? "svg" : "png"}`, {
         frameWidth: 128,
@@ -485,6 +483,10 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   create() {
+    // Keep the hand-authored pixel art crisp at every gameplay scale.
+    for (const key of SHEETS) {
+      this.textures.get(key)?.setFilter(Phaser.Textures.FilterMode.NEAREST);
+    }
     const mk = (key: string, anim: string, rate: number, repeat: number) => {
       if (this.anims.exists(anim)) return;
       this.anims.create({
