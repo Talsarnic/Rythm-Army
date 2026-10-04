@@ -25,8 +25,27 @@ export const ACTION: Record<CommandId, ActionDef> = {
   jump: { speed: 20, jump: true, walk: false },
 };
 
-/** How much each enemy resists being shoved. Bigger enemies barely move. */
-export const KNOCKBACK_WEIGHT: Record<EnemyKind, number> = { goretusk: 1, brute: 0.55, howl: 0.12 };
+/** How much each enemy resists being shoved. Bigger enemies and structures barely move. */
+export const KNOCKBACK_WEIGHT: Record<EnemyKind, number> = {
+  kooda: 1.2,
+  goretusk: 1,
+  brute: 0.55,
+  stag: 1.1,
+  "sand-crab": 0.45,
+  barricade: 0,
+  "stone-wall": 0,
+  watchtower: 0,
+  "catapult-tower": 0,
+  "tribe-spear": 0.95,
+  "tribe-shield": 0.5,
+  "tribe-bow": 1.0,
+  "tribe-kiba": 0.7,
+  "tribe-deka": 0.35,
+  "tribe-tori": 1.1,
+  howl: 0.12,
+  "drake-titan": 0.08,
+  "colossus-golem": 0.04,
+};
 
 /** An enemy shoved faster than this (px/s) is staggered and stops advancing. */
 export const STAGGER_SPEED = 40;
@@ -158,10 +177,17 @@ export function evaluateEnd(s: EndInput): EndVerdict | null {
   if (s.tutorial && s.armyX >= s.goalX - 40) {
     return { win: true, cause: "The shrine is yours." };
   }
-  if (!s.tutorial && s.wavesTotal > 0) {
-    const allSpawned = s.wavesSpawned >= s.wavesTotal;
-    if (allSpawned && s.enemiesSpawned > 0 && s.enemiesAlive === 0) {
-      return { win: true, cause: "The road is clear." };
+  if (!s.tutorial) {
+    // Stage victory if goal / end-of-stage is reached by the army
+    if (s.armyX >= s.goalX - 40) {
+      return { win: true, cause: "The mission objective is complete." };
+    }
+    // Or if all waves have spawned and all enemies are defeated
+    if (s.wavesTotal > 0) {
+      const allSpawned = s.wavesSpawned >= s.wavesTotal;
+      if (allSpawned && s.enemiesSpawned > 0 && s.enemiesAlive === 0) {
+        return { win: true, cause: "The road is clear." };
+      }
     }
   }
   return null;

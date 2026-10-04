@@ -1,6 +1,6 @@
-import { a as rollBattleLoot, c as CLASSES, d as computeUnitStats, f as audio, i as missionById, l as ENEMY_STATS, n as RhythmEngine, o as COMMANDS, r as bus, s as loadSave, u as STARTER_ARMY } from "./routes-VU-Tbi2O.mjs";
+import { a as rollBattleLoot, c as CLASSES, d as computeUnitStats, f as audio, i as missionById, l as ENEMY_STATS, n as RhythmEngine, o as COMMANDS, r as bus, s as loadSave, u as STARTER_ARMY } from "./routes-DDavm2BG.mjs";
 import { a as __webpack_exports__Scene, i as __webpack_exports__Scale, n as __webpack_exports__Game, r as __webpack_exports__Geom, t as __webpack_exports__AUTO } from "../_libs/phaser.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/createGame-e0Q8PpNw.js
+//#region node_modules/.nitro/vite/services/ssr/assets/createGame-BLOVfLD1.js
 var SHEETS = [
 	"spearkin-idle",
 	"bowkin-idle",
@@ -40,6 +40,432 @@ var PreloadScene = class extends __webpack_exports__Scene {
 			frameWidth: 128,
 			frameHeight: 128
 		});
+		this.generateProceduralSpritesheets();
+	}
+	generateProceduralSpritesheets() {
+		for (const c of [
+			{
+				key: "kibakin-idle",
+				base: "spearkin-idle",
+				tint: 14706431,
+				horse: true
+			},
+			{
+				key: "dekakin-idle",
+				base: "aegiskin-idle",
+				tint: 16096779,
+				giant: true
+			},
+			{
+				key: "megakin-idle",
+				base: "bowkin-idle",
+				tint: 3718648,
+				horn: true
+			},
+			{
+				key: "torikin-idle",
+				base: "spearkin-idle",
+				tint: 1096065,
+				bird: true
+			},
+			{
+				key: "mahokin-idle",
+				base: "bowkin-idle",
+				tint: 15485081,
+				staff: true
+			},
+			{
+				key: "robokin-idle",
+				base: "aegiskin-idle",
+				tint: 6583435,
+				robo: true
+			}
+		]) if (!this.textures.exists(c.key)) {
+			const canvas = document.createElement("canvas");
+			canvas.width = 512;
+			canvas.height = 128;
+			const ctx = canvas.getContext("2d");
+			if (ctx) {
+				for (let f = 0; f < 4; f++) {
+					const ox = f * 128 + 64;
+					const oy = 92 + Math.sin(f / 4 * Math.PI * 2) * 4;
+					if (c.horse) {
+						ctx.fillStyle = "#1e1e24";
+						ctx.beginPath();
+						ctx.ellipse(ox - 6, oy + 4, 32, 16, 0, 0, Math.PI * 2);
+						ctx.fill();
+						ctx.strokeStyle = "#1e1e24";
+						ctx.lineWidth = 4;
+						ctx.beginPath();
+						ctx.moveTo(ox - 24, oy + 12);
+						ctx.lineTo(ox - 26, oy + 28);
+						ctx.moveTo(ox + 12, oy + 12);
+						ctx.lineTo(ox + 14, oy + 28);
+						ctx.stroke();
+					} else if (c.bird) {
+						ctx.fillStyle = "#10b981";
+						ctx.beginPath();
+						ctx.ellipse(ox - 10, oy - 2, 28, 12, -.2, 0, Math.PI * 2);
+						ctx.fill();
+					}
+					const radius = c.giant ? 28 : 20;
+					ctx.fillStyle = "#111116";
+					ctx.beginPath();
+					ctx.arc(ox, oy - (c.giant ? 24 : 12), radius, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#ffffff";
+					ctx.beginPath();
+					ctx.arc(ox + 4, oy - (c.giant ? 24 : 12), radius * .62, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#09090b";
+					ctx.beginPath();
+					ctx.arc(ox + 6, oy - (c.giant ? 24 : 12), radius * .32, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.strokeStyle = "#fbbf24";
+					ctx.fillStyle = "#fbbf24";
+					ctx.lineWidth = 3;
+					if (c.horn) {
+						ctx.beginPath();
+						ctx.moveTo(ox + 16, oy - 14);
+						ctx.lineTo(ox + 34, oy - 26);
+						ctx.lineTo(ox + 34, oy - 2);
+						ctx.closePath();
+						ctx.fill();
+					} else if (c.staff) {
+						ctx.beginPath();
+						ctx.moveTo(ox + 16, oy + 10);
+						ctx.lineTo(ox + 26, oy - 38);
+						ctx.stroke();
+						ctx.fillStyle = "#ec4899";
+						ctx.beginPath();
+						ctx.arc(ox + 27, oy - 40, 7, 0, Math.PI * 2);
+						ctx.fill();
+					} else if (c.giant) {
+						ctx.fillStyle = "#78350f";
+						ctx.beginPath();
+						ctx.rect(ox + 16, oy - 48, 14, 46);
+						ctx.fill();
+					} else if (c.robo) {
+						ctx.fillStyle = "#475569";
+						ctx.strokeStyle = "#94a3b8";
+						ctx.lineWidth = 2;
+						ctx.beginPath();
+						ctx.roundRect(ox + 12, oy - 24, 20, 20, 4);
+						ctx.fill();
+						ctx.stroke();
+						ctx.beginPath();
+						ctx.roundRect(ox - 24, oy - 18, 16, 16, 3);
+						ctx.fill();
+						ctx.stroke();
+					}
+				}
+				this.textures.addSpriteSheet(c.key, canvas, {
+					frameWidth: 128,
+					frameHeight: 128
+				});
+			}
+		}
+		this.generateEnemySpritesheets();
+	}
+	generateEnemySpritesheets() {
+		for (const e of [
+			{
+				key: "kooda-idle",
+				type: "kooda"
+			},
+			{
+				key: "stag-idle",
+				type: "stag"
+			},
+			{
+				key: "crab-idle",
+				type: "crab"
+			},
+			{
+				key: "barricade-idle",
+				type: "barricade"
+			},
+			{
+				key: "stone-wall-idle",
+				type: "stone-wall"
+			},
+			{
+				key: "watchtower-idle",
+				type: "watchtower"
+			},
+			{
+				key: "catapult-tower-idle",
+				type: "catapult-tower"
+			},
+			{
+				key: "tribe-spear-idle",
+				type: "tribe-spear"
+			},
+			{
+				key: "tribe-shield-idle",
+				type: "tribe-shield"
+			},
+			{
+				key: "tribe-bow-idle",
+				type: "tribe-bow"
+			},
+			{
+				key: "tribe-kiba-idle",
+				type: "tribe-kiba"
+			},
+			{
+				key: "tribe-deka-idle",
+				type: "tribe-deka"
+			},
+			{
+				key: "tribe-tori-idle",
+				type: "tribe-tori"
+			},
+			{
+				key: "drake-idle",
+				type: "drake"
+			},
+			{
+				key: "golem-idle",
+				type: "golem"
+			}
+		]) {
+			if (this.textures.exists(e.key)) continue;
+			const canvas = document.createElement("canvas");
+			canvas.width = 512;
+			canvas.height = 128;
+			const ctx = canvas.getContext("2d");
+			if (!ctx) continue;
+			for (let f = 0; f < 4; f++) {
+				const ox = f * 128 + 64;
+				const bob = Math.sin(f / 4 * Math.PI * 2) * 3;
+				const oy = 96 + (e.type.includes("tower") || e.type.includes("wall") || e.type.includes("barricade") ? 0 : bob);
+				if (e.type === "kooda") {
+					ctx.fillStyle = "#f59e0b";
+					ctx.beginPath();
+					ctx.ellipse(ox, oy - 14, 20, 15, 0, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#d97706";
+					ctx.beginPath();
+					ctx.moveTo(ox + 18, oy - 14);
+					ctx.lineTo(ox + 28, oy - 10);
+					ctx.lineTo(ox + 18, oy - 6);
+					ctx.closePath();
+					ctx.fill();
+					ctx.fillStyle = "#ffffff";
+					ctx.beginPath();
+					ctx.arc(ox + 10, oy - 16, 5, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#000000";
+					ctx.beginPath();
+					ctx.arc(ox + 12, oy - 16, 2.5, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.strokeStyle = "#92400e";
+					ctx.lineWidth = 3;
+					ctx.beginPath();
+					ctx.moveTo(ox - 6, oy + 1);
+					ctx.lineTo(ox - 8, oy + 20);
+					ctx.moveTo(ox + 6, oy + 1);
+					ctx.lineTo(ox + 8, oy + 20);
+					ctx.stroke();
+				} else if (e.type === "stag") {
+					ctx.fillStyle = "#b45309";
+					ctx.beginPath();
+					ctx.ellipse(ox - 4, oy - 10, 24, 16, 0, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.beginPath();
+					ctx.arc(ox + 18, oy - 22, 12, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.strokeStyle = "#fbbf24";
+					ctx.lineWidth = 3;
+					ctx.beginPath();
+					ctx.moveTo(ox + 18, oy - 30);
+					ctx.lineTo(ox + 26, oy - 48);
+					ctx.lineTo(ox + 34, oy - 44);
+					ctx.moveTo(ox + 22, oy - 38);
+					ctx.lineTo(ox + 14, oy - 46);
+					ctx.stroke();
+					ctx.strokeStyle = "#78350f";
+					ctx.lineWidth = 3.5;
+					ctx.beginPath();
+					ctx.moveTo(ox - 18, oy + 4);
+					ctx.lineTo(ox - 18, oy + 24);
+					ctx.moveTo(ox + 10, oy + 4);
+					ctx.lineTo(ox + 12, oy + 24);
+					ctx.stroke();
+				} else if (e.type === "crab") {
+					ctx.fillStyle = "#475569";
+					ctx.beginPath();
+					ctx.ellipse(ox, oy - 8, 26, 18, 0, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#64748b";
+					ctx.beginPath();
+					ctx.arc(ox + 22, oy - 14, 10, 0, Math.PI * 2);
+					ctx.arc(ox - 22, oy - 14, 10, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#e2e8f0";
+					ctx.beginPath();
+					ctx.arc(ox + 6, oy - 22, 4, 0, Math.PI * 2);
+					ctx.arc(ox - 6, oy - 22, 4, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#0f172a";
+					ctx.beginPath();
+					ctx.arc(ox + 6, oy - 22, 2, 0, Math.PI * 2);
+					ctx.arc(ox - 6, oy - 22, 2, 0, Math.PI * 2);
+					ctx.fill();
+				} else if (e.type === "barricade") {
+					ctx.fillStyle = "#78350f";
+					ctx.fillRect(ox - 24, oy - 36, 48, 48);
+					ctx.fillStyle = "#b45309";
+					ctx.beginPath();
+					ctx.moveTo(ox - 22, oy - 36);
+					ctx.lineTo(ox - 14, oy - 56);
+					ctx.lineTo(ox - 6, oy - 36);
+					ctx.moveTo(ox + 6, oy - 36);
+					ctx.lineTo(ox + 14, oy - 56);
+					ctx.lineTo(ox + 22, oy - 36);
+					ctx.fill();
+					ctx.strokeStyle = "#451a03";
+					ctx.lineWidth = 4;
+					ctx.strokeRect(ox - 24, oy - 36, 48, 48);
+				} else if (e.type === "stone-wall") {
+					ctx.fillStyle = "#475569";
+					ctx.fillRect(ox - 32, oy - 58, 64, 70);
+					ctx.fillStyle = "#64748b";
+					ctx.fillRect(ox - 28, oy - 70, 16, 14);
+					ctx.fillRect(ox + 12, oy - 70, 16, 14);
+					ctx.strokeStyle = "#1e293b";
+					ctx.lineWidth = 3;
+					ctx.strokeRect(ox - 32, oy - 58, 64, 70);
+				} else if (e.type === "watchtower") {
+					ctx.fillStyle = "#78350f";
+					ctx.fillRect(ox - 18, oy - 72, 36, 80);
+					ctx.fillStyle = "#451a03";
+					ctx.fillRect(ox - 26, oy - 88, 52, 18);
+					ctx.fillStyle = "#dc2626";
+					ctx.beginPath();
+					ctx.arc(ox, oy - 94, 10, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.strokeStyle = "#fbbf24";
+					ctx.lineWidth = 3;
+					ctx.beginPath();
+					ctx.arc(ox - 12, oy - 94, 8, -Math.PI / 2, Math.PI / 2);
+					ctx.stroke();
+				} else if (e.type === "catapult-tower") {
+					ctx.fillStyle = "#334155";
+					ctx.fillRect(ox - 30, oy - 80, 60, 90);
+					ctx.fillStyle = "#0f172a";
+					ctx.fillRect(ox - 34, oy - 96, 68, 18);
+					ctx.fillStyle = "#78350f";
+					ctx.fillRect(ox - 8, oy - 110, 16, 26);
+					ctx.fillStyle = "#ef4444";
+					ctx.beginPath();
+					ctx.arc(ox, oy - 116, 8, 0, Math.PI * 2);
+					ctx.fill();
+				} else if (e.type.startsWith("tribe-")) {
+					const isKiba = e.type === "tribe-kiba";
+					const isDeka = e.type === "tribe-deka";
+					const isTori = e.type === "tribe-tori";
+					const isShield = e.type === "tribe-shield";
+					const isBow = e.type === "tribe-bow";
+					if (isKiba) {
+						ctx.fillStyle = "#1e1b4b";
+						ctx.beginPath();
+						ctx.ellipse(ox + 4, oy + 4, 30, 16, 0, 0, Math.PI * 2);
+						ctx.fill();
+						ctx.strokeStyle = "#1e1b4b";
+						ctx.lineWidth = 4;
+						ctx.beginPath();
+						ctx.moveTo(ox - 14, oy + 12);
+						ctx.lineTo(ox - 16, oy + 26);
+						ctx.moveTo(ox + 18, oy + 12);
+						ctx.lineTo(ox + 20, oy + 26);
+						ctx.stroke();
+					} else if (isTori) {
+						ctx.fillStyle = "#4c0519";
+						ctx.beginPath();
+						ctx.ellipse(ox + 8, oy - 4, 26, 12, .2, 0, Math.PI * 2);
+						ctx.fill();
+					}
+					const radius = isDeka ? 26 : 18;
+					ctx.fillStyle = "#dc2626";
+					ctx.beginPath();
+					if (isDeka) ctx.rect(ox - radius, oy - 28 - radius, radius * 2, radius * 2);
+					else ctx.arc(ox, oy - (isDeka ? 28 : 12), radius, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#fef08a";
+					ctx.beginPath();
+					ctx.arc(ox - 4, oy - (isDeka ? 28 : 12), radius * .5, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#18181b";
+					ctx.beginPath();
+					ctx.arc(ox - 6, oy - (isDeka ? 28 : 12), radius * .25, 0, Math.PI * 2);
+					ctx.fill();
+					if (isShield) {
+						ctx.fillStyle = "#991b1b";
+						ctx.fillRect(ox - 24, oy - 28, 12, 34);
+						ctx.strokeStyle = "#fef08a";
+						ctx.lineWidth = 2;
+						ctx.strokeRect(ox - 24, oy - 28, 12, 34);
+					} else if (isBow) {
+						ctx.strokeStyle = "#d97706";
+						ctx.lineWidth = 3;
+						ctx.beginPath();
+						ctx.arc(ox - 16, oy - 12, 14, Math.PI / 2, -Math.PI / 2);
+						ctx.stroke();
+					} else if (isDeka) {
+						ctx.fillStyle = "#3f3f46";
+						ctx.fillRect(ox - 32, oy - 56, 16, 44);
+					} else {
+						ctx.strokeStyle = "#e2e8f0";
+						ctx.lineWidth = 3;
+						ctx.beginPath();
+						ctx.moveTo(ox - 24, oy - 20);
+						ctx.lineTo(ox + 16, oy + 4);
+						ctx.stroke();
+					}
+				} else if (e.type === "drake") {
+					ctx.fillStyle = "#991b1b";
+					ctx.beginPath();
+					ctx.ellipse(ox + 8, oy - 16, 44, 30, 0, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#b91c1c";
+					ctx.beginPath();
+					ctx.arc(ox - 26, oy - 32, 24, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.strokeStyle = "#f59e0b";
+					ctx.lineWidth = 5;
+					ctx.beginPath();
+					ctx.moveTo(ox - 20, oy - 48);
+					ctx.lineTo(ox - 12, oy - 72);
+					ctx.stroke();
+					ctx.fillStyle = "#fef08a";
+					ctx.beginPath();
+					ctx.arc(ox - 34, oy - 34, 6, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#7f1d1d";
+					ctx.fillRect(ox - 12, oy + 10, 18, 22);
+					ctx.fillRect(ox + 22, oy + 10, 18, 22);
+				} else if (e.type === "golem") {
+					ctx.fillStyle = "#334155";
+					ctx.fillRect(ox - 38, oy - 64, 76, 72);
+					ctx.strokeStyle = "#38bdf8";
+					ctx.lineWidth = 4;
+					ctx.strokeRect(ox - 28, oy - 54, 56, 52);
+					ctx.fillStyle = "#38bdf8";
+					ctx.beginPath();
+					ctx.arc(ox, oy - 28, 12, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#1e293b";
+					ctx.fillRect(ox - 48, oy - 20, 20, 36);
+					ctx.fillRect(ox + 28, oy - 20, 20, 36);
+				}
+			}
+			this.textures.addSpriteSheet(e.key, canvas, {
+				frameWidth: 128,
+				frameHeight: 128
+			});
+		}
 	}
 	create() {
 		const mk = (key, anim, rate, repeat) => {
@@ -57,6 +483,28 @@ var PreloadScene = class extends __webpack_exports__Scene {
 		for (const key of SHEETS) if (key === "impact") mk(key, "fx-impact", 18, 0);
 		else if (key === "arrow") mk(key, "arrow-fly", 12, -1);
 		else mk(key, `${key}-anim`, 7, -1);
+		for (const key of [
+			"kibakin-idle",
+			"dekakin-idle",
+			"megakin-idle",
+			"torikin-idle",
+			"mahokin-idle",
+			"kooda-idle",
+			"stag-idle",
+			"crab-idle",
+			"barricade-idle",
+			"stone-wall-idle",
+			"watchtower-idle",
+			"catapult-tower-idle",
+			"tribe-spear-idle",
+			"tribe-shield-idle",
+			"tribe-bow-idle",
+			"tribe-kiba-idle",
+			"tribe-deka-idle",
+			"tribe-tori-idle",
+			"drake-idle",
+			"golem-idle"
+		]) mk(key, `${key}-anim`, 7, -1);
 		this.scene.start("battle");
 	}
 };
@@ -91,11 +539,26 @@ var ACTION = {
 		walk: false
 	}
 };
-/** How much each enemy resists being shoved. Bigger enemies barely move. */
+/** How much each enemy resists being shoved. Bigger enemies and structures barely move. */
 var KNOCKBACK_WEIGHT = {
+	kooda: 1.2,
 	goretusk: 1,
 	brute: .55,
-	howl: .12
+	stag: 1.1,
+	"sand-crab": .45,
+	barricade: 0,
+	"stone-wall": 0,
+	watchtower: 0,
+	"catapult-tower": 0,
+	"tribe-spear": .95,
+	"tribe-shield": .5,
+	"tribe-bow": 1,
+	"tribe-kiba": .7,
+	"tribe-deka": .35,
+	"tribe-tori": 1.1,
+	howl: .12,
+	"drake-titan": .08,
+	"colossus-golem": .04
 };
 /** Fever makes the army move faster and enemies a little slower. */
 var FEVER_ARMY_SPEED = 1.32;
@@ -184,11 +647,17 @@ function evaluateEnd(s) {
 		win: true,
 		cause: "The shrine is yours."
 	};
-	if (!s.tutorial && s.wavesTotal > 0) {
-		if (s.wavesSpawned >= s.wavesTotal && s.enemiesSpawned > 0 && s.enemiesAlive === 0) return {
+	if (!s.tutorial) {
+		if (s.armyX >= s.goalX - 40) return {
 			win: true,
-			cause: "The road is clear."
+			cause: "The mission objective is complete."
 		};
+		if (s.wavesTotal > 0) {
+			if (s.wavesSpawned >= s.wavesTotal && s.enemiesSpawned > 0 && s.enemiesAlive === 0) return {
+				win: true,
+				cause: "The road is clear."
+			};
+		}
 	}
 	return null;
 }
@@ -221,14 +690,61 @@ function beatFraction(beatPos) {
 }
 /** Where each class stands relative to the banner, front rank on the right. */
 var FORMATION = {
-	banner: [-200],
-	bow: [-92, -52],
-	spear: [
-		8,
-		48,
-		88
+	banner: [-260],
+	maho: [
+		-220,
+		-195,
+		-170
 	],
-	aegis: [128, 168]
+	mega: [
+		-150,
+		-125,
+		-100
+	],
+	bow: [
+		-80,
+		-65,
+		-50,
+		-35,
+		-20,
+		-5
+	],
+	spear: [
+		15,
+		30,
+		45,
+		60,
+		75,
+		90
+	],
+	tori: [
+		110,
+		135,
+		160
+	],
+	kiba: [
+		175,
+		200,
+		225
+	],
+	deka: [
+		235,
+		260,
+		285
+	],
+	robo: [
+		290,
+		310,
+		330
+	],
+	aegis: [
+		340,
+		360,
+		380,
+		400,
+		420,
+		440
+	]
 };
 /** The player's marching army: spawning it in formation and animating it each frame. */
 var Army = class {
@@ -294,16 +810,37 @@ var Army = class {
 		const frac = beatFraction(beatPos);
 		const idleBeat = beatPos >= 0 ? Math.exp(-frac * 6) : 0;
 		const act = s.action ? ACTION[s.action.id] : null;
+		const isAttacking = s.action?.id === "attack";
+		const isCharging = s.action?.id === "charge";
 		const hop = act?.jump ? Math.abs(Math.sin(Math.min(1, (beatPos - s.action.beat) / 4) * Math.PI * 2)) * 64 : 0;
 		const thrust = act?.lunge ? Math.max(0, Math.sin(frac * Math.PI)) * 18 : 0;
+		const livingEnemies = s.enemies.filter((e) => e.alive);
+		livingEnemies.sort((a, b) => a.sprite.x - b.sprite.x);
+		const nearestEnemy = livingEnemies.length > 0 ? livingEnemies[0] : null;
 		for (const u of s.units) {
 			if (!u.alive) continue;
 			const lungeDecay = 3 * (u.attackSpeed ?? 1);
 			u.lunge = Math.max(0, u.lunge - dt * lungeDecay);
 			u.flash = Math.max(0, u.flash - dt);
 			u.kb = easeUnitKnockback(u.kb, dt);
-			const x = s.armyX + u.formX + thrust + u.lunge * 16 + u.kb;
-			const y = s.groundY + u.formY - idleBeat * 6 - hop;
+			u.attackOffset = u.attackOffset ?? 0;
+			u.jumpOffset = u.jumpOffset ?? 0;
+			if (u.cls !== "banner" && (isAttacking || isCharging) && nearestEnemy) {
+				const uCurrentX = s.armyX + u.formX + u.attackOffset;
+				if (nearestEnemy.sprite.x - uCurrentX > (u.range ? Math.max(40, u.range * .7) : 50)) {
+					const runSpeed = (isCharging ? 380 : 260) * (s.engine.fever ? 1.3 : 1);
+					u.attackOffset = Math.min(260, u.attackOffset + runSpeed * dt);
+				} else u.attackOffset = Math.max(0, u.attackOffset - dt * 60);
+				if (u.cls === "spear" || u.cls === "tori") {
+					const jumpPhase = Math.sin(frac * Math.PI);
+					u.jumpOffset = Math.max(0, jumpPhase * (s.engine.fever ? 44 : 32));
+				}
+			} else {
+				u.attackOffset = Math.max(0, u.attackOffset - dt * 280);
+				u.jumpOffset = Math.max(0, (u.jumpOffset ?? 0) - dt * 160);
+			}
+			const x = s.armyX + u.formX + u.attackOffset + thrust + u.lunge * 16 + u.kb;
+			const y = s.groundY + u.formY - idleBeat * 6 - hop - (u.jumpOffset ?? 0);
 			u.sprite.x = x;
 			u.sprite.y = y;
 			squash(u, idleBeat * .08, idleBeat * .045);
@@ -496,15 +1033,22 @@ var Combat = class {
 			const range = u.range ?? classDef.range;
 			const role = classDef.role;
 			if (damage <= 0) continue;
-			const target = this.nearestEnemy(u.sprite.x, range + (charged ? 40 : 0));
+			const target = this.nearestEnemy(u.sprite.x, range + (charged ? 60 : 0));
 			if (!target) continue;
 			u.lunge = defend ? .6 : 1;
 			const dmg = scaledDamage(damage, mod.damage);
-			if (role === "ranged") {
-				const isSpear = u.cls === "spear";
-				this.fireRanged(u.sprite.x, u.sprite.y - 40, target, dmg, isSpear, .7 * mod.power);
+			if (role === "ranged" || role === "magic") {
+				const isSpear = u.cls === "spear" || u.cls === "tori";
+				const isSonic = u.cls === "mega";
+				const isMagic = u.cls === "maho";
+				const volleyCount = u.cls === "bow" && (s.engine.fever || charged) ? 3 : isSonic && s.engine.fever ? 2 : 1;
+				const arrowDmg = volleyCount > 1 ? Math.max(1, Math.round(dmg / (volleyCount === 3 ? 1.7 : 1.3))) : dmg;
+				for (let v = 0; v < volleyCount; v++) if (v === 0) this.fireRanged(u.sprite.x, u.sprite.y - 40, target, arrowDmg, isSpear, .7 * mod.power, isSonic, isMagic);
+				else this.scene.time.delayedCall(v * 90, () => {
+					if (u.alive && target.alive) this.fireRanged(u.sprite.x, u.sprite.y - 40, target, arrowDmg, isSpear, .7 * mod.power, isSonic, isMagic, v * 12);
+				});
 			} else {
-				this.hit(target, dmg, 1.2 * mod.power);
+				this.hit(target, dmg, (u.cls === "deka" ? 2 : 1.2) * mod.power);
 				fx.impact(target.sprite.x - 20, target.sprite.y - 36);
 			}
 		}
@@ -541,7 +1085,7 @@ var Combat = class {
 		f.alive = false;
 		f.hp = 0;
 		if (f.kind) s.killedEnemies.push(f.kind);
-		const boss = f.kind === "howl";
+		const boss = f.kind ? ENEMY_STATS[f.kind]?.isBoss ?? false : false;
 		s.freeze(boss ? .16 : .08);
 		const sprite = f.sprite;
 		const hx = sprite.x;
@@ -579,20 +1123,68 @@ var Combat = class {
 		});
 		audio.whoosh();
 	}
-	fireRanged(startX, startY, target, dmg, isSpear = false, power = 1) {
-		const { scene, fx } = this;
+	fireRanged(startX, startY, target, dmg, isSpear = false, power = 1, isSonic = false, isMagic = false, arcVariance = 0) {
+		const { scene, fx, s } = this;
 		const startPos = {
 			x: startX + 10,
 			y: startY
 		};
-		const projectile = scene.add.sprite(startPos.x, startPos.y, "arrow", 0).setDepth(35).setDisplaySize(isSpear ? 52 : 42, isSpear ? 52 : 42);
+		const projectile = scene.add.sprite(startPos.x, startPos.y, "arrow", 0).setDepth(35).setDisplaySize(isSpear ? 64 : isSonic ? 52 : isMagic ? 48 : 44, isSpear ? 64 : isSonic ? 52 : isMagic ? 48 : 44);
 		if (isSpear) projectile.setTint(16766366);
+		else if (isSonic) projectile.setTint(3718648);
+		else if (isMagic) projectile.setTint(16007006);
 		projectile.play("arrow-fly");
-		const targetX = target.sprite.x - 16;
-		const targetY = target.sprite.y - 42;
-		const dist = Math.max(60, targetX - startPos.x);
-		const arcHeight = Math.min(140, Math.max(70, dist * .38));
-		const duration = Math.min(480, Math.max(260, dist * .95));
+		const spread = (Math.random() - .5) * 16;
+		const destX = target.sprite.x - 16 + spread;
+		const destY = target.sprite.y - 40;
+		const dist = Math.max(60, destX - startPos.x);
+		const arcHeight = isSonic ? 20 : isMagic ? 55 : (isSpear ? Math.min(180, Math.max(90, dist * .45)) : Math.min(140, Math.max(70, dist * .38))) + arcVariance;
+		const duration = Math.min(500, Math.max(260, dist * .9));
+		const flight = { t: 0 };
+		let prevX = startPos.x;
+		let prevY = startPos.y;
+		scene.tweens.add({
+			targets: flight,
+			t: 1,
+			duration,
+			ease: isSonic ? "Sine.easeOut" : "Linear",
+			onUpdate: () => {
+				const t = flight.t;
+				const currX = startPos.x + (destX - startPos.x) * t;
+				const currY = startPos.y + (destY - startPos.y) * t - 4 * arcHeight * t * (1 - t);
+				const dx = currX - prevX;
+				const dy = currY - prevY;
+				if (Math.abs(dx) > .001 || Math.abs(dy) > .001) projectile.setRotation(Math.atan2(dy, dx));
+				projectile.setPosition(currX, currY);
+				prevX = currX;
+				prevY = currY;
+			},
+			onComplete: () => {
+				projectile.destroy();
+				const hitRadius = isSonic ? 70 : isMagic ? 60 : 48;
+				const hitTarget = s.enemies.find((e) => e.alive && Math.abs(e.sprite.x - destX) <= hitRadius);
+				if (hitTarget) {
+					this.hit(hitTarget, dmg, power);
+					fx.impact(hitTarget.sprite.x - 10, hitTarget.sprite.y - 36);
+				} else fx.puff(destX, s.groundY - 10, 3);
+			}
+		});
+	}
+	fireEnemyRanged(startX, startY, target, dmg, isSpear = false, isBoulder = false) {
+		const { scene, fx, s } = this;
+		const startPos = {
+			x: startX,
+			y: startY
+		};
+		const projectile = scene.add.sprite(startPos.x, startPos.y, "arrow", 0).setDepth(35).setDisplaySize(isBoulder ? 50 : isSpear ? 56 : 38, isBoulder ? 50 : isSpear ? 56 : 38);
+		projectile.setTint(isBoulder ? 9741240 : isSpear ? 15680580 : 16281969);
+		projectile.play("arrow-fly");
+		const spread = (Math.random() - .5) * 16;
+		const destX = target.sprite.x + 10 + spread;
+		const destY = target.sprite.y - 36;
+		const dist = Math.max(50, startPos.x - destX);
+		const arcHeight = isBoulder ? 75 : 45;
+		const duration = Math.min(520, Math.max(280, dist * .9));
 		const flight = { t: 0 };
 		let prevX = startPos.x;
 		let prevY = startPos.y;
@@ -603,8 +1195,8 @@ var Combat = class {
 			ease: "Linear",
 			onUpdate: () => {
 				const t = flight.t;
-				const currX = startPos.x + (targetX - startPos.x) * t;
-				const currY = startPos.y + (targetY - startPos.y) * t - 4 * arcHeight * t * (1 - t);
+				const currX = startPos.x + (destX - startPos.x) * t;
+				const currY = startPos.y + (destY - startPos.y) * t - 4 * arcHeight * t * (1 - t);
 				const dx = currX - prevX;
 				const dy = currY - prevY;
 				if (Math.abs(dx) > .001 || Math.abs(dy) > .001) projectile.setRotation(Math.atan2(dy, dx));
@@ -614,12 +1206,19 @@ var Combat = class {
 			},
 			onComplete: () => {
 				projectile.destroy();
-				if (target.alive) {
-					this.hit(target, dmg, power);
-					fx.impact(target.sprite.x - 10, target.sprite.y - 36);
-				}
+				const hitTarget = s.units.find((u) => u.alive && Math.abs(u.sprite.x - destX) <= 45);
+				if (hitTarget) {
+					this.hit(hitTarget, damageToUnit(dmg, s.defending, hitTarget.defense ?? 0), isBoulder ? 1.8 : 1);
+					fx.impact(hitTarget.sprite.x + 10, hitTarget.sprite.y - 30);
+				} else fx.puff(destX, s.groundY - 10, 3);
 			}
 		});
+	}
+	nearestArmyUnit() {
+		const living = this.s.units.filter((u) => u.alive);
+		if (!living.length) return null;
+		living.sort((a, b) => b.sprite.x - a.sprite.x);
+		return living.find((u) => u.cls === "aegis") ?? living[0] ?? null;
 	}
 	nearestEnemy(x, range) {
 		return nearestAhead(this.s.enemies, x, range, (e) => e.sprite.x, (e) => e.alive);
@@ -817,7 +1416,7 @@ var Effects = class {
 };
 /** How far ahead of the army a wave appears, in px. */
 var SPAWN_AHEAD = 520;
-/** Enemy waves: spawning, advancing, swinging, and the boss's telegraphed slam. */
+/** Enemy waves: spawning, advancing, swinging, fleeing wildlife, ranged towers, and colossal boss slams. */
 var Enemies = class {
 	scene;
 	s;
@@ -850,59 +1449,83 @@ var Enemies = class {
 			const stats = ENEMY_STATS[e.kind];
 			const dist = e.sprite.x - front;
 			e.kb = easeEnemyKnockback(e.kb, dt);
-			if (!(e.kb > 40)) e.sprite.x += enemyWalk(dist, stats.range, stats.speed, s.engine.fever, dt);
+			if (!(e.kb > 40)) {
+				if (stats.isStationary) {} else if (stats.isFleeing) {
+					if (dist < stats.range) e.sprite.x += stats.speed * dt;
+					if (e.sprite.x >= s.mission.worldLength - 60) {
+						e.alive = false;
+						e.hp = 0;
+						e.sprite.setVisible(false);
+						e.bar.clear();
+					}
+				} else e.sprite.x += enemyWalk(dist, stats.range, stats.speed, s.engine.fever, dt);
+			}
 			e.sprite.x += e.kb * dt;
 			e.lunge = Math.max(0, e.lunge - dt * 3);
 			e.flash = Math.max(0, e.flash - dt);
 			e.sprite.x -= e.lunge * 40 * dt;
-			e.sprite.y = s.groundY + e.formY - idleBeat * 4;
+			const heightOffset = stats.flying ? -38 : 0;
+			e.sprite.y = s.groundY + e.formY + heightOffset - idleBeat * 4;
 			squash(e, idleBeat * .05, idleBeat * .03);
 			if (e.flash > 0) e.sprite.setTintFill(16777215);
-			else if (e.kind === "howl" && s.telegraph) e.sprite.setTint(16737860);
+			else if (stats.isBoss && s.telegraph) e.sprite.setTint(16737860);
 			else e.sprite.clearTint();
-			const bw = e.kind === "howl" ? 86 : 40;
-			drawBar(e, e.sprite.x, e.sprite.y - (e.kind === "howl" ? 110 : 74), bw);
+			const bw = stats.isBoss ? e.kind === "colossus-golem" ? 110 : 86 : stats.isStationary ? 56 : 40;
+			const barY = e.sprite.y - (stats.isBoss ? 115 : stats.isStationary ? 88 : 74);
+			drawBar(e, e.sprite.x, barY, bw);
 		}
 	}
-	/** On the army's first answering beat, every enemy in reach swings. The boss slams instead. */
+	/** On the army's first answering beat, every enemy in reach attacks. Ranged units fire projectiles. */
 	swing() {
-		const { s } = this;
+		const { s, fx } = this;
 		const front = frontOf(s);
 		for (const e of s.enemies) {
 			if (!e.alive || !e.kind) continue;
 			const stats = ENEMY_STATS[e.kind];
-			if (e.kind === "howl") continue;
+			if (stats.isBoss || stats.damage <= 0) continue;
 			const d = e.sprite.x - front;
-			if (d > 8 && d < stats.range + 12) this.combat.enemyStrike(e, stats.damage);
+			if (d > 8 && d < stats.range + 16) {
+				if (stats.isRanged) {
+					e.lunge = .5;
+					const target = this.combat.nearestArmyUnit();
+					if (target) this.combat.fireEnemyRanged(e.sprite.x - 20, e.sprite.y - 30, target, stats.damage, e.kind === "tribe-spear" || e.kind === "tribe-tori", e.kind === "catapult-tower");
+				} else {
+					e.lunge = 1;
+					this.combat.enemyStrike(e, stats.damage);
+					fx.impact(e.sprite.x - 30, e.sprite.y - 30);
+				}
+			}
 		}
 	}
-	/** Wind up the boss's slam, giving the player a measure to answer with JUMP. */
+	/** Wind up the boss's slam / ultimate attack, giving the player a measure to answer with JUMP. */
 	maybeTelegraph(beat) {
 		const { s, fx } = this;
 		const boss = liveBoss(s);
-		if (!boss) return;
+		if (!boss || !boss.kind) return;
+		if (!ENEMY_STATS[boss.kind].isBoss) return;
 		if (!shouldTelegraphSlam(Math.floor(beat / 8), boss.sprite.x, frontOf(s))) return;
+		const telegraphLabel = boss.kind === "drake-titan" ? "INFERNO — JUMP" : boss.kind === "colossus-golem" ? "QUAKE — JUMP" : "SLAM — JUMP";
 		s.telegraph = {
 			until: beat + 4,
-			kind: "SLAM — JUMP"
+			kind: telegraphLabel
 		};
 		boss.sprite.setTint(16737860);
-		fx.floatText(boss.sprite.x, boss.sprite.y - 110, "SLAM", "#e4572e");
+		fx.floatText(boss.sprite.x, boss.sprite.y - 110, telegraphLabel.split(" ")[0] ?? "SLAM", "#e4572e");
 	}
-	/** The slam lands, unless the army jumped. */
+	/** The boss attack lands, unless the army jumped. */
 	maybeSlam() {
 		const { s, fx } = this;
 		const boss = liveBoss(s);
-		if (!boss || !s.telegraph) return;
+		if (!boss || !boss.kind || !s.telegraph) return;
 		boss.sprite.clearTint();
-		const stats = ENEMY_STATS.howl;
+		const stats = ENEMY_STATS[boss.kind];
 		fx.impact(boss.sprite.x - 40, s.groundY - 20);
-		fx.ring(boss.sprite.x - 40, s.groundY - 10, 16737860);
-		fx.puff(boss.sprite.x - 40, s.groundY, 10);
-		s.addTrauma(.55);
+		fx.ring(boss.sprite.x - 40, s.groundY - 10, boss.kind === "drake-titan" ? 16729122 : 16737860);
+		fx.puff(boss.sprite.x - 40, s.groundY, 12);
+		s.addTrauma(.6);
 		fx.flash(80, 40, 10, 8);
 		if (s.jumping) fx.floatText(s.armyX + 40, s.groundY - 150, "DODGED", "#59cd90");
-		else this.combat.enemyStrike(boss, bossSlamDamage(stats.damage, s.defending), 2.4);
+		else this.combat.enemyStrike(boss, bossSlamDamage(stats.damage, s.defending), boss.kind === "colossus-golem" ? 2.8 : 2.4);
 		s.telegraph = null;
 	}
 	spawnWave(index) {
@@ -912,11 +1535,11 @@ var Enemies = class {
 		let n = 0;
 		for (const pack of wave.enemies) for (let i = 0; i < pack.count; i++) {
 			const stats = ENEMY_STATS[pack.kind];
-			const x = wave.atX + n * 54;
-			const y = s.groundY + n % 2 * 10;
+			const x = wave.atX + n * (stats.isStationary ? 90 : 54);
+			const y = s.groundY + (stats.isStationary ? 0 : n % 2 * 10);
 			const sprite = scene.add.sprite(x, y, stats.sprite, 0);
 			sprite.setOrigin(.5, .92);
-			sprite.setDepth(8);
+			sprite.setDepth(stats.flying ? 14 : 8);
 			const size = 86 * stats.scale;
 			sprite.setDisplaySize(size, size);
 			sprite.play(`${stats.sprite}-anim`);
@@ -928,7 +1551,7 @@ var Enemies = class {
 				kind: pack.kind,
 				alive: true,
 				formX: 0,
-				formY: n % 2 * 10,
+				formY: stats.isStationary ? 0 : n % 2 * 10,
 				lunge: 0,
 				flash: 0,
 				bar,
@@ -1302,8 +1925,8 @@ var BattleScene = class extends __webpack_exports__Scene {
 				hp: banner.hp,
 				maxHp: banner.maxHp
 			} : null,
-			boss: boss ? {
-				name: ENEMY_STATS.howl.name,
+			boss: boss && boss.kind ? {
+				name: ENEMY_STATS[boss.kind]?.name ?? "Boss",
 				hp: boss.hp,
 				maxHp: boss.maxHp
 			} : null,

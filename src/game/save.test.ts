@@ -45,7 +45,7 @@ describe("SaveData Migration & Persistence", () => {
       bestCombo: 22,
       roster: [
         { id: "hero-1", cls: "spear", level: 2, weapon: "spear-iron", helmet: "helm-iron" },
-        { id: "tank-1", cls: "aegis", level: 3, weapon: "shield-tower", helmet: "helm-great" },
+        { id: "tank-1", cls: "aegis", level: 3, weapon: "sword-iron", shield: "shield-tower", helmet: "helm-great" },
       ],
       inventory: {
         "iron-scrap": 5,
@@ -60,7 +60,8 @@ describe("SaveData Migration & Persistence", () => {
     assert.equal(migrated.roster[0]?.weapon, "spear-iron");
     assert.equal(migrated.roster[0]?.helmet, "helm-iron");
     assert.equal(migrated.roster[1]?.level, 3);
-    assert.equal(migrated.roster[1]?.weapon, "shield-tower");
+    assert.equal(migrated.roster[1]?.weapon, "sword-iron");
+    assert.equal(migrated.roster[1]?.shield, "shield-tower");
     assert.equal(migrated.roster[1]?.helmet, "helm-great");
     assert.equal(migrated.inventory["iron-scrap"], 5);
     assert.equal(migrated.inventory["wood-branch"], 10);

@@ -18,9 +18,25 @@ const PORTRAITS: Record<string, string> = {
   bow: "/assets/sprites/bowkin-portrait.png",
   aegis: "/assets/sprites/aegiskin-portrait.png",
   banner: "/assets/sprites/bannerkin-portrait.png",
+  kiba: "/assets/sprites/spearkin-portrait.png",
+  deka: "/assets/sprites/aegiskin-portrait.png",
+  mega: "/assets/sprites/bowkin-portrait.png",
+  tori: "/assets/sprites/spearkin-portrait.png",
+  maho: "/assets/sprites/bowkin-portrait.png",
+  robo: "/assets/sprites/aegiskin-portrait.png",
 };
 
-const CRAFTABLE_CLASSES: Exclude<UnitClass, "banner">[] = ["bow", "spear", "aegis"];
+const CRAFTABLE_CLASSES: Exclude<UnitClass, "banner">[] = [
+  "spear", // Spearkin
+  "aegis", // Aegiskin
+  "bow", // Bowkin
+  "kiba", // Horsekin
+  "deka", // Bludgeonkin
+  "mega", // Warhornkin
+  "tori", // Wingkin
+  "maho", // Magekin
+  "robo", // Mechakin
+];
 
 interface CreateUnitModalProps {
   open: boolean;
@@ -116,7 +132,7 @@ export function CreateUnitModal({ open, onClose, initialClass }: CreateUnitModal
         </div>
 
         {/* Unit Class Selection Tabs */}
-        <div className="grid grid-cols-3 gap-2 py-3 border-b border-border/40">
+        <div className="grid grid-cols-4 gap-2 py-3 border-b border-border/40 max-h-40 overflow-y-auto">
           {CRAFTABLE_CLASSES.map((cls) => {
             const isSelected = selectedCls === cls;
             const cDef = CLASSES[cls];
@@ -133,7 +149,7 @@ export function CreateUnitModal({ open, onClose, initialClass }: CreateUnitModal
                   setCreatedSuccess(null);
                 }}
                 className={cn(
-                  "flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border text-center transition-all cursor-pointer",
+                  "flex flex-col items-center gap-1 p-2 rounded-2xl border text-center transition-all cursor-pointer",
                   isSelected
                     ? "border-accent bg-accent/15 shadow-sm ring-1 ring-accent/30"
                     : "border-border/60 bg-surface/60 hover:bg-surface-2"
@@ -142,13 +158,14 @@ export function CreateUnitModal({ open, onClose, initialClass }: CreateUnitModal
                 <img
                   src={PORTRAITS[cls]}
                   alt=""
-                  className="h-11 w-11 object-contain rounded-lg bg-surface-2/40 p-0.5"
+                  className="h-9 w-9 object-contain rounded-lg bg-surface-2/40 p-0.5"
                 />
                 <div>
-                  <p className="text-xs font-bold text-fg leading-tight">{cDef.name}</p>
+                  <p className="text-[11px] font-bold text-fg leading-tight truncate max-w-[70px]">{cDef.name}</p>
+                  <p className="text-[9px] text-muted">{cDef.roleTitle}</p>
                   <span
                     className={cn(
-                      "text-[10px] font-mono font-semibold",
+                      "text-[9px] font-mono font-semibold",
                       isFull ? "text-amber-400" : "text-muted"
                     )}
                   >

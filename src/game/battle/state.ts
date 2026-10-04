@@ -27,6 +27,10 @@ export interface Fighter {
   bar: Phaser.GameObjects.Graphics;
   /** Knockback. Units: a shove offset in px that eases back to formation. Enemies: velocity in px/s. */
   kb: number;
+  /** Attack run offset: when attacking, units surge forward towards enemies and return to formation. */
+  attackOffset?: number;
+  /** Jump height during attack windup (e.g. Spearkin jumping to hurl spears). */
+  jumpOffset?: number;
   /** Resting sprite scale, so squash and stretch can be applied on top of it. */
   sx: number;
   sy: number;

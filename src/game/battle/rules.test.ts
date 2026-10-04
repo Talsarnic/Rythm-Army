@@ -78,6 +78,8 @@ describe("knockback", () => {
   it("barely moves heavy enemies", () => {
     near(enemyKnockback(0, 1, "brute"), 143);
     near(enemyKnockback(0, 1, "howl"), 31.2);
+    near(enemyKnockback(0, 1, "colossus-golem"), 10.4);
+    assert.equal(enemyKnockback(0, 1, "barricade"), 0);
   });
 
   it("a normal hit staggers a goretusk but not the boss", () => {
@@ -278,6 +280,11 @@ describe("evaluateEnd", () => {
   it("a normal mission is won by clearing every wave", () => {
     const cleared = { ...base, wavesSpawned: 2, enemiesAlive: 0 };
     assert.deepEqual(evaluateEnd(cleared), { win: true, cause: "The road is clear." });
+  });
+
+  it("a normal mission is also won by reaching the goal marker", () => {
+    const reachedGoal = { ...base, armyX: 2800, goalX: 2800 };
+    assert.deepEqual(evaluateEnd(reachedGoal), { win: true, cause: "The mission objective is complete." });
   });
 
   it("is not won while a wave is still to come", () => {

@@ -180,10 +180,6 @@ export class BattleScene extends Phaser.Scene {
     s.jumping = id === "jump";
     if (id === "charge") s.charged = true;
     if (fever) s.feverReached = true;
-    if (id === "attack" || id === "charge" || id === "defend") {
-      this.combat.resolveAttack(id === "charge" || s.charged, id === "defend");
-    }
-    if (id === "attack") s.charged = false;
     const label = fever ? `${id.toUpperCase()}  FEVER` : id.toUpperCase();
     this.fx.floatText(s.armyX + 90, s.groundY - 180, label, fever ? "#ffe08a" : "#f4ead8");
     s.addTrauma((fever ? 0.28 : 0.12) + perfects * 0.03);
@@ -219,6 +215,19 @@ export class BattleScene extends Phaser.Scene {
         if (u.alive) this.fx.puff(u.sprite.x - 20, s.groundY + u.formY + 4, n);
       }
     }
+    // Dynamic attack resolution on response beats:
+    // Units attack from their dynamic positions during the command execution phase
+    if (phase === "response" && s.action) {
+      const id = s.action.id;
+      if (id === "attack" || id === "charge" || id === "defend") {
+        if (slot === INPUT_BEATS || slot === INPUT_BEATS + 1) {
+          const isCharged = id === "charge" || s.charged;
+          this.combat.resolveAttack(isCharged, id === "defend");
+          if (id === "attack") s.charged = false;
+        }
+      }
+    }
+
     if (phase === "response" && slot === INPUT_BEATS) {
       this.enemies.maybeTelegraph(beat);
     }
@@ -292,7 +301,7 @@ export class BattleScene extends Phaser.Scene {
         armyHp: s.units.reduce((sum, u) => sum + Math.max(0, u.hp), 0),
         armyMax: s.units.reduce((sum, u) => sum + u.maxHp, 0),
         banner: banner ? { hp: banner.hp, maxHp: banner.maxHp } : null,
-        boss: boss ? { name: ENEMY_STATS.howl.name, hp: boss.hp, maxHp: boss.maxHp } : null,
+        boss: boss && boss.kind ? { name: ENEMY_STATS[boss.kind]?.name ?? "Boss", hp: boss.hp, maxHp: boss.maxHp } : null,
         tutorial: s.tutorial,
         telegraph: s.telegraph?.kind ?? null,
       }),

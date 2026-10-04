@@ -18,7 +18,7 @@ export const Route = createRootRoute({
       { name: "theme-color", content: "#110c18" },
       {
         name: "description",
-        content: "Drum four beats. Your army answers. A Patapon-style rhythm war.",
+        content: "Drum four beats. Your army answers. A dynamic rhythm war strategy game.",
       },
     ],
     links: [

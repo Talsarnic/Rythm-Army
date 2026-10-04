@@ -8,21 +8,23 @@ describe("getNextPlayableMissionId", () => {
   });
 
   it("returns the next uncleared mission when earlier missions are completed", () => {
-    assert.equal(getNextPlayableMissionId(["training"]), "dust-road");
-    assert.equal(getNextPlayableMissionId(["training", "dust-road"]), "thorn-gate");
-    assert.equal(getNextPlayableMissionId(["training", "dust-road", "thorn-gate"]), "howls-gate");
-    assert.equal(getNextPlayableMissionId(["training", "dust-road", "thorn-gate", "howls-gate"]), "bone-canyon");
-    assert.equal(getNextPlayableMissionId(["training", "dust-road", "thorn-gate", "howls-gate", "bone-canyon"]), "iron-citadel");
-    assert.equal(getNextPlayableMissionId(["training", "dust-road", "thorn-gate", "howls-gate", "bone-canyon", "iron-citadel"]), "storm-peak");
+    assert.equal(getNextPlayableMissionId(["training"]), "coast-hunt");
+    assert.equal(getNextPlayableMissionId(["training", "coast-hunt"]), "shadowmask-clash");
+    assert.equal(getNextPlayableMissionId(["training", "coast-hunt", "shadowmask-clash"]), "drake-caldera");
+    assert.equal(getNextPlayableMissionId(["training", "coast-hunt", "shadowmask-clash", "drake-caldera"]), "swamp-hunt");
+    assert.equal(getNextPlayableMissionId(["training", "coast-hunt", "shadowmask-clash", "drake-caldera", "swamp-hunt"]), "jungle-gate");
+    assert.equal(getNextPlayableMissionId(["training", "coast-hunt", "shadowmask-clash", "drake-caldera", "swamp-hunt", "jungle-gate"]), "bastion-siege");
+    assert.equal(getNextPlayableMissionId(["training", "coast-hunt", "shadowmask-clash", "drake-caldera", "swamp-hunt", "jungle-gate", "bastion-siege"]), "iron-ridge");
+    assert.equal(getNextPlayableMissionId(["training", "coast-hunt", "shadowmask-clash", "drake-caldera", "swamp-hunt", "jungle-gate", "bastion-siege", "iron-ridge"]), "golem-altar");
   });
 
   it("returns the furthest completed mission when all missions are cleared", () => {
-    const all = ["training", "dust-road", "thorn-gate", "howls-gate", "bone-canyon", "iron-citadel", "storm-peak"];
-    assert.equal(getNextPlayableMissionId(all), "storm-peak");
+    const all = ["training", "coast-hunt", "shadowmask-clash", "drake-caldera", "swamp-hunt", "jungle-gate", "bastion-siege", "iron-ridge", "golem-altar"];
+    assert.equal(getNextPlayableMissionId(all), "golem-altar");
   });
 
   it("returns the furthest completed mission even if completed list is disordered", () => {
-    const all = ["storm-peak", "howls-gate", "training", "thorn-gate", "dust-road", "iron-citadel", "bone-canyon"];
-    assert.equal(getNextPlayableMissionId(all), "storm-peak");
+    const all = ["golem-altar", "shadowmask-clash", "training", "iron-ridge", "swamp-hunt", "coast-hunt", "jungle-gate", "bastion-siege", "drake-caldera"];
+    assert.equal(getNextPlayableMissionId(all), "golem-altar");
   });
 });

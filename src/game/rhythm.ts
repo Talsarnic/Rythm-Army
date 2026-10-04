@@ -105,7 +105,7 @@ export class RhythmEngine {
     const slot = j.beat % MEASURE_BEATS;
 
     if (slot >= INPUT_BEATS) {
-      // The army is answering. Drums here are ignored rather than punished, as in Patapon.
+      // The army is answering. Drum beats here are ignored during command chants.
       return { ...j, measure, slot, ignored: true };
     }
 

@@ -32,6 +32,12 @@ const PORTRAITS: Record<string, string> = {
   bow: "/assets/sprites/bowkin-portrait.png",
   aegis: "/assets/sprites/aegiskin-portrait.png",
   banner: "/assets/sprites/bannerkin-portrait.png",
+  kiba: "/assets/sprites/spearkin-portrait.png",
+  deka: "/assets/sprites/aegiskin-portrait.png",
+  mega: "/assets/sprites/bowkin-portrait.png",
+  tori: "/assets/sprites/spearkin-portrait.png",
+  maho: "/assets/sprites/bowkin-portrait.png",
+  robo: "/assets/sprites/aegiskin-portrait.png",
 };
 
 interface EquipmentModalProps {
@@ -210,6 +216,7 @@ export function EquipmentModal({ open, onClose, unitClass }: EquipmentModalProps
 
   const stats = computeUnitStats(currentUnit);
   const currentWeapon = currentUnit.weapon ? ITEMS[currentUnit.weapon] : undefined;
+  const currentShield = currentUnit.shield ? ITEMS[currentUnit.shield] : undefined;
   const currentHelmet = currentUnit.helmet ? ITEMS[currentUnit.helmet] : undefined;
 
   // Find gear items in inventory that are valid for this slot and unit class
@@ -224,7 +231,7 @@ export function EquipmentModal({ open, onClose, unitClass }: EquipmentModalProps
 
   const handleEquip = (itemId: string, slot: EquipSlot) => {
     patchSave((prev) => {
-      const oldEquippedId = slot === "weapon" ? currentUnit.weapon : currentUnit.helmet;
+      const oldEquippedId = slot === "weapon" ? currentUnit.weapon : slot === "shield" ? currentUnit.shield : currentUnit.helmet;
       const updatedInv = { ...prev.inventory };
 
       // Deduct 1 from inventory
@@ -261,7 +268,7 @@ export function EquipmentModal({ open, onClose, unitClass }: EquipmentModalProps
   };
 
   const handleUnequip = (slot: EquipSlot) => {
-    const oldEquippedId = slot === "weapon" ? currentUnit.weapon : currentUnit.helmet;
+    const oldEquippedId = slot === "weapon" ? currentUnit.weapon : slot === "shield" ? currentUnit.shield : currentUnit.helmet;
     if (!oldEquippedId) return;
 
     patchSave((prev) => {
@@ -482,7 +489,7 @@ export function EquipmentModal({ open, onClose, unitClass }: EquipmentModalProps
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-semibold text-muted uppercase tracking-wider flex items-center gap-1.5">
-                      ⚔️ Weapon / Armament
+                      ⚔️ Weapon / Main Armament
                     </span>
                     <Button
                       variant="ghost"
@@ -515,6 +522,53 @@ export function EquipmentModal({ open, onClose, unitClass }: EquipmentModalProps
                   ) : (
                     <div className="p-3 text-center text-xs text-muted border border-dashed border-border rounded-xl">
                       No weapon equipped
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Shield Slot for Aegiskin */}
+              {currentUnit.cls === "aegis" && (
+                <div
+                  className={cn(
+                    "rounded-2xl border p-3.5 transition-all",
+                    selectingSlot === "shield"
+                      ? "border-accent bg-accent/10 ring-1 ring-accent/30"
+                      : "border-border/80 bg-surface/60"
+                  )}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-muted uppercase tracking-wider flex items-center gap-1.5">
+                      🛡️ Shield / Offhand
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectingSlot(selectingSlot === "shield" ? null : "shield")}
+                      className="h-7 text-xs gap-1 text-accent hover:text-accent"
+                    >
+                      <ArrowRightLeft className="size-3.5" />
+                      {selectingSlot === "shield" ? "Cancel" : "Change"}
+                    </Button>
+                  </div>
+
+                  {currentShield ? (
+                    <div className="flex items-center justify-between bg-surface-2/50 p-2.5 rounded-xl border border-border/40">
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-2xl">{currentShield.icon}</span>
+                        <div>
+                          <p className="text-sm font-bold text-fg leading-snug">{currentShield.name}</p>
+                          <p className="text-[11px] text-muted">
+                            +{currentShield.equipment?.hpBonus ?? 0} HP · +
+                            {Math.round((currentShield.equipment?.defenseBonus ?? 0) * 100)}% Def · +
+                            {currentShield.equipment?.damageBonus ?? 0} Dmg
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-3 text-center text-xs text-muted border border-dashed border-border rounded-xl">
+                      No shield equipped
                     </div>
                   )}
                 </div>

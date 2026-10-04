@@ -8,15 +8,49 @@ export const DRUMS = [
 export type DrumId = 0 | 1 | 2 | 3;
 export type Grade = "perfect" | "good" | "miss";
 export type CommandId = "march" | "attack" | "defend" | "retreat" | "charge" | "jump";
-export type UnitClass = "spear" | "bow" | "aegis" | "banner";
-export type EnemyKind = "goretusk" | "brute" | "howl";
-export type EquipSlot = "weapon" | "helmet";
+export type UnitClass =
+  | "banner" // Bannerkin (Standard Bearer)
+  | "spear" // Spearkin (Spear Thrower)
+  | "aegis" // Aegiskin (Sword & Shield Vanguard)
+  | "bow" // Bowkin (Archer)
+  | "kiba" // Horsekin (Cavalry Charger)
+  | "deka" // Bludgeonkin (Heavy Breaker)
+  | "mega" // Warhornkin (Sonic Hornist)
+  | "tori" // Wingkin (Aerial Lancer)
+  | "maho" // Magekin (Arcane Staff Channeler)
+  | "robo"; // Mechakin (Mechanical Gauntlet Brawler - Robopon archetype)
+
+export type EnemyKind =
+  // Wildlife / Hunting Game (Patapon Hunting Beasts: Kacheek, Momoti, Poocheek)
+  | "kooda" // Swift Plains Runner (flees/runs, drops meats/veggies)
+  | "goretusk" // Wild Tuskboar
+  | "brute" // Great Armored Boar
+  | "stag" // Giant Horned Stag (elusive big game)
+  | "sand-crab" // Armored Desert Crab
+  // Barriers & Fortifications (Patapon Obstacles & Watchtowers)
+  | "barricade" // Wooden Barrier / Palisade
+  | "stone-wall" // Fortified Stone Gate
+  | "watchtower" // Arrow-shooting wooden watchtower
+  | "catapult-tower" // Heavy stone ballista/catapult tower
+  // Rival Tribe Squads (Patapon Zigoton Warriors: Yariton, Tateton, Yumiton, Kibaton, Dekaton, Toriton)
+  | "tribe-spear" // Enemy Spear Hurler
+  | "tribe-shield" // Enemy Shield Vanguard
+  | "tribe-bow" // Enemy Archer
+  | "tribe-kiba" // Enemy Mounted Charger
+  | "tribe-deka" // Enemy Heavy Breaker
+  | "tribe-tori" // Enemy Flying Sky Lancer
+  // Colossal Bosses (Patapon Bosses: Dodonga, Zaknel, Majidonga, Iron Howl)
+  | "howl" // Iron Howl Behemoth
+  | "drake-titan" // Fire-Breathing Drake Titan (Dodonga archetype)
+  | "colossus-golem"; // Ancient Stone Golem (Majidonga archetype)
+export type EquipSlot = "weapon" | "shield" | "helmet";
 
 export interface UnitMember {
   id: string; // Unique unit instance id
   cls: UnitClass;
   level: number;
   weapon?: string; // ItemDef id
+  shield?: string; // ItemDef id (for classes that use dual gear e.g. aegis)
   helmet?: string; // ItemDef id
 }
 

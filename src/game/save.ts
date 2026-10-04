@@ -29,6 +29,7 @@ export function migrate(raw: Partial<SaveData> & { version?: number }): SaveData
           cls: u.cls,
           level: typeof u.level === "number" && u.level > 0 ? u.level : 1,
           weapon: typeof u.weapon === "string" ? u.weapon : defaultGear.weapon,
+          shield: typeof u.shield === "string" ? u.shield : defaultGear.shield,
           helmet: typeof u.helmet === "string" ? u.helmet : defaultGear.helmet,
         };
       });

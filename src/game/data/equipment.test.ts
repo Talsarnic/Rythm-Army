@@ -24,8 +24,8 @@ describe("Equipment & Unit Stats", () => {
     assert.equal(stats.hp, 56);
     // Base damage 14 + Wooden Spear (0) = 14
     assert.equal(stats.damage, 14);
-    // Base range 260 + Wooden Spear (0) = 260
-    assert.equal(stats.range, 260);
+    // Base range 380 + Wooden Spear (0) = 380
+    assert.equal(stats.range, 380);
     // Leather cap defense 0.05
     assert.equal(stats.defense, 0.05);
     // Wooden spear speed 1.0
@@ -46,8 +46,8 @@ describe("Equipment & Unit Stats", () => {
     assert.equal(stats.hp, 70);
     // Base damage 14 + 6 = 20
     assert.equal(stats.damage, 20);
-    // Base range 260 + 20 = 280
-    assert.equal(stats.range, 280);
+    // Base range 380 + 20 = 400
+    assert.equal(stats.range, 400);
     // 0.12 defense
     assert.equal(stats.defense, 0.12);
     // 1.15 speed
@@ -59,41 +59,42 @@ describe("Equipment & Unit Stats", () => {
       id: "test-bow",
       cls: "bow",
       level: 1,
-      weapon: "bow-great", // +9 dmg, +100 range, 1.1x speed
+      weapon: "bow-great", // +10 dmg, +100 range, 1.15x speed
       helmet: "helm-great", // +48 HP, 0.20 defense
     };
 
     const stats = computeUnitStats(unit);
-    // Base HP 32 + 48 = 80
-    assert.equal(stats.hp, 80);
-    // Base damage 9 + 9 = 18
-    assert.equal(stats.damage, 18);
+    // Base HP 34 + 48 = 82
+    assert.equal(stats.hp, 82);
+    // Base damage 9 + 10 = 19
+    assert.equal(stats.damage, 19);
     // Base range 420 + 100 = 520
     assert.equal(stats.range, 520);
     // 0.20 defense
     assert.equal(stats.defense, 0.2);
-    // 1.1 speed
-    assert.equal(stats.attackSpeed, 1.1);
+    // 1.15 speed
+    assert.equal(stats.attackSpeed, 1.15);
   });
 
-  it("calculates Aegiskin stats with Tower Bulwark and Crown", () => {
+  it("calculates Aegiskin stats with Sword, Tower Shield and Crown", () => {
     const unit: UnitMember = {
       id: "test-aegis",
       cls: "aegis",
       level: 1,
-      weapon: "shield-tower", // +8 dmg, +45 HP, +0.22 def, +15 range
-      helmet: "helm-crown", // +70 HP, +0.28 def
+      weapon: "sword-flame", // +14 dmg, +15 range, 1.25x speed
+      shield: "shield-tower", // +5 dmg, +60 HP, +0.28 def, +10 range
+      helmet: "helm-crown", // +75 HP, +0.28 def
     };
 
     const stats = computeUnitStats(unit);
-    // Base HP 78 + 45 + 70 = 193
-    assert.equal(stats.hp, 193);
-    // Base damage 7 + 8 = 15
-    assert.equal(stats.damage, 15);
-    // Base range 70 + 15 = 85
-    assert.equal(stats.range, 85);
-    // 0.22 + 0.28 = 0.50 defense (50% reduction)
-    assert.equal(stats.defense, 0.5);
+    // Base HP 80 + 60 + 75 = 215
+    assert.equal(stats.hp, 215);
+    // Base damage 10 + 14 + 5 = 29
+    assert.equal(stats.damage, 29);
+    // Base range 75 + 15 + 10 = 100
+    assert.equal(stats.range, 100);
+    // 0.28 + 0.28 = 0.56 defense (56% reduction)
+    assert.equal(stats.defense, 0.56);
   });
 
   it("all defined equipment items have valid equipment descriptors and allowedClasses", () => {
@@ -111,17 +112,27 @@ describe("Equipment & Unit Stats", () => {
     const starterRoster = createStarterRoster();
 
     // Starter roster has 3 spearkin, 2 bowkin, 2 aegiskin, 1 bannerkin
-    // Spearkin is at limit (3/3)
-    const spearCheck = canCreateUnit("spear", starterRoster, { "beast-meat": 99, "wood-branch": 99, "iron-scrap": 99 });
-    assert.equal(spearCheck.allowed, false);
-    assert.match(spearCheck.reason ?? "", /Maximum limit reached/);
+    // Spearkin has 3/6: can create if materials provided
+    const spearCheckOk = canCreateUnit("spear", starterRoster, UNIT_CREATION_RECIPES.spear.materials);
+    assert.equal(spearCheckOk.allowed, true);
+
+    // Max limit test with 6 spearkin
+    const fullSpearRoster: UnitMember[] = [
+      ...starterRoster,
+      { id: "s4", cls: "spear", level: 1 },
+      { id: "s5", cls: "spear", level: 1 },
+      { id: "s6", cls: "spear", level: 1 },
+    ];
+    const fullSpearCheck = canCreateUnit("spear", fullSpearRoster, UNIT_CREATION_RECIPES.spear.materials);
+    assert.equal(fullSpearCheck.allowed, false);
+    assert.match(fullSpearCheck.reason ?? "", /Maximum limit reached/);
 
     // Bannerkin cannot be cloned
-    const bannerCheck = canCreateUnit("banner", starterRoster, { "beast-meat": 99 });
+    const bannerCheck = canCreateUnit("banner", starterRoster, { "mat-meat-leather": 99 });
     assert.equal(bannerCheck.allowed, false);
 
-    // Bowkin has 2/3: insufficient materials
-    const bowCheckNoMat = canCreateUnit("bow", starterRoster, { "beast-meat": 1 });
+    // Bowkin has 2/6: insufficient materials
+    const bowCheckNoMat = canCreateUnit("bow", starterRoster, { "mat-meat-leather": 1 });
     assert.equal(bowCheckNoMat.allowed, false);
     assert.match(bowCheckNoMat.reason ?? "", /Missing materials/);
 

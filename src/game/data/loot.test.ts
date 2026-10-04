@@ -21,24 +21,24 @@ describe("Loot Tables & Item System", () => {
   it("rollBattleLoot grants guaranteed mission rewards even with zero killed enemies", () => {
     const rewards = rollBattleLoot("training", []);
     assert.ok(rewards.length >= 2);
-    const branch = rewards.find((r) => r.itemId === "wood-branch");
-    const resin = rewards.find((r) => r.itemId === "drummer-resin");
-    assert.equal(branch?.qty, 2);
-    assert.equal(resin?.qty, 1);
+    const meat = rewards.find((r) => r.itemId === "mat-meat-leather");
+    const wood = rewards.find((r) => r.itemId === "mat-wood-bitan");
+    assert.equal(meat?.qty, 3);
+    assert.equal(wood?.qty, 3);
   });
 
   it("rollBattleLoot correctly accumulates enemy drops with deterministic RNG", () => {
     // RNG returning 0.0 means drop chance check passes (< dropRate) and chooses first weighted entry (qty: 1 per mob)
     const zeroRng = () => 0.0;
-    const rewards = rollBattleLoot("dust-road", ["goretusk", "brute"], zeroRng);
+    const rewards = rollBattleLoot("coast-hunt", ["goretusk", "brute"], zeroRng);
 
-    const fang = rewards.find((r) => r.itemId === "goretusk-fang");
-    const hide = rewards.find((r) => r.itemId === "brute-hide");
-    const branch = rewards.find((r) => r.itemId === "wood-branch");
+    const meat = rewards.find((r) => r.itemId === "mat-meat-leather");
+    const tenderMeat = rewards.find((r) => r.itemId === "mat-meat-tender");
+    const bitanWood = rewards.find((r) => r.itemId === "mat-wood-bitan");
 
-    assert.ok(fang && fang.qty === 1); // 1 from goretusk
-    assert.ok(hide && hide.qty === 1); // 1 from brute
-    assert.ok(branch && branch.qty === 2); // 2 from mission guaranteed rewards
+    assert.ok(meat && meat.qty === 5); // 4 from mission + 1 from goretusk
+    assert.ok(tenderMeat && tenderMeat.qty === 1); // 1 from brute
+    assert.ok(bitanWood && bitanWood.qty === 3); // 3 from mission guaranteed rewards
   });
 
   it("addLootToInventory merges new spoils cleanly into existing stock", () => {
