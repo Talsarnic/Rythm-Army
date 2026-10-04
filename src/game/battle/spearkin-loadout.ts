@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { UnitMember } from "../types";
 
 export const SPEARKIN_TEXTURE = "spearkin-loadouts";
@@ -33,7 +34,7 @@ export function getSpearkinAnimationKey(member: UnitMember): string {
   return `spearkin-loadout-${getSpearkinLoadoutIndex(member)}-anim`;
 }
 
-export function getSpearkinSpriteStyle(member: UnitMember, size = 56): React.CSSProperties {
+export function getSpearkinSpriteStyle(member: UnitMember, size = 56): CSSProperties {
   const frame = getSpearkinAtlasFrame(member);
   const column = frame % 16;
   const row = Math.floor(frame / 16);
