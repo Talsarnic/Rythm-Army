@@ -47,7 +47,7 @@ export class Army {
       const formX = FORMATION[cls]?.[idx] ?? idx * 36;
       const formY = (i % 2) * 8;
       const textureKey = cls === "spear" ? SPEARKIN_TEXTURE : classDef.sprite;
-      const initialFrame = cls === "spear" ? getSpearkinAtlasFrame(member) : 0;
+      const initialFrame = cls === "spear" ? `s${getSpearkinAtlasFrame(member)}` : 0;
       const sprite = scene.add.sprite(s.armyX + formX, s.groundY + formY, textureKey, initialFrame);
       sprite.setOrigin(0.5, 0.92);
       sprite.setDepth(10 + i * 0.01);
