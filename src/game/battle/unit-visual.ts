@@ -17,6 +17,7 @@ export class UnitVisual {
   private fallbackHelmet: Phaser.GameObjects.Graphics;
   private member: UnitMember;
   private scene: Phaser.Scene;
+  private appliedTextureKey?: string;
 
   constructor(scene: Phaser.Scene, base: Phaser.GameObjects.Sprite, member: UnitMember) {
     this.scene = scene;
@@ -34,6 +35,13 @@ export class UnitVisual {
     this.fallbackBack.clear();
     this.fallbackFront.clear();
     this.fallbackHelmet.clear();
+
+    if (this.member.cls === "spear") {
+      this.applySpearkinLoadout();
+      this.hideLayeredEquipment();
+      this.sync();
+      return;
+    }
 
     const weapon = this.member.weapon ? ITEMS[this.member.weapon] : undefined;
     const shield = this.member.shield ? ITEMS[this.member.shield] : undefined;
@@ -63,6 +71,12 @@ export class UnitVisual {
   }
 
   sync() {
+    if (this.member.cls === "spear") {
+      this.applySpearkinLoadout();
+      this.hideLayeredEquipment();
+      return;
+    }
+
     this.fallbackBack.setDepth(this.base.depth - 0.2);
     this.fallbackFront.setDepth(this.base.depth + 0.2);
     this.fallbackHelmet.setDepth(this.base.depth + 0.1);
@@ -90,6 +104,33 @@ export class UnitVisual {
     this.fallbackBack.destroy();
     this.fallbackFront.destroy();
     this.fallbackHelmet.destroy();
+  }
+
+  private applySpearkinLoadout() {
+    const helmet = this.member.helmet && ITEMS[this.member.helmet]?.equipment?.gearType === "helmet"
+      ? this.member.helmet
+      : "helm-leather";
+    const weapon = this.member.weapon && ITEMS[this.member.weapon]?.equipment?.gearType === "spear"
+      ? this.member.weapon
+      : "spear-wood";
+
+    const key = `spearkin-${helmet}-${weapon}`;
+    if (!this.scene.textures.exists(key)) return;
+
+    if (this.appliedTextureKey !== key) {
+      this.base.setTexture(key, 0);
+      this.base.play(`${key}-anim`);
+      this.appliedTextureKey = key;
+    }
+  }
+
+  private hideLayeredEquipment() {
+    for (const layer of [this.back, this.front, this.helmet]) {
+      layer?.setVisible(false);
+    }
+    for (const layer of [this.fallbackBack, this.fallbackFront, this.fallbackHelmet]) {
+      layer.setVisible(false);
+    }
   }
 
   private destroyLayers() {
