@@ -78,7 +78,7 @@ export class UnitVisual {
 
     for (const layer of [this.back, this.front, this.helmet]) {
       if (layer) {
-        layer.setPosition(this.base.x, this.base.y);
+        layer.setPosition(this.base.x, this.base.y - 54 * this.base.scaleY);
         layer.setScale(this.base.scaleX, this.base.scaleY);
         layer.setVisible(this.base.visible && this.base.alpha > 0);
       }
