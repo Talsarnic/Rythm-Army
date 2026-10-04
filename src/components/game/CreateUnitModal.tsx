@@ -12,6 +12,7 @@ import type { UnitClass } from "@/game/types";
 import { useGame } from "@/store/game-store";
 import { cn } from "@/lib/utils";
 import { UserPlus, X, Sparkles, Check, AlertCircle } from "lucide-react";
+import { SpearkinSpritePreview } from "./SpearkinSpritePreview";
 
 const PORTRAITS: Record<string, string> = {
   spear: "/assets/sprites/spearkin-portrait.svg",
@@ -155,11 +156,25 @@ export function CreateUnitModal({ open, onClose, initialClass }: CreateUnitModal
                     : "border-border/60 bg-surface/60 hover:bg-surface-2"
                 )}
               >
-                <img
-                  src={PORTRAITS[cls]}
-                  alt=""
-                  className="h-9 w-9 object-contain rounded-lg bg-surface-2/40 p-0.5"
-                />
+                {cls === "spear" ? (
+                  <SpearkinSpritePreview
+                    unit={{
+                      id: "preview-spear",
+                      cls: "spear",
+                      level: 1,
+                      weapon: "spear-wood",
+                      helmet: "helm-leather",
+                    }}
+                    size={36}
+                    className="rounded-lg bg-surface-2/40"
+                  />
+                ) : (
+                  <img
+                    src={PORTRAITS[cls]}
+                    alt=""
+                    className="h-9 w-9 object-contain rounded-lg bg-surface-2/40 p-0.5"
+                  />
+                )}
                 <div>
                   <p className="text-[11px] font-bold text-fg leading-tight truncate max-w-[70px]">{cDef.name}</p>
                   <p className="text-[9px] text-muted">{cDef.roleTitle}</p>
@@ -180,11 +195,25 @@ export function CreateUnitModal({ open, onClose, initialClass }: CreateUnitModal
         {/* Selected Unit Details & Cost */}
         <div className="flex-1 overflow-y-auto py-4 space-y-4">
           <div className="flex items-center gap-3.5 rounded-2xl border border-border/80 bg-surface/60 p-3.5">
-            <img
-              src={PORTRAITS[selectedCls]}
-              alt=""
-              className="h-14 w-14 object-contain rounded-xl bg-surface-2/50 border border-border/50 p-1"
-            />
+            {selectedCls === "spear" ? (
+              <SpearkinSpritePreview
+                unit={{
+                  id: "preview-spear",
+                  cls: "spear",
+                  level: 1,
+                  weapon: "spear-wood",
+                  helmet: "helm-leather",
+                }}
+                size={56}
+                className="rounded-xl bg-surface-2/50 border border-border/50"
+              />
+            ) : (
+              <img
+                src={PORTRAITS[selectedCls]}
+                alt=""
+                className="h-14 w-14 object-contain rounded-xl bg-surface-2/50 border border-border/50 p-1"
+              />
+            )}
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-display text-lg text-fg">{classDef.name}</h3>
