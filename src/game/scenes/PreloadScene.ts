@@ -41,6 +41,8 @@ export class PreloadScene extends Phaser.Scene {
     });
 
     this.load.image("sky", "/assets/map/dusk-sky.jpg");
+    this.load.image("item-spear-wood", "/assets/items/spear-wood.svg");
+    this.load.image("item-helm-leather", "/assets/items/helm-leather.svg");
     for (const key of SHEETS) {
       this.load.spritesheet(key, `/assets/sprites/${key}.${key === "spearkin-idle" ? "svg" : "png"}`, {
         frameWidth: 128,
