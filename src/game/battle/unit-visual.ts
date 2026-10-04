@@ -44,21 +44,13 @@ export class UnitVisual {
     }
 
     if (weapon?.equipment?.slot === "weapon") {
-      if (this.member.weapon === "spear-wood") {
-        this.front = this.scene.add.image(this.base.x, this.base.y, "item-spear-wood");
-        this.front.setOrigin(0.72, 0.5);
-        this.front.setDepth(this.base.depth + 0.01);
-      } else {
+      if (this.member.weapon !== "spear-wood") {
         this.drawFallbackWeapon(this.fallbackFront, this.member.weapon!);
       }
     }
 
     if (helmet?.equipment?.slot === "helmet") {
-      if (this.member.helmet === "helm-leather") {
-        this.helmet = this.scene.add.image(this.base.x, this.base.y - 28, "item-helm-leather");
-        this.helmet.setOrigin(0.5, 0.62);
-        this.helmet.setDepth(this.base.depth + 0.02);
-      } else {
+      if (this.member.helmet !== "helm-leather") {
         this.drawFallbackHelmet(this.fallbackHelmet, this.member.helmet!);
       }
     }
