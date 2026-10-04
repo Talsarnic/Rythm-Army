@@ -12,14 +12,14 @@ import { CreateUnitModal } from "./CreateUnitModal";
 import { InventoryModal } from "./InventoryModal";
 
 const PORTRAITS: Record<string, string> = {
-  spear: "/assets/sprites/spearkin-portrait.png",
+  spear: "/assets/sprites/spearkin-portrait.svg",
   bow: "/assets/sprites/bowkin-portrait.png",
   aegis: "/assets/sprites/aegiskin-portrait.png",
   banner: "/assets/sprites/bannerkin-portrait.png",
-  kiba: "/assets/sprites/spearkin-portrait.png",
+  kiba: "/assets/sprites/spearkin-portrait.svg",
   deka: "/assets/sprites/aegiskin-portrait.png",
   mega: "/assets/sprites/bowkin-portrait.png",
-  tori: "/assets/sprites/spearkin-portrait.png",
+  tori: "/assets/sprites/spearkin-portrait.svg",
   maho: "/assets/sprites/bowkin-portrait.png",
   robo: "/assets/sprites/aegiskin-portrait.png",
 };
