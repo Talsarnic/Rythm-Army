@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" shape-rendering="crispEdges"><g transform="translate(0 0)">
+    <g transform="translate(0 0)">
+    <path d="M78 83L82 86L113 27L109 25Z" fill="#241b23"/>
+    <path d="M80 82L82 83L111 27L109 26Z" fill="#6b412e"/>
+    <path d="M81 79L83 80L108 29L107 28Z" fill="#a06a3c"/>
+    <rect x="87" y="72" width="7" height="2" fill="#dfaa5d"/><rect x="99" y="48" width="7" height="2" fill="#dfaa5d"/>
+    <path d="M83 79L88 68L91 70L86 81Z" fill="#56362f"/>
+    <path d="M84 77L88 69L89 70L86 78Z" fill="#b47743"/>
+    <path d="M94 57L98 49L101 51L97 59Z" fill="#945528"/>
+    <path d="M95 56L98 50L99 51L97 56Z" fill="#f1c76d"/>
+    <path d="M105 37L109 29L112 31L108 39Z" fill="#945528"/>
+    <rect x="107" y="36" width="4" height="2" fill="#6b412e"/>
+    <path d="M104 34L109 17L122 8L119 27L113 39L108 41Z" fill="#6b412e"/><path d="M108 32L111 19L120 11L117 28L112 36Z" fill="#a06a3c"/><path d="M112 21L120 11L117 25Z" fill="#dfaa5d"/><rect x="106" y="35" width="7" height="2" fill="#f0cb81"/>
+  </g>
+    <!-- compact, stepped shadow keeps the transparent sprite grounded -->
+    <rect x="46" y="111" width="6" height="2" fill="#241b23" opacity=".32"/><rect x="52" y="113" width="27" height="3" fill="#241b23" opacity=".42"/><rect x="79" y="111" width="5" height="2" fill="#241b23" opacity=".32"/>
+    <!-- boots and trousers -->
+    <path d="M47 83L61 83L63 104L58 110L44 108L43 96Z" fill="#241b23"/>
+    <path d="M67 83L81 83L86 101L83 109L69 110L65 102Z" fill="#241b23"/>
+    <path d="M49 86L59 86L60 103L56 107L47 105L46 96Z" fill="#56362f"/>
+    <path d="M69 86L79 86L82 101L80 106L71 107L68 100Z" fill="#805039"/>
+    <rect x="49" y="91" width="5" height="3" fill="#b47743"/><rect x="73" y="94" width="5" height="3" fill="#b47743"/>
+    <path d="M41 103L59 103L64 108L62 115L39 115L37 111Z" fill="#241b23"/>
+    <path d="M67 103L82 103L88 109L87 115L66 115L63 111Z" fill="#241b23"/>
+    <path d="M42 106L57 106L60 110L58 112L39 112Z" fill="#56362f"/>
+    <path d="M68 106L81 106L85 110L84 112L66 112Z" fill="#56362f"/>
+    <rect x="44" y="106" width="7" height="2" fill="#b47743"/><rect x="72" y="106" width="7" height="2" fill="#d19743"/>
+    <!-- tunic silhouette, collar and short shoulder cape -->
+    <path d="M46 61L53 55L74 55L84 62L90 72L85 96L77 104L48 101L37 92L38 74Z" fill="#241b23"/>
+    <path d="M47 65L54 59L72 59L81 65L85 74L81 92L74 98L50 96L42 89L42 75Z" fill="#283a43"/>
+    <path d="M49 68L56 63L71 63L77 68L80 77L76 90L71 94L51 92L46 87L46 75Z" fill="#3d5960"/>
+    <path d="M50 68L56 63L69 63L73 68L68 72L53 72Z" fill="#688077"/>
+    <rect x="48" y="74" width="4" height="11" fill="#688077"/><rect x="52" y="76" width="3" height="4" fill="#91a080"/>
+    <path d="M72 67L80 70L83 76L79 83L73 79Z" fill="#283a43"/>
+    <rect x="74" y="70" width="5" height="3" fill="#688077"/>
+    <!-- short red neck wrap adds a warm accent under the face -->
+    <path d="M53 64L60 62L73 63L78 68L73 74L59 72L53 69Z" fill="#241b23"/>
+    <path d="M56 65L62 64L72 65L75 68L71 71L60 70L55 68Z" fill="#a84f3b"/>
+    <rect x="58" y="65" width="7" height="2" fill="#dc7950"/><path d="M56 69L61 71L54 76L51 74Z" fill="#a84f3b"/>
+    <!-- viewer-left arm, now clearly connected from shoulder to hand -->
+    <path d="M42 65L49 67L53 72L50 78L45 82L42 88L38 95L30 94L27 90L29 84L34 79L35 72L38 67Z" fill="#241b23"/>
+    <path d="M42 69L47 70L49 73L46 78L42 82L39 89L36 92L32 91L31 89L35 83L39 77L39 71Z" fill="#c98556"/>
+    <path d="M39 77L46 78L43 85L37 88L34 85Z" fill="#56362f"/>
+    <path d="M40 78L44 79L42 84L37 86L36 84Z" fill="#b47743"/>
+    <rect x="39" y="78" width="5" height="2" fill="#945528"/><rect x="40" y="78" width="3" height="1" fill="#f1c76d"/>
+    <path d="M34 85L40 86L39 91L35 94L29 93L28 90Z" fill="#98533f"/>
+    <path d="M32 86L37 87L36 90L33 92L30 91Z" fill="#e5a56d"/>
+    <rect x="30" y="88" width="3" height="2" fill="#c98556"/><rect x="34" y="91" width="4" height="2" fill="#98533f"/>
+    <!-- bright shoulder cap, chest plate, and riveted harness -->
+    <path d="M41 64L48 64L53 68L51 74L45 76L40 72Z" fill="#241b23"/>
+    <path d="M43 66L48 66L51 69L49 72L45 73L42 70Z" fill="#46545a"/>
+    <path d="M44 67L48 67L49 69L46 70L43 69Z" fill="#cad0bd"/>
+    <rect x="44" y="71" width="5" height="2" fill="#945528"/><rect x="45" y="71" width="3" height="1" fill="#f1c76d"/>
+    <path d="M73 65L80 67L84 72L82 77L76 76L72 71Z" fill="#241b23"/>
+    <path d="M75 67L79 68L82 72L80 74L76 73Z" fill="#46545a"/>
+    <path d="M75 68L79 69L80 71L76 70Z" fill="#cad0bd"/>
+    <path d="M53 73L72 72L77 77L75 87L69 91L54 87L50 80Z" fill="#241b23"/>
+    <path d="M55 75L70 74L74 78L72 85L68 88L56 85L53 80Z" fill="#53696a"/>
+    <path d="M56 76L69 75L72 78L66 80L55 79Z" fill="#819083"/>
+    <rect x="55" y="81" width="3" height="4" fill="#40575c"/><rect x="68" y="82" width="3" height="4" fill="#40575c"/>
+    <rect x="59" y="82" width="8" height="2" fill="#f1c76d"/><rect x="61" y="84" width="4" height="2" fill="#d19743"/>
+    <path d="M73 68L78 70L57 92L52 90Z" fill="#241b23"/>
+    <path d="M73 70L76 71L58 90L55 89Z" fill="#805039"/>
+    <path d="M72 70L74 71L58 86L56 85Z" fill="#b47743"/>
+    <rect x="65" y="77" width="4" height="3" fill="#945528"/><rect x="66" y="77" width="2" height="2" fill="#f1c76d"/>
+    <rect x="56" y="89" width="2" height="2" fill="#f1c76d"/><rect x="59" y="86" width="2" height="2" fill="#f1c76d"/><rect x="62" y="83" width="2" height="2" fill="#f1c76d"/>
+    <!-- belt, clasp and field pouch -->
+    <path d="M43 88L81 91L79 98L48 96L40 93Z" fill="#56362f"/>
+    <rect x="48" y="91" width="28" height="3" fill="#805039"/><rect x="58" y="90" width="9" height="6" fill="#945528"/>
+    <rect x="60" y="91" width="5" height="3" fill="#f1c76d"/>
+    <path d="M75 92L84 93L84 102L76 101Z" fill="#56362f"/>
+    <rect x="78" y="94" width="4" height="4" fill="#b47743"/>
+    <!-- forward arm; hand closes around the spear shaft -->
+    <path d="M76 63L86 66L93 76L91 86L82 89L76 80Z" fill="#241b23"/>
+    <path d="M79 66L85 69L90 77L88 83L83 84L78 77Z" fill="#c98556"/>
+    <rect x="84" y="77" width="7" height="4" fill="#e5a56d"/><rect x="87" y="81" width="4" height="4" fill="#98533f"/>
+    <rect x="83" y="76" width="5" height="3" fill="#b47743"/>
+    <!-- face: warm stepped planes and large readable eyes -->
+    <path d="M48 39L54 34L74 34L82 42L82 62L76 72L67 76L55 73L47 64Z" fill="#241b23"/>
+    <path d="M51 41L56 37L72 37L78 43L78 61L73 68L66 71L57 69L51 62Z" fill="#c98556"/>
+    <path d="M51 52L56 55L58 66L65 70L56 68L51 62Z" fill="#98533f"/>
+    <rect x="55" y="48" width="7" height="4" fill="#f4ddb1"/><rect x="69" y="48" width="7" height="4" fill="#f4ddb1"/>
+    <rect x="58" y="49" width="3" height="4" fill="#241b23"/><rect x="71" y="49" width="3" height="4" fill="#241b23"/>
+    <rect x="57" y="45" width="8" height="2" fill="#56362f"/><rect x="68" y="45" width="8" height="2" fill="#56362f"/>
+    <rect x="63" y="59" width="8" height="3" fill="#e5a56d"/><rect x="62" y="65" width="9" height="2" fill="#98533f"/>
+    <!-- single equipment layer overlays only the head; body identity stays fixed -->
+
+      <path d="M43 48L43 35L48 27L58 22L67 24L75 21L85 29L87 43L82 50L46 50Z" fill="#241b23"/>
+      <path d="M47 42L47 35L52 29L59 26L66 28L75 25L81 31L83 41L77 46L49 46Z" fill="#805039"/>
+      <path d="M51 34L56 29L63 29L67 34L57 36Z" fill="#b47743"/>
+      <rect x="69" y="28" width="8" height="4" fill="#56362f"/><rect x="48" y="44" width="37" height="5" fill="#56362f"/>
+      <rect x="52" y="44" width="6" height="2" fill="#d19743"/><rect x="75" y="44" width="6" height="2" fill="#d19743"/>
+      <rect x="54" y="30" width="2" height="8" fill="#d09250"/><rect x="58" y="28" width="5" height="2" fill="#e2ae68"/>
+      <rect x="68" y="32" width="5" height="2" fill="#422b2b"/><rect x="52" y="39" width="3" height="2" fill="#b47743"/>
+      <path d="M44 43L48 46L48 57L44 61L41 55Z" fill="#56362f"/>
+      <rect x="46" y="48" width="2" height="8" fill="#b47743"/><rect x="43" y="54" width="3" height="3" fill="#945528"/>
+    <!-- metallic shoulder trim catches the dungeon light -->
+    <rect x="43" y="68" width="5" height="6" fill="#945528"/><rect x="44" y="68" width="3" height="2" fill="#f1c76d"/>
+    <!-- leather ties and warm stitched hem -->
+    <rect x="47" y="97" width="8" height="2" fill="#b47743"/><rect x="68" y="99" width="7" height="2" fill="#b47743"/>
+    <!-- reassert the front hand at the contact point so the spear reads gripped -->
+    <rect x="84" y="77" width="6" height="5" fill="#c98556"/><rect x="87" y="80" width="4" height="4" fill="#98533f"/>
+  </g></svg>

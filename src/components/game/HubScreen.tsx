@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CLASSES } from "@/game/data/units";
+import { CLASSES, getDefaultStarterGear } from "@/game/data/units";
 import { isUnlocked, MISSIONS } from "@/game/data/missions";
 import type { UnitClass } from "@/game/types";
 import { cn } from "@/lib/utils";
@@ -10,19 +10,7 @@ import { CommandsModal } from "./CommandsModal";
 import { EquipmentModal } from "./EquipmentModal";
 import { CreateUnitModal } from "./CreateUnitModal";
 import { InventoryModal } from "./InventoryModal";
-
-const PORTRAITS: Record<string, string> = {
-  spear: "/assets/sprites/spearkin-portrait.png",
-  bow: "/assets/sprites/bowkin-portrait.png",
-  aegis: "/assets/sprites/aegiskin-portrait.png",
-  banner: "/assets/sprites/bannerkin-portrait.png",
-  kiba: "/assets/sprites/spearkin-portrait.png",
-  deka: "/assets/sprites/aegiskin-portrait.png",
-  mega: "/assets/sprites/bowkin-portrait.png",
-  tori: "/assets/sprites/spearkin-portrait.png",
-  maho: "/assets/sprites/bowkin-portrait.png",
-  robo: "/assets/sprites/aegiskin-portrait.png",
-};
+import { UnitSpritePreview } from "./UnitSpritePreview";
 
 // Unit order reflecting their battle positioning from rear to front:
 // Bannerkin ➔ Magekin ➔ Warhornkin ➔ Bowkin ➔ Spearkin ➔ Wingkin ➔ Horsekin ➔ Bludgeonkin ➔ Mechakin ➔ Aegiskin
@@ -125,6 +113,12 @@ export function HubScreen({ onPlay }: { onPlay: (id: string) => void }) {
           {CAMPAIGN_UNIT_ORDER.map((id) => {
             const c = CLASSES[id];
             const countInRoster = (save.roster ?? []).filter((u) => u.cls === id).length;
+            const previewUnit = (save.roster ?? []).find((u) => u.cls === id) ?? {
+              id: `preview-${id}`,
+              cls: id,
+              level: 1,
+              ...getDefaultStarterGear(id),
+            };
             return (
               <button
                 key={id}
@@ -137,7 +131,11 @@ export function HubScreen({ onPlay }: { onPlay: (id: string) => void }) {
                     : "border-border/40 bg-surface/30 opacity-60 hover:opacity-100 hover:border-accent"
                 )}
               >
-                <img src={PORTRAITS[id]} alt="" className="mx-auto h-12 w-12 object-contain group-hover:scale-105 transition-transform" />
+                <UnitSpritePreview
+                  unit={previewUnit}
+                  size={48}
+                  className="mx-auto group-hover:scale-105 transition-transform"
+                />
                 <p className="mt-1 text-xs font-semibold group-hover:text-accent transition-colors truncate">{c.name}</p>
                 <p className="text-[10px] text-faint truncate">
                   {c.roleTitle}

@@ -1,6 +1,7 @@
 import type * as Phaser from "phaser";
 import type { RhythmEngine } from "../rhythm.ts";
 import type { CommandId, EnemyKind, MissionDef, UnitClass, UnitMember } from "../types";
+import type { UnitVisual } from "./unit-visual.ts";
 
 /** One soldier or enemy on the field. */
 export interface Fighter {
@@ -34,6 +35,8 @@ export interface Fighter {
   /** Resting sprite scale, so squash and stretch can be applied on top of it. */
   sx: number;
   sy: number;
+  /** Equipment-aware visual overlays owned by this fighter. */
+  visual?: UnitVisual;
 }
 
 export interface ActiveAction {
