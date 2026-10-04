@@ -2,15 +2,15 @@ import * as Phaser from "phaser";
 
 const PLAYER_SHEETS = [
   ["spearkin-idle", "spearkin-idle.svg"],
-  ["bowkin-idle", "spearkin-idle.svg"],
+  ["bowkin-idle", "bowkin-idle.svg"],
   ["aegiskin-idle", "aegiskin-idle.svg"],
-  ["bannerkin-idle", "spearkin-idle.svg"],
-  ["kibakin-idle", "spearkin-idle.svg"],
+  ["bannerkin-idle", "bannerkin-idle.svg"],
+  ["kibakin-idle", "kibakin-idle.svg"],
   ["dekakin-idle", "dekakin-idle.svg"],
   ["megakin-idle", "megakin-idle.svg"],
-  ["torikin-idle", "spearkin-idle.svg"],
-  ["mahokin-idle", "spearkin-idle.svg"],
-  ["robokin-idle", "aegiskin-idle.svg"],
+  ["torikin-idle", "torikin-idle.svg"],
+  ["mahokin-idle", "mahokin-idle.svg"],
+  ["robokin-idle", "robokin-idle.svg"],
 ] as const;
 
 const SHEETS = [
@@ -58,11 +58,10 @@ export class PreloadScene extends Phaser.Scene {
     });
 
     this.load.image("sky", "/assets/map/dusk-sky.jpg");
-    for (const key of PLAYER_SHEETS) {
-      this.load.spritesheet(key, `/assets/sprites/${key}.svg`, {
-        frameWidth: 128,
-        frameHeight: 128,
-      });
+    for (const [key, file] of PLAYER_SHEETS) {
+      // Load SVG as an image, then add explicit 128x128 frames in create().
+      // This avoids browser-dependent SVG spritesheet dimension parsing.
+      this.load.image(key, `/assets/sprites/${file}`);
     }
     this.load.spritesheet("arrow", "/assets/sprites/arrow.png", { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet("impact", "/assets/sprites/impact.png", { frameWidth: 128, frameHeight: 128 });
@@ -390,6 +389,16 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   create() {
+    // Convert each 512x128 SVG sheet into four explicit 128x128 Phaser frames.
+    for (const [key] of PLAYER_SHEETS) {
+      const texture = this.textures.get(key);
+      if (!texture || texture.has(0)) continue;
+      texture.firstFrame = 0;
+      for (let frame = 0; frame < 4; frame++) {
+        texture.add(frame, 0, frame * 128, 0, 128, 128);
+      }
+    }
+
     // Keep the hand-authored pixel art crisp at every gameplay scale.
     for (const key of SHEETS) {
       this.textures.get(key)?.setFilter(Phaser.Textures.FilterMode.NEAREST);
