@@ -1,6 +1,13 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { computeUnitStats, createStarterRoster, canCreateUnit, UNIT_CREATION_RECIPES } from "./units.ts";
+import {
+  computeUnitStats,
+  createStarterRoster,
+  canCreateUnit,
+  UNIT_CREATION_RECIPES,
+  getGearScore,
+  optimizeUnitsEquipment,
+} from "./units.ts";
 import { ITEMS } from "./items.ts";
 import type { UnitMember } from "../types.ts";
 
@@ -121,5 +128,55 @@ describe("Equipment & Unit Stats", () => {
     // Bowkin with exact materials
     const bowCheckOk = canCreateUnit("bow", starterRoster, UNIT_CREATION_RECIPES.bow.materials);
     assert.equal(bowCheckOk.allowed, true);
+  });
+
+  it("getGearScore ranks higher tier and higher stat equipment above starter equipment", () => {
+    const woodBowScore = getGearScore("bow-wood", "bow");
+    const recurveBowScore = getGearScore("bow-recurve", "bow");
+    const cycloneBowScore = getGearScore("bow-cyclone", "bow");
+
+    assert.ok(recurveBowScore > woodBowScore);
+    assert.ok(cycloneBowScore > recurveBowScore);
+
+    const leatherHelmScore = getGearScore("helm-leather", "spear");
+    const ironHelmScore = getGearScore("helm-iron", "spear");
+    const greatHelmScore = getGearScore("helm-great", "spear");
+    assert.ok(ironHelmScore > leatherHelmScore);
+    assert.ok(greatHelmScore > ironHelmScore);
+  });
+
+  it("optimizeUnitsEquipment equips the highest scoring gear across all Bowkin", () => {
+    const roster: UnitMember[] = [
+      { id: "bow-1", cls: "bow", level: 1, weapon: "bow-wood", helmet: "helm-leather" },
+      { id: "bow-2", cls: "bow", level: 1, weapon: "bow-wood", helmet: "helm-leather" },
+    ];
+
+    const inventory: Record<string, number> = {
+      "bow-cyclone": 1,
+      "bow-great": 1,
+      "helm-crown": 1,
+      "helm-great": 1,
+      "beast-meat": 10,
+    };
+
+    const res = optimizeUnitsEquipment(roster, inventory, "bow");
+    assert.equal(res.changesCount, 2);
+
+    const bow1 = res.updatedRoster.find((u) => u.id === "bow-1")!;
+    const bow2 = res.updatedRoster.find((u) => u.id === "bow-2")!;
+
+    // Top bow is bow-cyclone, second is bow-great
+    assert.equal(bow1.weapon, "bow-cyclone");
+    assert.equal(bow2.weapon, "bow-great");
+
+    // Top helm is helm-crown, second is helm-great
+    assert.equal(bow1.helmet, "helm-crown");
+    assert.equal(bow2.helmet, "helm-great");
+
+    // Replaced starter gear returns to inventory
+    assert.equal(res.updatedInventory["bow-wood"], 2);
+    assert.equal(res.updatedInventory["helm-leather"], 2);
+    assert.equal(res.updatedInventory["bow-cyclone"], undefined);
+    assert.equal(res.updatedInventory["beast-meat"], 10);
   });
 });

@@ -11,15 +11,18 @@ describe("getNextPlayableMissionId", () => {
     assert.equal(getNextPlayableMissionId(["training"]), "dust-road");
     assert.equal(getNextPlayableMissionId(["training", "dust-road"]), "thorn-gate");
     assert.equal(getNextPlayableMissionId(["training", "dust-road", "thorn-gate"]), "howls-gate");
+    assert.equal(getNextPlayableMissionId(["training", "dust-road", "thorn-gate", "howls-gate"]), "bone-canyon");
+    assert.equal(getNextPlayableMissionId(["training", "dust-road", "thorn-gate", "howls-gate", "bone-canyon"]), "iron-citadel");
+    assert.equal(getNextPlayableMissionId(["training", "dust-road", "thorn-gate", "howls-gate", "bone-canyon", "iron-citadel"]), "storm-peak");
   });
 
   it("returns the furthest completed mission when all missions are cleared", () => {
-    const all = ["training", "dust-road", "thorn-gate", "howls-gate"];
-    assert.equal(getNextPlayableMissionId(all), "howls-gate");
+    const all = ["training", "dust-road", "thorn-gate", "howls-gate", "bone-canyon", "iron-citadel", "storm-peak"];
+    assert.equal(getNextPlayableMissionId(all), "storm-peak");
   });
 
   it("returns the furthest completed mission even if completed list is disordered", () => {
-    const all = ["howls-gate", "training", "thorn-gate", "dust-road"];
-    assert.equal(getNextPlayableMissionId(all), "howls-gate");
+    const all = ["storm-peak", "howls-gate", "training", "thorn-gate", "dust-road", "iron-citadel", "bone-canyon"];
+    assert.equal(getNextPlayableMissionId(all), "storm-peak");
   });
 });

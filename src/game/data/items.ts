@@ -75,6 +75,22 @@ export const ITEMS: Record<string, ItemDef> = {
       rangeBonus: 40,
     },
   },
+  "spear-storm": {
+    id: "spear-storm",
+    name: "Thunder Lance",
+    description: "Electrified spear humming with storm resonance. Cracks through any armor.",
+    category: "gear",
+    rarity: "epic",
+    icon: "⚡",
+    equipment: {
+      slot: "weapon",
+      gearType: "spear",
+      allowedClasses: ["spear"],
+      damageBonus: 20,
+      attackSpeedMultiplier: 1.5,
+      rangeBonus: 60,
+    },
+  },
 
   // === GEAR: WEAPONS - BOWS ===
   "bow-wood": {
@@ -123,6 +139,22 @@ export const ITEMS: Record<string, ItemDef> = {
       damageBonus: 9,
       attackSpeedMultiplier: 1.1,
       rangeBonus: 100,
+    },
+  },
+  "bow-cyclone": {
+    id: "bow-cyclone",
+    name: "Cyclone Warbow",
+    description: "Masterwork recurve carved with wind runes. Fires rapid, devastating salvos.",
+    category: "gear",
+    rarity: "epic",
+    icon: "🌪️",
+    equipment: {
+      slot: "weapon",
+      gearType: "bow",
+      allowedClasses: ["bow"],
+      damageBonus: 16,
+      attackSpeedMultiplier: 1.4,
+      rangeBonus: 140,
     },
   },
 
@@ -179,6 +211,24 @@ export const ITEMS: Record<string, ItemDef> = {
       rangeBonus: 15,
       defenseBonus: 0.22,
       hpBonus: 45,
+    },
+  },
+  "shield-aegis-core": {
+    id: "shield-aegis-core",
+    name: "Aegis Bastion",
+    description: "Imposing fortress shield humming with rhythmic barrier energy.",
+    category: "gear",
+    rarity: "epic",
+    icon: "💠",
+    equipment: {
+      slot: "weapon",
+      gearType: "shield",
+      allowedClasses: ["aegis"],
+      damageBonus: 14,
+      attackSpeedMultiplier: 1.2,
+      rangeBonus: 25,
+      defenseBonus: 0.35,
+      hpBonus: 80,
     },
   },
 

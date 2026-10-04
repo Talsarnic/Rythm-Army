@@ -171,3 +171,178 @@ export function createStarterRoster(): UnitMember[] {
     };
   });
 }
+
+/**
+ * Calculates a power/effectiveness score for a piece of gear when equipped on a specific unit class.
+ */
+export function getGearScore(itemId: string, cls: UnitClass): number {
+  const item = ITEMS[itemId];
+  if (!item || !item.equipment) return 0;
+  if (!item.equipment.allowedClasses.includes(cls)) return -1;
+
+  const eq = item.equipment;
+  let score = 0;
+
+  // Rarity baseline weight
+  const rarityWeights: Record<string, number> = {
+    common: 10,
+    uncommon: 25,
+    rare: 50,
+    epic: 90,
+  };
+  score += rarityWeights[item.rarity] ?? 10;
+
+  // Stat contributions
+  if (eq.damageBonus) score += eq.damageBonus * 4;
+  if (eq.hpBonus) score += eq.hpBonus * 1.2;
+  if (eq.defenseBonus) score += eq.defenseBonus * 120;
+  if (eq.rangeBonus) score += eq.rangeBonus * 0.3;
+  if (eq.attackSpeedMultiplier && eq.attackSpeedMultiplier > 1.0) {
+    score += (eq.attackSpeedMultiplier - 1.0) * 100;
+  }
+
+  // Class-specific weighting
+  if (cls === "aegis") {
+    // Aegis values defense and HP even more
+    if (eq.defenseBonus) score += eq.defenseBonus * 80;
+    if (eq.hpBonus) score += eq.hpBonus * 1.5;
+  } else if (cls === "bow") {
+    // Bowkin values range and damage
+    if (eq.rangeBonus) score += eq.rangeBonus * 0.5;
+    if (eq.damageBonus) score += eq.damageBonus * 3;
+  } else if (cls === "spear") {
+    // Spearkin values damage and attack speed
+    if (eq.damageBonus) score += eq.damageBonus * 3;
+    if (eq.attackSpeedMultiplier && eq.attackSpeedMultiplier > 1.0) {
+      score += (eq.attackSpeedMultiplier - 1.0) * 80;
+    }
+  }
+
+  return Math.round(score);
+}
+
+export interface OptimizeGearResult {
+  updatedRoster: UnitMember[];
+  updatedInventory: Record<string, number>;
+  changesCount: number;
+}
+
+/**
+ * Optimizes equipment for all units of a given class (or all units in the roster if targetClass is omitted).
+ * Pulls currently equipped gear for target units back into the candidate pool, sorts available items by score,
+ * and equips the highest-scoring weapons and helmets to all units of that class.
+ */
+export function optimizeUnitsEquipment(
+  roster: UnitMember[],
+  inventory: Record<string, number>,
+  targetClass?: UnitClass
+): OptimizeGearResult {
+  const targetUnits = targetClass ? roster.filter((u) => u.cls === targetClass) : roster;
+  if (targetUnits.length === 0) {
+    return {
+      updatedRoster: [...roster],
+      updatedInventory: { ...inventory },
+      changesCount: 0,
+    };
+  }
+
+  const updatedInv = { ...inventory };
+  let changesCount = 0;
+
+  // Gather pools per class if targetClass is not specified, or process class by class
+  const classesToOptimize = targetClass
+    ? [targetClass]
+    : (Array.from(new Set(roster.map((u) => u.cls))) as UnitClass[]);
+
+  const newRosterMap = new Map<string, UnitMember>(roster.map((u) => [u.id, { ...u }]));
+
+  for (const cls of classesToOptimize) {
+    const classUnits = roster.filter((u) => u.cls === cls);
+    if (classUnits.length === 0) continue;
+
+    // 1. Gather all weapons and helmets available for this class (inventory + already equipped on these units)
+    const availableWeapons: string[] = [];
+    const availableHelmets: string[] = [];
+
+    // Collect from inventory
+    for (const [itemId, qty] of Object.entries(updatedInv)) {
+      if (qty <= 0) continue;
+      const item = ITEMS[itemId];
+      if (!item?.equipment) continue;
+      if (!item.equipment.allowedClasses.includes(cls)) continue;
+
+      for (let i = 0; i < qty; i++) {
+        if (item.equipment.slot === "weapon") {
+          availableWeapons.push(itemId);
+        } else if (item.equipment.slot === "helmet") {
+          availableHelmets.push(itemId);
+        }
+      }
+    }
+
+    // Collect from currently equipped units of this class
+    for (const unit of classUnits) {
+      if (unit.weapon) {
+        availableWeapons.push(unit.weapon);
+      }
+      if (unit.helmet) {
+        availableHelmets.push(unit.helmet);
+      }
+    }
+
+    // Sort available items by score descending
+    availableWeapons.sort((a, b) => getGearScore(b, cls) - getGearScore(a, cls));
+    availableHelmets.sort((a, b) => getGearScore(b, cls) - getGearScore(a, cls));
+
+    // Clear target units' equipment from updatedInv tracking
+    // (We will rebuild inventory at the end based on leftover items)
+    // Remove all class-valid items from updatedInv temporarily
+    for (const itemId of new Set([...availableWeapons, ...availableHelmets])) {
+      delete updatedInv[itemId];
+    }
+
+    // 2. Assign best gear to each unit of this class
+    let weaponIdx = 0;
+    let helmetIdx = 0;
+
+    for (const unit of classUnits) {
+      const currentMember = newRosterMap.get(unit.id)!;
+      let newWeapon: string | undefined = undefined;
+      let newHelmet: string | undefined = undefined;
+
+      if (cls !== "banner" && weaponIdx < availableWeapons.length) {
+        newWeapon = availableWeapons[weaponIdx++];
+      }
+
+      if (helmetIdx < availableHelmets.length) {
+        newHelmet = availableHelmets[helmetIdx++];
+      }
+
+      if (currentMember.weapon !== newWeapon || currentMember.helmet !== newHelmet) {
+        changesCount++;
+      }
+
+      newRosterMap.set(unit.id, {
+        ...currentMember,
+        weapon: newWeapon,
+        helmet: newHelmet,
+      });
+    }
+
+    // 3. Put remaining unused items back into updatedInv
+    for (let i = weaponIdx; i < availableWeapons.length; i++) {
+      const id = availableWeapons[i];
+      updatedInv[id] = (updatedInv[id] ?? 0) + 1;
+    }
+    for (let i = helmetIdx; i < availableHelmets.length; i++) {
+      const id = availableHelmets[i];
+      updatedInv[id] = (updatedInv[id] ?? 0) + 1;
+    }
+  }
+
+  return {
+    updatedRoster: roster.map((u) => newRosterMap.get(u.id) ?? u),
+    updatedInventory: updatedInv,
+    changesCount,
+  };
+}
