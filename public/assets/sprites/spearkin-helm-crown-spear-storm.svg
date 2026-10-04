@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="128" viewBox="0 0 512 128" shape-rendering="crispEdges"><g transform="translate(0 0)"><g transform="translate(0 0)">
+    <ellipse cx="64" cy="112" rx="25" ry="5" fill="#211a22" opacity=".45"/>
+    <!-- spear shaft and rear hand -->
+    <path d="M78 78L102 45" stroke="#211a22" stroke-width="6" stroke-linecap="square"/>
+    <path d="M78 78L102 45" stroke="#486b7a" stroke-width="3" stroke-linecap="square"/>
+    <path d="M96 52l15-20 7-1-5 9-17 12z" fill="#425b68"/><path d="M110 32l9-6-4 10-7 5z" fill="#6bc8f2"/><path d="M115 28l5-5-2 8z" fill="#d9f7ff"/><path d="M104 35l5-7-2 9 6-3-8 13 2-8-6 3z" fill="#79d7ff"/><rect x="101" y="39" width="3" height="3" fill="#eaf8ff"/>
+    <!-- legs -->
+    <path d="M51 92h11v17H48zM68 92h11l4 17H70z" fill="#211a22"/>
+    <path d="M53 93h8v15h-9zM70 93h8l3 15h-9z" fill="#684238"/>
+    <rect x="46" y="107" width="17" height="5" fill="#211a22"/><rect x="70" y="107" width="18" height="5" fill="#211a22"/>
+    <!-- torso outline and armor -->
+    <path d="M44 72h39l9 24-12 8H49l-14-8z" fill="#211a22"/>
+    <path d="M47 74h34l7 20-9 6H50l-10-7z" fill="#334b55"/>
+    <path d="M50 78h28v17H50z" fill="#405b66"/>
+    <path d="M51 78h26v4H51z" fill="#6a7c80"/>
+    <!-- rear arm -->
+    <path d="M43 75l-10 15 9 6 13-13z" fill="#211a22"/>
+    <path d="M43 77l-8 13 6 4 11-12z" fill="#9e5f43"/>
+    <!-- front arm holding spear -->
+    <path d="M78 75l12 8-6 10-15-11z" fill="#211a22"/>
+    <path d="M78 77l9 7-4 6-12-9z" fill="#c98a5a"/>
+    <rect x="83" y="82" width="8" height="7" fill="#c98a5a"/>
+    <!-- face -->
+    <path d="M47 47q17-18 34 0v25q-17 12-34 0z" fill="#211a22"/>
+    <path d="M50 49q14-14 28 0v22q-14 9-28 0z" fill="#c98a5a"/>
+    <path d="M50 62h28v9q-14 8-28 0z" fill="#b87250"/>
+    <rect x="53" y="56" width="6" height="4" fill="#eee2c4"/><rect x="69" y="56" width="6" height="4" fill="#eee2c4"/>
+    <rect x="55" y="57" width="3" height="3" fill="#17131b"/><rect x="70" y="57" width="3" height="3" fill="#17131b"/>
+    <path d="M60 65h7" stroke="#704333" stroke-width="2"/>
+    
+    <path d="M43 52q2-17 21-22 19 5 21 22v12H43z" fill="#171a20"/>
+    <path d="M47 51q3-14 17-18 15 4 18 18v9H47z" fill="#a06a3f"/>
+    <path d="M49 40l6-10 6 9 4-13 6 13 7-8 3 20H49z" fill="#d7a34b"/>
+    <path d="M49 42l6-7 6 7 4-10 6 10 6-5 2 17H49z" fill="#b77b38"/>
+    <rect x="44" y="53" width="40" height="6" fill="#6a402c"/>
+    <rect x="62" y="39" width="5" height="19" fill="#f0cf76"/>
+  </g></g><g transform="translate(128 0)"><g transform="translate(0 -1)">
+    <ellipse cx="64" cy="112" rx="25" ry="5" fill="#211a22" opacity=".45"/>
+    <!-- spear shaft and rear hand -->
+    <path d="M80 78L102 45" stroke="#211a22" stroke-width="6" stroke-linecap="square"/>
+    <path d="M80 78L102 45" stroke="#486b7a" stroke-width="3" stroke-linecap="square"/>
+    <path d="M96 52l15-20 7-1-5 9-17 12z" fill="#425b68"/><path d="M110 32l9-6-4 10-7 5z" fill="#6bc8f2"/><path d="M115 28l5-5-2 8z" fill="#d9f7ff"/><path d="M104 35l5-7-2 9 6-3-8 13 2-8-6 3z" fill="#79d7ff"/><rect x="101" y="39" width="3" height="3" fill="#eaf8ff"/>
+    <!-- legs -->
+    <path d="M51 92h11v17H48zM68 92h11l4 17H70z" fill="#211a22"/>
+    <path d="M53 93h8v15h-9zM70 93h8l3 15h-9z" fill="#684238"/>
+    <rect x="46" y="107" width="17" height="5" fill="#211a22"/><rect x="70" y="107" width="18" height="5" fill="#211a22"/>
+    <!-- torso outline and armor -->
+    <path d="M44 72h39l9 24-12 8H49l-14-8z" fill="#211a22"/>
+    <path d="M47 74h34l7 20-9 6H50l-10-7z" fill="#334b55"/>
+    <path d="M50 78h28v17H50z" fill="#405b66"/>
+    <path d="M51 78h26v4H51z" fill="#6a7c80"/>
+    <!-- rear arm -->
+    <path d="M43 75l-10 15 9 6 13-13z" fill="#211a22"/>
+    <path d="M43 77l-8 13 6 4 11-12z" fill="#9e5f43"/>
+    <!-- front arm holding spear -->
+    <path d="M78 75l12 8-6 10-15-11z" fill="#211a22"/>
+    <path d="M78 77l9 7-4 6-12-9z" fill="#c98a5a"/>
+    <rect x="83" y="82" width="8" height="7" fill="#c98a5a"/>
+    <!-- face -->
+    <path d="M47 47q17-18 34 0v25q-17 12-34 0z" fill="#211a22"/>
+    <path d="M50 49q14-14 28 0v22q-14 9-28 0z" fill="#c98a5a"/>
+    <path d="M50 62h28v9q-14 8-28 0z" fill="#b87250"/>
+    <rect x="53" y="56" width="6" height="4" fill="#eee2c4"/><rect x="69" y="56" width="6" height="4" fill="#eee2c4"/>
+    <rect x="55" y="57" width="3" height="3" fill="#17131b"/><rect x="70" y="57" width="3" height="3" fill="#17131b"/>
+    <path d="M60 65h7" stroke="#704333" stroke-width="2"/>
+    
+    <path d="M43 52q2-17 21-22 19 5 21 22v12H43z" fill="#171a20"/>
+    <path d="M47 51q3-14 17-18 15 4 18 18v9H47z" fill="#a06a3f"/>
+    <path d="M49 40l6-10 6 9 4-13 6 13 7-8 3 20H49z" fill="#d7a34b"/>
+    <path d="M49 42l6-7 6 7 4-10 6 10 6-5 2 17H49z" fill="#b77b38"/>
+    <rect x="44" y="53" width="40" height="6" fill="#6a402c"/>
+    <rect x="62" y="39" width="5" height="19" fill="#f0cf76"/>
+  </g></g><g transform="translate(256 0)"><g transform="translate(0 0)">
+    <ellipse cx="64" cy="112" rx="25" ry="5" fill="#211a22" opacity=".45"/>
+    <!-- spear shaft and rear hand -->
+    <path d="M78 78L102 45" stroke="#211a22" stroke-width="6" stroke-linecap="square"/>
+    <path d="M78 78L102 45" stroke="#486b7a" stroke-width="3" stroke-linecap="square"/>
+    <path d="M96 52l15-20 7-1-5 9-17 12z" fill="#425b68"/><path d="M110 32l9-6-4 10-7 5z" fill="#6bc8f2"/><path d="M115 28l5-5-2 8z" fill="#d9f7ff"/><path d="M104 35l5-7-2 9 6-3-8 13 2-8-6 3z" fill="#79d7ff"/><rect x="101" y="39" width="3" height="3" fill="#eaf8ff"/>
+    <!-- legs -->
+    <path d="M51 92h11v17H48zM68 92h11l4 17H70z" fill="#211a22"/>
+    <path d="M53 93h8v15h-9zM70 93h8l3 15h-9z" fill="#684238"/>
+    <rect x="46" y="107" width="17" height="5" fill="#211a22"/><rect x="70" y="107" width="18" height="5" fill="#211a22"/>
+    <!-- torso outline and armor -->
+    <path d="M44 72h39l9 24-12 8H49l-14-8z" fill="#211a22"/>
+    <path d="M47 74h34l7 20-9 6H50l-10-7z" fill="#334b55"/>
+    <path d="M50 78h28v17H50z" fill="#405b66"/>
+    <path d="M51 78h26v4H51z" fill="#6a7c80"/>
+    <!-- rear arm -->
+    <path d="M43 75l-10 15 9 6 13-13z" fill="#211a22"/>
+    <path d="M43 77l-8 13 6 4 11-12z" fill="#9e5f43"/>
+    <!-- front arm holding spear -->
+    <path d="M78 75l12 8-6 10-15-11z" fill="#211a22"/>
+    <path d="M78 77l9 7-4 6-12-9z" fill="#c98a5a"/>
+    <rect x="83" y="82" width="8" height="7" fill="#c98a5a"/>
+    <!-- face -->
+    <path d="M47 47q17-18 34 0v25q-17 12-34 0z" fill="#211a22"/>
+    <path d="M50 49q14-14 28 0v22q-14 9-28 0z" fill="#c98a5a"/>
+    <path d="M50 62h28v9q-14 8-28 0z" fill="#b87250"/>
+    <rect x="53" y="56" width="6" height="4" fill="#eee2c4"/><rect x="69" y="56" width="6" height="4" fill="#eee2c4"/>
+    <rect x="55" y="57" width="3" height="3" fill="#17131b"/><rect x="70" y="57" width="3" height="3" fill="#17131b"/>
+    <path d="M60 65h7" stroke="#704333" stroke-width="2"/>
+    
+    <path d="M43 52q2-17 21-22 19 5 21 22v12H43z" fill="#171a20"/>
+    <path d="M47 51q3-14 17-18 15 4 18 18v9H47z" fill="#a06a3f"/>
+    <path d="M49 40l6-10 6 9 4-13 6 13 7-8 3 20H49z" fill="#d7a34b"/>
+    <path d="M49 42l6-7 6 7 4-10 6 10 6-5 2 17H49z" fill="#b77b38"/>
+    <rect x="44" y="53" width="40" height="6" fill="#6a402c"/>
+    <rect x="62" y="39" width="5" height="19" fill="#f0cf76"/>
+  </g></g><g transform="translate(384 0)"><g transform="translate(0 1)">
+    <ellipse cx="64" cy="112" rx="25" ry="5" fill="#211a22" opacity=".45"/>
+    <!-- spear shaft and rear hand -->
+    <path d="M80 78L102 45" stroke="#211a22" stroke-width="6" stroke-linecap="square"/>
+    <path d="M80 78L102 45" stroke="#486b7a" stroke-width="3" stroke-linecap="square"/>
+    <path d="M96 52l15-20 7-1-5 9-17 12z" fill="#425b68"/><path d="M110 32l9-6-4 10-7 5z" fill="#6bc8f2"/><path d="M115 28l5-5-2 8z" fill="#d9f7ff"/><path d="M104 35l5-7-2 9 6-3-8 13 2-8-6 3z" fill="#79d7ff"/><rect x="101" y="39" width="3" height="3" fill="#eaf8ff"/>
+    <!-- legs -->
+    <path d="M51 92h11v17H48zM68 92h11l4 17H70z" fill="#211a22"/>
+    <path d="M53 93h8v15h-9zM70 93h8l3 15h-9z" fill="#684238"/>
+    <rect x="46" y="107" width="17" height="5" fill="#211a22"/><rect x="70" y="107" width="18" height="5" fill="#211a22"/>
+    <!-- torso outline and armor -->
+    <path d="M44 72h39l9 24-12 8H49l-14-8z" fill="#211a22"/>
+    <path d="M47 74h34l7 20-9 6H50l-10-7z" fill="#334b55"/>
+    <path d="M50 78h28v17H50z" fill="#405b66"/>
+    <path d="M51 78h26v4H51z" fill="#6a7c80"/>
+    <!-- rear arm -->
+    <path d="M43 75l-10 15 9 6 13-13z" fill="#211a22"/>
+    <path d="M43 77l-8 13 6 4 11-12z" fill="#9e5f43"/>
+    <!-- front arm holding spear -->
+    <path d="M78 75l12 8-6 10-15-11z" fill="#211a22"/>
+    <path d="M78 77l9 7-4 6-12-9z" fill="#c98a5a"/>
+    <rect x="83" y="82" width="8" height="7" fill="#c98a5a"/>
+    <!-- face -->
+    <path d="M47 47q17-18 34 0v25q-17 12-34 0z" fill="#211a22"/>
+    <path d="M50 49q14-14 28 0v22q-14 9-28 0z" fill="#c98a5a"/>
+    <path d="M50 62h28v9q-14 8-28 0z" fill="#b87250"/>
+    <rect x="53" y="56" width="6" height="4" fill="#eee2c4"/><rect x="69" y="56" width="6" height="4" fill="#eee2c4"/>
+    <rect x="55" y="57" width="3" height="3" fill="#17131b"/><rect x="70" y="57" width="3" height="3" fill="#17131b"/>
+    <path d="M60 65h7" stroke="#704333" stroke-width="2"/>
+    
+    <path d="M43 52q2-17 21-22 19 5 21 22v12H43z" fill="#171a20"/>
+    <path d="M47 51q3-14 17-18 15 4 18 18v9H47z" fill="#a06a3f"/>
+    <path d="M49 40l6-10 6 9 4-13 6 13 7-8 3 20H49z" fill="#d7a34b"/>
+    <path d="M49 42l6-7 6 7 4-10 6 10 6-5 2 17H49z" fill="#b77b38"/>
+    <rect x="44" y="53" width="40" height="6" fill="#6a402c"/>
+    <rect x="62" y="39" width="5" height="19" fill="#f0cf76"/>
+  </g></g></svg>
