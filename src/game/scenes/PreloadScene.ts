@@ -15,17 +15,6 @@ const PLAYER_SHEETS = [
 ] as const;
 
 
-const SPEARKIN_LOADOUTS = [
-  "spearkin-helm-leather-spear-wood", "spearkin-helm-leather-spear-iron",
-  "spearkin-helm-leather-spear-fang", "spearkin-helm-leather-spear-storm",
-  "spearkin-helm-iron-spear-wood", "spearkin-helm-iron-spear-iron",
-  "spearkin-helm-iron-spear-fang", "spearkin-helm-iron-spear-storm",
-  "spearkin-helm-great-spear-wood", "spearkin-helm-great-spear-iron",
-  "spearkin-helm-great-spear-fang", "spearkin-helm-great-spear-storm",
-  "spearkin-helm-crown-spear-wood", "spearkin-helm-crown-spear-iron",
-  "spearkin-helm-crown-spear-fang", "spearkin-helm-crown-spear-storm",
-] as const;
-
 const SHEETS = [
   "spearkin-idle",
   "bowkin-idle",
@@ -413,18 +402,19 @@ export class PreloadScene extends Phaser.Scene {
       }
     }
 
-    // Spearkin loadouts use complete character art; each sheet still has four 128px frames.
-    for (const key of SPEARKIN_LOADOUTS) {
-      const texture = this.textures.get(key);
-      if (!texture || texture.has(0)) continue;
-      texture.firstFrame = 0;
-      for (let frame = 0; frame < 4; frame++) {
-        texture.add(frame, 0, frame * 128, 0, 128, 128);
+    // The atlas is 16 loadouts x 4 animation frames, packed as 16 frames across each row.
+    const spearkinTexture = this.textures.get(SPEARKIN_TEXTURE);
+    if (spearkinTexture && !spearkinTexture.has(0)) {
+      spearkinTexture.firstFrame = 0;
+      for (let frame = 0; frame < 64; frame++) {
+        const column = frame % 16;
+        const row = Math.floor(frame / 16);
+        spearkinTexture.add(frame, 0, column * 128, row * 128, 128, 128);
       }
     }
 
-    // The atlas is 16 loadouts x 4 animation frames, packed as 16 frames across each row.\n    const spearkinTexture = this.textures.get(SPEARKIN_TEXTURE);\n    if (spearkinTexture && !spearkinTexture.has(0)) {\n      spearkinTexture.firstFrame = 0;\n      for (let frame = 0; frame < 64; frame++) {\n        const column = frame % 16;\n        const row = Math.floor(frame / 16);\n        spearkinTexture.add(frame, 0, column * 128, row * 128, 128, 128);\n      }\n    }\n\n    // Keep the hand-authored pixel art crisp at every gameplay scale.
-    for (const key of [...SHEETS, ...SPEARKIN_LOADOUTS]) {
+    // Keep the hand-authored pixel art crisp at every gameplay scale.
+    for (const key of [...SHEETS, SPEARKIN_TEXTURE]) {
       this.textures.get(key)?.setFilter(Phaser.Textures.FilterMode.NEAREST);
     }
     const mk = (key: string, anim: string, rate: number, repeat: number) => {
@@ -441,9 +431,20 @@ export class PreloadScene extends Phaser.Scene {
       else if (key === "arrow") mk(key, "arrow-fly", 12, -1);
       else mk(key, `${key}-anim`, 7, -1);
     }
-    for (const key of SPEARKIN_LOADOUTS) mk(key, `${key}-anim`, 7, -1);
+    for (let loadoutIndex = 0; loadoutIndex < 16; loadoutIndex++) {
+      const baseFrame = Math.floor(loadoutIndex / 4) * 16 + (loadoutIndex % 4) * 4;
+      const anim = `spearkin-loadout-${loadoutIndex}-anim`;
+      if (!this.anims.exists(anim)) {
+        this.anims.create({
+          key: anim,
+          frames: this.anims.generateFrameNumbers(SPEARKIN_TEXTURE, { start: baseFrame, end: baseFrame + 3 }),
+          frameRate: 7,
+          repeat: -1,
+        });
+      }
+    }
 
-    for (let loadoutIndex = 0; loadoutIndex < 16; loadoutIndex++) {\n      const baseFrame = Math.floor(loadoutIndex / 4) * 16 + (loadoutIndex % 4) * 4;\n      const anim = `spearkin-loadout-${loadoutIndex}-anim`;\n      if (!this.anims.exists(anim)) {\n        this.anims.create({\n          key: anim,\n          frames: this.anims.generateFrameNumbers(SPEARKIN_TEXTURE, { start: baseFrame, end: baseFrame + 3 }),\n          frameRate: 7,\n          repeat: -1,\n        });\n      }\n    }\n\n    // Register animations for new classes & enemy types
+    // Register animations for new classes & enemy types
     const extraSheets = [
       "kibakin-idle",
       "dekakin-idle",
