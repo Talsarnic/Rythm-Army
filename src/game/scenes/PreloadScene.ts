@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { getSpearkinAtlasFrame, SPEARKIN_TEXTURE } from "../battle/spearkin-loadout";
+import { SPEARKIN_TEXTURE } from "../battle/spearkin-loadout";
 
 const PLAYER_SHEETS = [
   ["spearkin-idle", "spearkin-idle.svg"],
@@ -409,7 +409,10 @@ export class PreloadScene extends Phaser.Scene {
       for (let frame = 0; frame < 64; frame++) {
         const column = frame % 16;
         const row = Math.floor(frame / 16);
-        spearkinTexture.add(frame, 0, column * 128, row * 128, 128, 128);
+        const name = `s${frame}`;
+        if (!spearkinTexture.has(name)) {
+          spearkinTexture.add(name, 0, column * 128, row * 128, 128, 128);
+        }
       }
     }
 
@@ -437,7 +440,10 @@ export class PreloadScene extends Phaser.Scene {
       if (!this.anims.exists(anim)) {
         this.anims.create({
           key: anim,
-          frames: this.anims.generateFrameNumbers(SPEARKIN_TEXTURE, { start: baseFrame, end: baseFrame + 3 }),
+          frames: [0, 1, 2, 3].map((offset) => ({
+            key: SPEARKIN_TEXTURE,
+            frame: `s${baseFrame + offset}`,
+          })),
           frameRate: 7,
           repeat: -1,
         });
