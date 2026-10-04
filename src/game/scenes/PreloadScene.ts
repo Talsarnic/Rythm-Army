@@ -1,4 +1,5 @@
 import * as Phaser from "phaser";
+import { getSpearkinAtlasFrame, SPEARKIN_TEXTURE } from "../battle/spearkin-loadout";
 
 const PLAYER_SHEETS = [
   ["spearkin-idle", "spearkin-idle.svg"],
@@ -75,9 +76,7 @@ export class PreloadScene extends Phaser.Scene {
       // This avoids browser-dependent SVG spritesheet dimension parsing.
       this.load.image(key, `/assets/sprites/${file}`);
     }
-    for (const key of SPEARKIN_LOADOUTS) {
-      this.load.image(key, `/assets/sprites/${key}.svg`);
-    }
+    this.load.image(SPEARKIN_TEXTURE, "/assets/sprites/spearkin-loadouts.svg");
     this.load.spritesheet("arrow", "/assets/sprites/arrow.png", { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet("impact", "/assets/sprites/impact.png", { frameWidth: 128, frameHeight: 128 });
     const EQUIPMENT_ART = [
@@ -424,7 +423,7 @@ export class PreloadScene extends Phaser.Scene {
       }
     }
 
-    // Keep the hand-authored pixel art crisp at every gameplay scale.
+    // The atlas is 16 loadouts x 4 animation frames, packed as 16 frames across each row.\n    const spearkinTexture = this.textures.get(SPEARKIN_TEXTURE);\n    if (spearkinTexture && !spearkinTexture.has(0)) {\n      spearkinTexture.firstFrame = 0;\n      for (let frame = 0; frame < 64; frame++) {\n        const column = frame % 16;\n        const row = Math.floor(frame / 16);\n        spearkinTexture.add(frame, 0, column * 128, row * 128, 128, 128);\n      }\n    }\n\n    // Keep the hand-authored pixel art crisp at every gameplay scale.
     for (const key of [...SHEETS, ...SPEARKIN_LOADOUTS]) {
       this.textures.get(key)?.setFilter(Phaser.Textures.FilterMode.NEAREST);
     }
@@ -444,7 +443,7 @@ export class PreloadScene extends Phaser.Scene {
     }
     for (const key of SPEARKIN_LOADOUTS) mk(key, `${key}-anim`, 7, -1);
 
-    // Register animations for new classes & enemy types
+    for (let loadoutIndex = 0; loadoutIndex < 16; loadoutIndex++) {\n      const baseFrame = Math.floor(loadoutIndex / 4) * 16 + (loadoutIndex % 4) * 4;\n      const anim = `spearkin-loadout-${loadoutIndex}-anim`;\n      if (!this.anims.exists(anim)) {\n        this.anims.create({\n          key: anim,\n          frames: this.anims.generateFrameNumbers(SPEARKIN_TEXTURE, { start: baseFrame, end: baseFrame + 3 }),\n          frameRate: 7,\n          repeat: -1,\n        });\n      }\n    }\n\n    // Register animations for new classes & enemy types
     const extraSheets = [
       "kibakin-idle",
       "dekakin-idle",
