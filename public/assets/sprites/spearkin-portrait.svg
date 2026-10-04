@@ -1,17 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" shape-rendering="crispEdges">
-<rect width="128" height="128" fill="none"/>
-<path d="M26 108h76v8H26z" fill="#38272a"/>
-<path d="M35 71h58v31H35z" fill="#241a1b"/><path d="M40 72h48v25H40z" fill="#3d5260"/><path d="M47 75h34v18H47z" fill="#587180"/>
-<path d="M43 94h42v7H43z" fill="#70452f"/><path d="M48 99h12v9H48zM68 99h12v9H68z" fill="#b8794f"/>
-<path d="M38 35h8v-7h31v5h8v8h5v28H83v7H44v-7h-8V41h2z" fill="#241a1b"/>
-<path d="M43 40h35v5h7v18H78v7H49v-7h-8V45h2z" fill="#d6a56a"/>
-<rect x="45" y="48" width="35" height="15" fill="#f7f0dc"/><rect x="49" y="52" width="11" height="10" fill="#241a1b"/><rect x="67" y="52" width="9" height="10" fill="#241a1b"/>
-<rect x="44" y="63" width="36" height="6" fill="#b8794f"/>
-<path d="M37 42V30h7v-8h8v-5h23v5h8v8h7v12H81v-7H47v7z" fill="#70452f"/>
-<path d="M45 30h9v-7h21v7h9v9H45z" fill="#936044"/>
-<rect x="53" y="23" width="22" height="6" fill="#f1e7c8"/><rect x="42" y="38" width="44" height="5" fill="#70452f"/>
-<rect x="80" y="29" width="6" height="10" fill="#38272a"/>
-<rect x="91" y="27" width="5" height="73" fill="#8a5a36"/><rect x="93" y="26" width="2" height="70" fill="#b57a45"/>
-<path d="M88 30l5-14 5 14-5 11z" fill="#d8d7c7"/><path d="M93 18l2-2 3 14h-5z" fill="#f1e7c8"/>
-<path d="M78 68h14v8h5v16H85V82h-7z" fill="#d6a56a"/><rect x="88" y="87" width="11" height="8" fill="#70452f"/>
+  <!-- Portrait uses the same production sprite as gameplay so menus and battle share one art language. -->
+  <image href="/assets/sprites/spearkin-idle.svg" x="0" y="0" width="512" height="128" preserveAspectRatio="none"/>
 </svg>
