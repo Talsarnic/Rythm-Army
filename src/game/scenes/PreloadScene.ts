@@ -414,7 +414,17 @@ export class PreloadScene extends Phaser.Scene {
       }
     }
 
-    // Spearkin loadouts use complete character art; each sheet still has four 128px frames.\n    for (const key of SPEARKIN_LOADOUTS) {\n      const texture = this.textures.get(key);\n      if (!texture || texture.has(0)) continue;\n      texture.firstFrame = 0;\n      for (let frame = 0; frame < 4; frame++) {\n        texture.add(frame, 0, frame * 128, 0, 128, 128);\n      }\n    }\n\n    // Keep the hand-authored pixel art crisp at every gameplay scale.
+    // Spearkin loadouts use complete character art; each sheet still has four 128px frames.
+    for (const key of SPEARKIN_LOADOUTS) {
+      const texture = this.textures.get(key);
+      if (!texture || texture.has(0)) continue;
+      texture.firstFrame = 0;
+      for (let frame = 0; frame < 4; frame++) {
+        texture.add(frame, 0, frame * 128, 0, 128, 128);
+      }
+    }
+
+    // Keep the hand-authored pixel art crisp at every gameplay scale.
     for (const key of [...SHEETS, ...SPEARKIN_LOADOUTS]) {
       this.textures.get(key)?.setFilter(Phaser.Textures.FilterMode.NEAREST);
     }
